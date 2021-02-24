@@ -36,7 +36,7 @@ namespace RoboCriadorDeItens_2
             //criaListaPrecos(serviceProxyOrigem);
 
             //RetornaLeadId(serviceProxyOrigem);
-            
+            RetornarMultiplo(serviceProxyOrigem);
             Console.WriteLine("Fim!");
             Console.ReadLine();
         }
@@ -202,7 +202,6 @@ namespace RoboCriadorDeItens_2
                 registro = serviceProxy.Create(entidade);
             }
         }
-
         static List<ListaPersonalizada> IdClientePotencial;
         static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxyOrigem)
         {
@@ -210,9 +209,10 @@ namespace RoboCriadorDeItens_2
             //queryExpression.Criteria.AddCondition("leadid", ConditionOperator.NotNull);
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+            IdClientePotencial = new List<ListaPersonalizada>();
             foreach (var item in colecaoEntidades.Entities)
             {
-                IdClientePotencial.Add(new ListaPersonalizada("teste"));
+                IdClientePotencial.Add(new ListaPersonalizada(item["leadid"].ToString()));
             }
             foreach (var item in IdClientePotencial)
             {
