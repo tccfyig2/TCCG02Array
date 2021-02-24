@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Sdk.Client;
+
 
 namespace RoboCriadorDeItens_2
 {
@@ -31,12 +33,16 @@ namespace RoboCriadorDeItens_2
 
             //RetornaPriceLevelId(serviceProxyOrigem);
 
-            criaListaPrecos(serviceProxyOrigem);
+            //criaListaPrecos(serviceProxyOrigem);
+
+            var contas = RetornarMultiplo(serviceProxyOrigem);
+
             //RetornaLeadId(serviceProxyOrigem);
 
             Console.WriteLine("Fim!");
             Console.ReadLine();
         }
+
         static EntityCollection RetornaPriceLevelId(CrmServiceClient serviceProxyOrigem)
         {
             QueryExpression queryExpression = new QueryExpression("pricelevel");
@@ -68,11 +74,8 @@ namespace RoboCriadorDeItens_2
                 Console.WriteLine(item["leadid"]);
                 //Console.WriteLine(item["name"]);
             }
-
             return colecaoEntidades;
         }
-
-
         static void criaContato(CrmServiceClient serviceProxy)
         {
             for (int i = 0; i < 1; i++)
@@ -201,6 +204,19 @@ namespace RoboCriadorDeItens_2
                 registro = serviceProxy.Create(entidade);
             }
         }
+        static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxy)
+        {
+            QueryExpression queryExpression = new QueryExpression("account");
 
+            queryExpression.Criteria.AddCondition("name", ConditionOperator.NotEqual, "teste");
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection colecaoEntidades = serviceProxy.RetrieveMultiple(queryExpression);
+            foreach (var item in colecaoEntidades.Entities)
+            {
+                Console.WriteLine(item["name"]);
+            }
+
+            return colecaoEntidades;
+        }
     }
 }
