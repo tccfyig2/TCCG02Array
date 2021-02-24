@@ -50,7 +50,7 @@ namespace Plugin
                             // contactColl não deve conter nada.
 
                             if (contactColl.Entities.Count > 0)
-                                throw new InvalidPluginExecutionException("CPF já consta no banco de dados!");
+                                throw new InvalidPluginExecutionException("CPF já cadastrado!");
                         }
                         else
                             throw new InvalidPluginExecutionException("CPF é Inválido!");
