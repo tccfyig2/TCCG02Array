@@ -27,7 +27,7 @@ namespace RoboCriadorDeItens_2
 
             //criaClientePetencial(serviceProxyOrigem);
 
-            //criaOrdem(serviceProxyOrigem);
+            criaOrdem(serviceProxyOrigem);
 
             //criaProduto(serviceProxyOrigem);
 
@@ -36,7 +36,6 @@ namespace RoboCriadorDeItens_2
             //criaListaPrecos(serviceProxyOrigem);
 
             //RetornaLeadId(serviceProxyOrigem);
-            RetornarMultiplo(serviceProxyOrigem);
             Console.WriteLine("Fim!");
             Console.ReadLine();
         }
@@ -53,25 +52,6 @@ namespace RoboCriadorDeItens_2
                 Console.WriteLine(item["pricelevelid"]);
             }
 
-            return colecaoEntidades;
-        }
-
-
-        //Precisava ser o customerid mas n deu u.u
-        //Talvez seja isso, mas é pouco provavel que seja, ja que ele pede um id e estamos passando outro
-        //Detalhe, aparentemente da pra selecionar tanto contas como contatos no campo cliente potencial que é o customerid que fica em ordem(salesorder)
-        static EntityCollection RetornaLeadId(CrmServiceClient serviceProxyOrigem)
-        {
-            QueryExpression queryExpression = new QueryExpression("lead");
-
-            //queryExpression.Criteria.AddCondition("customerid", ConditionOperator.NotNull);
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-            foreach (var item in colecaoEntidades.Entities)
-            {
-                Console.WriteLine(item["leadid"]);
-                //Console.WriteLine(item["name"]);
-            }
             return colecaoEntidades;
         }
         static void criaContato(CrmServiceClient serviceProxy)
@@ -199,26 +179,10 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("begindate", DateTime.Today);
                 entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
 
+
                 registro = serviceProxy.Create(entidade);
             }
         }
-        static List<ListaPersonalizada> IdClientePotencial;
-        static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxyOrigem)
-        {
-            QueryExpression queryExpression = new QueryExpression("lead");
-            //queryExpression.Criteria.AddCondition("leadid", ConditionOperator.NotNull);
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-            IdClientePotencial = new List<ListaPersonalizada>();
-            foreach (var item in colecaoEntidades.Entities)
-            {
-                IdClientePotencial.Add(new ListaPersonalizada(item["leadid"].ToString()));
-            }
-            foreach (var item in IdClientePotencial)
-            {
-                Console.WriteLine(item.Id);
-            }
-            return colecaoEntidades;
-        }
+
     }
 }
