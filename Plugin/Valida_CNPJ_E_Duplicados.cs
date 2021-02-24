@@ -49,7 +49,7 @@ namespace Plugin
 
                             // contactColl não deve conter nada.
                             if (contactColl.Entities.Count > 0)
-                                throw new InvalidPluginExecutionException("CNPJ já consta no banco de dados!");
+                                throw new InvalidPluginExecutionException("CNPJ já cadastrado!");
                         }
                         else
                             throw new InvalidPluginExecutionException("CNPJ é Inválido!");
