@@ -12,7 +12,7 @@ using Microsoft.Xrm.Sdk.Client;
 
 namespace RoboCriadorDeItens_2
 {
-    class Program
+    class Program : ListaPersonalizada
     {
         static void Main(string[] args)
         {
@@ -35,9 +35,9 @@ namespace RoboCriadorDeItens_2
 
             //criaListaPrecos(serviceProxyOrigem);
 
-            var contas = RetornarMultiplo(serviceProxyOrigem);
-
             //RetornaLeadId(serviceProxyOrigem);
+
+            RetornarMultiplo(serviceProxyOrigem);
 
             Console.WriteLine("Fim!");
             Console.ReadLine();
@@ -204,18 +204,22 @@ namespace RoboCriadorDeItens_2
                 registro = serviceProxy.Create(entidade);
             }
         }
-        static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxy)
-        {
-            QueryExpression queryExpression = new QueryExpression("account");
 
-            queryExpression.Criteria.AddCondition("name", ConditionOperator.NotEqual, "teste");
+        static List<ListaPersonalizada> IdClientePotencial;
+        static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxyOrigem)
+        {
+            QueryExpression queryExpression = new QueryExpression("lead");
+            //queryExpression.Criteria.AddCondition("leadid", ConditionOperator.NotNull);
             queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection colecaoEntidades = serviceProxy.RetrieveMultiple(queryExpression);
+            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
             foreach (var item in colecaoEntidades.Entities)
             {
-                Console.WriteLine(item["name"]);
+                IdClientePotencial.Add(new ListaPersonalizada("teste"));
             }
-
+            foreach (var item in IdClientePotencial)
+            {
+                Console.WriteLine(item.Id);
+            }
             return colecaoEntidades;
         }
     }
