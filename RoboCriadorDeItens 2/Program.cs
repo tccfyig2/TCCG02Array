@@ -28,7 +28,8 @@ namespace RoboCriadorDeItens_2
             //criaOrdem(serviceProxyOrigem);
 
             //criaProduto(serviceProxyOrigem);
-            RetornaPriceLevelId(serviceProxyOrigem);
+            //RetornaPriceLevelId(serviceProxyOrigem);
+            RetornaLeadId(serviceProxyOrigem);
 
             Console.WriteLine("Fim!");
             Console.ReadLine();
@@ -47,6 +48,27 @@ namespace RoboCriadorDeItens_2
 
             return colecaoEntidades;
         }
+
+
+        //Precisava ser o customerid mas n deu u.u
+        //Talvez seja isso, mas é pouco provavel que seja, ja que ele pede um id e estamos passando outro
+        //Detalhe, aparentemente da pra selecionar tanto contas como contatos no campo cliente potencial que é o customerid que fica em ordem(salesorder)
+        static EntityCollection RetornaLeadId(CrmServiceClient serviceProxyOrigem)
+        {
+            QueryExpression queryExpression = new QueryExpression("lead");
+
+            //queryExpression.Criteria.AddCondition("customerid", ConditionOperator.NotNull);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+            foreach (var item in colecaoEntidades.Entities)
+            {
+                Console.WriteLine(item["leadid"]);
+                //Console.WriteLine(item["name"]);
+            }
+
+            return colecaoEntidades;
+        }
+
 
         static void criaContato(CrmServiceClient serviceProxy)
         {
