@@ -36,26 +36,6 @@ namespace RoboCriadorDeItens_2
             //criaListaPrecos(serviceProxyOrigem);
 
             //RetornaLeadId(serviceProxyOrigem);
-
-            /*
-            Conexao conexao = new Conexao();
-
-            //CRM de Origem
-            var serviceProxyOrigem = conexao.ObterConexaoOrigem();
-            //var contas = RetornarMultiplo(serviceProxyOrigem);
-            //criaContato(serviceProxyOrigem);
-            //criaConta(serviceProxyOrigem);
-            //criaClientePetencial(serviceProxyOrigem);
-            //criaOrdem(serviceProxyOrigem);
-            //criaProduto(serviceProxyOrigem);
-            //RetornaPriceLevelId(serviceProxyOrigem);
-            criaListaPrecos(serviceProxyOrigem);
-            //RetornaLeadId(serviceProxyOrigem);
-
-            //CRM de Destino
-            var serviceProxyDestino = conexao.ObterConexaoDestino();
-            //criaConta(serviceProxyDestino.contas);
-            */
             
             Console.WriteLine("Fim!");
             Console.ReadLine();
