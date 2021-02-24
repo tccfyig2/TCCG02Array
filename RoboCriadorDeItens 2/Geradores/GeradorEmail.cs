@@ -6,16 +6,15 @@ using System.Threading.Tasks;
 
 namespace RoboCriadorDeItens_2.Geradores
 {
-    class GeradorEmail : GeradorNome_Sobrenome
+    class GeradorEmail
     {
-        internal static string geradorEmail()
+        protected static Random rnd = new Random();
+        internal static string geradorEmail(string nome = "exemplo")
         {
-            Random rnd = new Random();
-            string sobrenome = geradorSobrenome().ToLower();
-            string nome = geradorNome().ToLower();
+            
             string[] sufixos = { "org", "yahoo", "uol", "bol", "aol", "gmail", "gov", "hotmail" };
             int index = rnd.Next(sufixos.Length);
-            string email = $"{sobrenome}.{nome}@{sufixos[index]}.com";
+            string email = $"{nome.ToLower()}_{rnd.Next(0, 1000)}@{sufixos[index]}.com";
             return email;
         }
     }

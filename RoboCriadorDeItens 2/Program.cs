@@ -86,8 +86,9 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
 
-                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail());
-                entidade.Attributes.Add("firstname", GeradorNome_Sobrenome.geradorNome());
+                string emailNome = (GeradorNome_Sobrenome.geradorNome());
+                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
+                entidade.Attributes.Add("firstname", emailNome);
                 entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
                 entidade.Attributes.Add("cred2_cpf", GeradorCPF_CNPJ.geradorCPF());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
@@ -135,8 +136,9 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
 
-                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail());
-                entidade.Attributes.Add("firstname", GeradorNome_Sobrenome.geradorNome());
+                string emailNome = (GeradorNome_Sobrenome.geradorNome());
+                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
+                entidade.Attributes.Add("firstname", emailNome);
                 entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
                 entidade.Attributes.Add("companyname", GeradorNome_Sobrenome.geradorSobrenome() + " ltda.");
                 entidade.Attributes.Add("subject", GeradorTelefone_Topico.geredorTopico());

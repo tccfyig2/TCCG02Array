@@ -9,7 +9,7 @@ namespace RoboCriadorDeItens_2.Geradores
 {
     class GeradorEndereco
     {
-        public static Random rnd = new Random();
+        protected static Random rnd = new Random();
         internal static string[] geradorEndereco()
         {
             string[] arrayCEP = // 200

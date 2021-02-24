@@ -8,7 +8,7 @@ namespace RoboCriadorDeItens_2.Geradores
 {
     class GeradorNome_Sobrenome
     {
-        public static Random rnd = new Random();
+        protected static Random rnd = new Random();
         internal static string geradorNome()
         {
             string[] Homem = //100

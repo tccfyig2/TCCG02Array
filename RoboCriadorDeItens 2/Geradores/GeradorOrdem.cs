@@ -8,7 +8,7 @@ namespace RoboCriadorDeItens_2.Geradores
 {
     class GeradorOrdem
     {
-        public static Random rnd = new Random();
+        protected static Random rnd = new Random();
         internal static string geradorCod()
         {
             return "cod-" + rnd.Next(10000, 99999).ToString();
