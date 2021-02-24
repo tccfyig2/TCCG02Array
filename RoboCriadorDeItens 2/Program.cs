@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.Xrm.Sdk.Query;
 
 namespace RoboCriadorDeItens_2
 {
@@ -25,13 +25,29 @@ namespace RoboCriadorDeItens_2
 
             //criaClientePetencial(serviceProxyOrigem);
 
-            criaOrdem(serviceProxyOrigem);
+            //criaOrdem(serviceProxyOrigem);
 
             //criaProduto(serviceProxyOrigem);
+            RetornaPriceLevelId(serviceProxyOrigem);
 
             Console.WriteLine("Fim!");
             Console.ReadLine();
         }
+        static EntityCollection RetornaPriceLevelId(CrmServiceClient serviceProxyOrigem)
+        {
+            QueryExpression queryExpression = new QueryExpression("pricelevel");
+
+            queryExpression.Criteria.AddCondition("pricelevelid", ConditionOperator.NotNull);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+            foreach (var item in colecaoEntidades.Entities)
+            {
+                Console.WriteLine(item["pricelevelid"]);
+            }
+
+            return colecaoEntidades;
+        }
+
         static void criaContato(CrmServiceClient serviceProxy)
         {
             for (int i = 0; i < 1; i++)
