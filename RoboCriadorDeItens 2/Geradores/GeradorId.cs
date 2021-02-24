@@ -8,8 +8,9 @@ namespace RoboCriadorDeItens_2.Geradores
 {
     class GeradorId : ListaPersonalizada
     {
-        static List<ListaPersonalizada> IdClientePotencial;
-        static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxy)
+        protected static Random rnd = new Random();
+        protected static List<ListaPersonalizada> IdClientePotencial;
+        internal static Guid BuscaId(CrmServiceClient serviceProxy)
         {
             QueryExpression queryExpression = new QueryExpression("lead");
             queryExpression.Criteria.AddCondition("leadid", ConditionOperator.NotNull);
@@ -19,12 +20,11 @@ namespace RoboCriadorDeItens_2.Geradores
             IdClientePotencial = new List<ListaPersonalizada>();
             foreach (var item in colecaoEntidades.Entities)
             {
-                IdClientePotencial.Add(new ListaPersonalizada(item["leadid"].ToString()));
+                IdClientePotencial.Add(new ListaPersonalizada(item.Id));
             }
-            Console.WriteLine(IdClientePotencial.Count);
-            Console.WriteLine(IdClientePotencial[IdClientePotencial.Count - 1].Id);
-            Console.WriteLine(IdClientePotencial[3].Id);
-            return colecaoEntidades;
+            var f =  IdClientePotencial[rnd.Next(IdClientePotencial.Count)].Id;
+            return f;
+           
         }
 
     }

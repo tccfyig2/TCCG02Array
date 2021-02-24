@@ -10,9 +10,9 @@ namespace RoboCriadorDeItens_2.Geradores
     {
         public ListaPersonalizada() { }
 
-        public string Id { get; set; }
+        public Guid Id { get; set; }
 
-        public ListaPersonalizada(string id)
+        public ListaPersonalizada(Guid id)
         {
             this.Id = id;
         }

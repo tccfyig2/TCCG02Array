@@ -135,13 +135,13 @@ namespace RoboCriadorDeItens_2
         static void criaOrdem(CrmServiceClient serviceProxy)
         {
             // Lista de Preços(pricelevelid) CAMPO PESQUISAVEL
-            // Cliente Potencial(customerid) CAMPO PESQUISAVEL
             for (int i = 0; i < 1; i++)
             {
                 var entidade = new Entity("salesorder");
                 Guid registro = new Guid();
 
                 entidade.Attributes.Add("name", $"Cliente nº: {i}");
+                entidade.Attributes.Add("customerid", new EntityReference("lead", GeradorId.BuscaId(serviceProxy)));
                 //entidade.Attributes.Add("cred2_codigo", GeradorOrdem.geradorCod());
                 //entidade.Attributes.Add("ordernumber", GeradorOrdem.geradorOrdemNumber());
 
