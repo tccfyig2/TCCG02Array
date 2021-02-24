@@ -28,8 +28,11 @@ namespace RoboCriadorDeItens_2
             //criaOrdem(serviceProxyOrigem);
 
             //criaProduto(serviceProxyOrigem);
+
             //RetornaPriceLevelId(serviceProxyOrigem);
-            RetornaLeadId(serviceProxyOrigem);
+
+            criaListaPrecos(serviceProxyOrigem);
+            //RetornaLeadId(serviceProxyOrigem);
 
             Console.WriteLine("Fim!");
             Console.ReadLine();
@@ -156,7 +159,7 @@ namespace RoboCriadorDeItens_2
             {
                 var entidade = new Entity("salesorder");
                 Guid registro = new Guid();
-                
+
                 entidade.Attributes.Add("name", $"Cliente nº: {i}");
                 //entidade.Attributes.Add("cred2_codigo", GeradorOrdem.geradorCod());
                 //entidade.Attributes.Add("ordernumber", GeradorOrdem.geradorOrdemNumber());
@@ -180,6 +183,20 @@ namespace RoboCriadorDeItens_2
                 Guid registro = new Guid();
 
                 entidade.Attributes.Add("name", $"Cliente nº: {i}");
+
+                registro = serviceProxy.Create(entidade);
+            }
+        }
+        static void criaListaPrecos(CrmServiceClient serviceProxy)
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                var entidade = new Entity("pricelevel");
+                Guid registro = new Guid();
+
+                entidade.Attributes.Add("name", $"Produto {i}");
+                entidade.Attributes.Add("begindate", DateTime.Today);
+                entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
 
                 registro = serviceProxy.Create(entidade);
             }
