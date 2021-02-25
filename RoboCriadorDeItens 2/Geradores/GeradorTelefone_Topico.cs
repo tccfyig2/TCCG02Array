@@ -8,7 +8,7 @@ namespace RoboCriadorDeItens_2.Geradores
 {
     class GeradorTelefone_Topico
     {
-        public static Random rnd = new Random();
+        protected static Random rnd = new Random();
         internal static string geredorTelefone(string estado = "RS")
         {
             string telefone = null;
