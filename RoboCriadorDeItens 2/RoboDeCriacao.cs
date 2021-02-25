@@ -1,38 +1,30 @@
 ﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
-using System;
-using RoboCriadorDeItens_2.Geradores;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk.Query;
-using Microsoft.Xrm.Sdk.Client;
+using Microsoft.Xrm.Tooling.Connector;
+using RoboCriadorDeItens_2.Geradores;
+using System;
 
 namespace RoboCriadorDeItens_2
 {
     class RoboDeCriacao
     {
         public static int quantidade = 1;
-        static void criacao()
+        internal static void criacao()
         {
             Conexao conexao = new Conexao();
 
             //CRM de Origem
             var serviceProxyOrigem = conexao.ObterConexaoOrigem();
-            var serviceProxyDestino = conexao.ObterConexaoDestino();
 
             //criaContato(serviceProxyOrigem);
 
-            //criaConta(serviceProxyOrigem);
+            criaConta(serviceProxyOrigem);
 
             //criaClientePotencial(serviceProxyOrigem);
 
-            criaOrdem(serviceProxyOrigem);
+            //criaOrdem(serviceProxyOrigem);
 
             //criaListaPrecos(serviceProxyOrigem);
-            var contas = RetornarMultiplo(serviceProxyOrigem);
-            migration(serviceProxyOrigem, serviceProxyDestino, contas);
 
             Console.WriteLine("Criado com Sucesso!");
             Console.ReadLine();
