@@ -14,8 +14,10 @@ namespace RoboCriadorDeItens_2
 {
     class Program
     {
+        public static int quantidade = 500;
         static void Main(string[] args)
         {
+            
             Conexao conexao = new Conexao();
 
             //CRM de Origem
@@ -25,7 +27,7 @@ namespace RoboCriadorDeItens_2
 
             criaConta(serviceProxyOrigem);
 
-            //criaClientePetencial(serviceProxyOrigem);
+            //criaClientePotencial(serviceProxyOrigem);
 
             //criaOrdem(serviceProxyOrigem);
 
@@ -36,7 +38,7 @@ namespace RoboCriadorDeItens_2
         }
         static void criaContato(CrmServiceClient serviceProxy)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < quantidade; i++)
             {
                 var entidade = new Entity("contact");
                 Guid registro = new Guid();
@@ -59,11 +61,13 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
                 registro = serviceProxy.Create(entidade);
+                Console.Clear();
+                Console.WriteLine($"Contato nº: {i}");
             }
         }
         static void criaConta(CrmServiceClient serviceProxy)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < quantidade; i++)
             {
                 var entidade = new Entity("account");
                 Guid registro = new Guid();
@@ -77,16 +81,20 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
 
-                entidade.Attributes.Add("name", GeradorNome_Sobrenome.geradorSobrenome() + " ltda.");
+                string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
+                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
+                entidade.Attributes.Add("name", emailSobrenome + " ltda.");
                 entidade.Attributes.Add("cred2_cnpj", GeradorCPF_CNPJ.geradorCNPJ());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
                 registro = serviceProxy.Create(entidade);
+                Console.Clear();
+                Console.WriteLine($"Conta nº: {i}");
             }
         }
-        static void criaClientePetencial(CrmServiceClient serviceProxy)
+        static void criaClientePotencial(CrmServiceClient serviceProxy)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < quantidade; i++)
             {
                 var entidade = new Entity("lead");
                 Guid registro = new Guid();
@@ -111,12 +119,14 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
                 registro = serviceProxy.Create(entidade);
+                Console.Clear();
+                Console.WriteLine($"Cliente Petencial nº: {i}");
             }
         }
         static void criaOrdem(CrmServiceClient serviceProxy)
         {
             // Lista de Preços(pricelevelid) CAMPO PESQUISAVEL
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < quantidade; i++)
             {
                 var entidade = new Entity("salesorder");
                 Guid registro = new Guid();
@@ -126,11 +136,13 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy)));
 
                 registro = serviceProxy.Create(entidade);
+                Console.Clear();
+                Console.WriteLine($"Ordem nº: {i}");
             }
         }
         static void criaListaPrecos(CrmServiceClient serviceProxy)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < quantidade; i++)
             {
                 var entidade = new Entity("pricelevel");
                 Guid registro = new Guid();
@@ -140,6 +152,8 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
 
                 registro = serviceProxy.Create(entidade);
+                Console.Clear();
+                Console.WriteLine($"Lista Precos nº: {i}");
             }
         }
     }
