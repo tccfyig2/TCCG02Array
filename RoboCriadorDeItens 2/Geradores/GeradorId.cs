@@ -12,8 +12,8 @@ namespace RoboCriadorDeItens_2.Geradores
         protected static List<ListaPersonalizada> IdClientePotencial;
         internal static Guid BuscaId(CrmServiceClient serviceProxy)
         {
-            QueryExpression queryExpression = new QueryExpression("lead");
-            queryExpression.Criteria.AddCondition("leadid", ConditionOperator.NotNull);
+            QueryExpression queryExpression = new QueryExpression("account");
+            queryExpression.Criteria.AddCondition("accountid", ConditionOperator.NotNull);
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = serviceProxy.RetrieveMultiple(queryExpression);
 
@@ -22,9 +22,8 @@ namespace RoboCriadorDeItens_2.Geradores
             {
                 IdClientePotencial.Add(new ListaPersonalizada(item.Id));
             }
-            var f =  IdClientePotencial[rnd.Next(IdClientePotencial.Count)].Id;
-            return f;
-           
+            return IdClientePotencial[rnd.Next(0, IdClientePotencial.Count)].Identidade;
+
         }
 
     }
