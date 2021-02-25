@@ -39,21 +39,6 @@ namespace RoboCriadorDeItens_2
             Console.WriteLine("Fim!");
             Console.ReadLine();
         }
-
-        static EntityCollection RetornaPriceLevelId(CrmServiceClient serviceProxyOrigem)
-        {
-            QueryExpression queryExpression = new QueryExpression("pricelevel");
-
-            queryExpression.Criteria.AddCondition("pricelevelid", ConditionOperator.NotNull);
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-            foreach (var item in colecaoEntidades.Entities)
-            {
-                Console.WriteLine(item["pricelevelid"]);
-            }
-
-            return colecaoEntidades;
-        }
         static void criaContato(CrmServiceClient serviceProxy)
         {
             for (int i = 0; i < 1; i++)
