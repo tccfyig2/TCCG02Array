@@ -14,7 +14,7 @@ namespace RoboCriadorDeItens_2
             {
                 var connectionStringCRM = @"AuthType=OAuth;
                 Username = admin@fyitcc.onmicrosoft.com;
-                Password = Moradela2; SkipDiscovery = True;
+                Password = Mortadela2; SkipDiscovery = True;
                 AppId = 51f81489-12ee-4a9e-aaae-a2591f45987d;
                 RedirectUri = app://58145B91-0C36-4500-8554-080854F2AC97;
                 Url = https://fyitccv1.api.crm.dynamics.com/XRMServices/2011/Organization.svc;";

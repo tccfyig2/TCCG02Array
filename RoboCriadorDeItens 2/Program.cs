@@ -27,13 +27,11 @@ namespace RoboCriadorDeItens_2
 
             //criaClientePetencial(serviceProxyOrigem);
 
-            //criaOrdem(serviceProxyOrigem);
-
-            //criaProduto(serviceProxyOrigem);
+            criaOrdem(serviceProxyOrigem);
 
             //criaListaPrecos(serviceProxyOrigem);
 
-            Console.WriteLine("Fim!");
+            Console.WriteLine("Sucesso!!!");
             Console.ReadLine();
         }
         static void criaContato(CrmServiceClient serviceProxy)
@@ -117,35 +115,14 @@ namespace RoboCriadorDeItens_2
         static void criaOrdem(CrmServiceClient serviceProxy)
         {
             // Lista de Preços(pricelevelid) CAMPO PESQUISAVEL
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 var entidade = new Entity("salesorder");
                 Guid registro = new Guid();
 
                 entidade.Attributes.Add("name", $"Cliente nº: {i}");
-                entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy)));
-                //entidade.Attributes.Add("cred2_codigo", GeradorOrdem.geradorCod());
-                //entidade.Attributes.Add("ordernumber", GeradorOrdem.geradorOrdemNumber());
-
-                registro = serviceProxy.Create(entidade);
-            }
-        }
-
-        static void criaProduto(CrmServiceClient serviceProxy)
-        {
-            // OBG: Nome(name)
-            // ID do produto(productnumber)
-            // Grupo de Unidades(defaultuomscheduleid
-            // Unidade Padrão(defaultuomid)
-            // Oferece Suporte a Decimais(quantitydecimal)
-            // Recomendado: Lista de Preços Padrão(pricelevelid)
-
-            for (int i = 0; i < 1; i++)
-            {
-                var entidade = new Entity("salesorder");
-                Guid registro = new Guid();
-
-                entidade.Attributes.Add("name", $"Cliente nº: {i}");
+                entidade.Attributes.Add("productid", "{4190122b-0477-eb11-a812-000d3a1c6462}");
+                //entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy)));
 
                 registro = serviceProxy.Create(entidade);
             }
@@ -165,6 +142,5 @@ namespace RoboCriadorDeItens_2
                 registro = serviceProxy.Create(entidade);
             }
         }
-
     }
 }
