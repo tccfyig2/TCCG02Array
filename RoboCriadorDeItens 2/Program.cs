@@ -77,7 +77,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
 
-                entidade.Attributes.Add("name" + " ltda.", GeradorNome_Sobrenome.geradorSobrenome());
+                entidade.Attributes.Add("name", GeradorNome_Sobrenome.geradorSobrenome() + " ltda.");
                 entidade.Attributes.Add("cred2_cnpj", GeradorCPF_CNPJ.geradorCNPJ());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
@@ -137,7 +137,6 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("name", $"Produto {i}");
                 entidade.Attributes.Add("begindate", DateTime.Today);
                 entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
-
 
                 registro = serviceProxy.Create(entidade);
             }
