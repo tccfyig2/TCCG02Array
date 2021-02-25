@@ -22,8 +22,9 @@ namespace RoboCriadorDeItens_2
 
             //CRM de Origem
             var serviceProxyOrigem = conexao.ObterConexaoOrigem();
+            var serviceProxyDestino = conexao.ObterConexaoDestino();
 
-            criaContato(serviceProxyOrigem);
+            //criaContato(serviceProxyOrigem);
 
             //criaConta(serviceProxyOrigem);
 
@@ -32,6 +33,8 @@ namespace RoboCriadorDeItens_2
             //criaOrdem(serviceProxyOrigem);
 
             //criaListaPrecos(serviceProxyOrigem);
+            var contas = RetornarMultiplo(serviceProxyOrigem);
+            migration(serviceProxyOrigem, serviceProxyDestino, contas);
 
             Console.WriteLine("Criado com Sucesso!");
             Console.ReadLine();
@@ -155,5 +158,34 @@ namespace RoboCriadorDeItens_2
                 Console.WriteLine($"Lista Precos nº: {i + 1}");
             }
         }
+        static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxyOrigem)
+        {
+            QueryExpression queryExpression = new QueryExpression("account");
+
+            //queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, "teste");
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+            foreach (var item in colecaoEntidades.Entities)
+            {
+                Console.WriteLine(item["name"]);
+            }
+
+            return colecaoEntidades;
+        }
+
+        static void migration (CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
+        { 
+            int i = 0;
+            foreach (var conta in contas.Entities)
+            {
+                var c = new Entity("account");
+                c.Attributes.Add("name", conta["name"].ToString() + i);
+                c.Attributes.Add("name", conta["name"].ToString() + i);
+                c.Attributes.Add("name", conta["name"].ToString() + i);
+                serviceProxyDestino.Create(c);
+                i++;
+            }
+        }
     }
 }
+
