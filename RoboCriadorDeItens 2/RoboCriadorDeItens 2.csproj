@@ -68,7 +68,6 @@
     <Compile Include="Geradores\GeradorId.cs" />
     <Compile Include="Geradores\GeradorNome_Sobrenome.cs" />
     <Compile Include="Geradores\GeradorTelefone_Topico.cs" />
-    <Compile Include="Geradores\ListaPersonalizada.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

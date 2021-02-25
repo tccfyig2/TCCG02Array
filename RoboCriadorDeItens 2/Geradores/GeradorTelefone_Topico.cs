@@ -185,7 +185,7 @@ namespace RoboCriadorDeItens_2.Geradores
                 "Gosta de nossos produtos",
                 "Nova loja aberta este ano - acompanhamento",
                 "Agricultor investidor",
-                "Padeiro contratodo",
+                "Padeiro contratado",
                 "Chef",
                 "Dentista",
                 "Maquinista",

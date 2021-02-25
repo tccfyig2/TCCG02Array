@@ -23,11 +23,11 @@ namespace RoboCriadorDeItens_2
 
             //criaContato(serviceProxyOrigem);
 
-            //criaConta(serviceProxyOrigem);
+            criaConta(serviceProxyOrigem);
 
             //criaClientePetencial(serviceProxyOrigem);
 
-            criaOrdem(serviceProxyOrigem);
+            //criaOrdem(serviceProxyOrigem);
 
             //criaListaPrecos(serviceProxyOrigem);
 
@@ -36,7 +36,7 @@ namespace RoboCriadorDeItens_2
         }
         static void criaContato(CrmServiceClient serviceProxy)
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var entidade = new Entity("contact");
                 Guid registro = new Guid();
@@ -63,7 +63,7 @@ namespace RoboCriadorDeItens_2
         }
         static void criaConta(CrmServiceClient serviceProxy)
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var entidade = new Entity("account");
                 Guid registro = new Guid();
@@ -86,7 +86,7 @@ namespace RoboCriadorDeItens_2
         }
         static void criaClientePetencial(CrmServiceClient serviceProxy)
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 10; i++)
             {
                 var entidade = new Entity("lead");
                 Guid registro = new Guid();
@@ -103,8 +103,9 @@ namespace RoboCriadorDeItens_2
                 string emailNome = (GeradorNome_Sobrenome.geradorNome());
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
                 entidade.Attributes.Add("firstname", emailNome);
-                entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
-                entidade.Attributes.Add("companyname", GeradorNome_Sobrenome.geradorSobrenome() + " ltda.");
+                string sobrenomeEmpresa = (GeradorNome_Sobrenome.geradorSobrenome());
+                entidade.Attributes.Add("lastname", sobrenomeEmpresa);
+                entidade.Attributes.Add("companyname", sobrenomeEmpresa + " ltda.");
                 entidade.Attributes.Add("subject", GeradorTelefone_Topico.geredorTopico());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));

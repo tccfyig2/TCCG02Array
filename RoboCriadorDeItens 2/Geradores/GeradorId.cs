@@ -17,7 +17,7 @@ namespace RoboCriadorDeItens_2.Geradores
             this.Id = id;
         }
     }
-    class GeradorId : ListaId
+    class GeradorId : listaId
     {
         protected static Random rnd = new Random();
         protected static List<listaId> accountId = new List<listaId>();
