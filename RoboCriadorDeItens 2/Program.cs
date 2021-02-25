@@ -27,15 +27,12 @@ namespace RoboCriadorDeItens_2
 
             //criaClientePetencial(serviceProxyOrigem);
 
-            criaOrdem(serviceProxyOrigem);
+            //criaOrdem(serviceProxyOrigem);
 
             //criaProduto(serviceProxyOrigem);
 
-            //RetornaPriceLevelId(serviceProxyOrigem);
-
             //criaListaPrecos(serviceProxyOrigem);
 
-            //RetornaLeadId(serviceProxyOrigem);
             Console.WriteLine("Fim!");
             Console.ReadLine();
         }
