@@ -14,7 +14,7 @@ using Microsoft.Xrm.Sdk.Client;
         class RoboDeImportacao
     {
             public static int quantidade = 10;
-            static void import(string[] args)
+            static void import()
             {
 
                 Conexao conexao = new Conexao();
@@ -53,8 +53,8 @@ using Microsoft.Xrm.Sdk.Client;
                 {
                     var c = new Entity("account");
                     c.Attributes.Add("name", conta["name"].ToString() + i);
-                    c.Attributes.Add("name", conta["name"].ToString() + i);
-                    c.Attributes.Add("name", conta["name"].ToString() + i);
+                    c.Attributes.Add("crb79_cnpj", conta["cred2_cnpj"].ToString() + i);
+                    c.Attributes.Add("telephone1", conta["telephone1"].ToString() + i);
                     serviceProxyDestino.Create(c);
                     i++;
                 }
