@@ -35,8 +35,8 @@ namespace RoboCriadorDeItens_2.Geradores
                 "35164241", "77825786", "49080641", "79015410", "72220049", "77015516", "68908300", "69316051", "33125160", "58082008",
                 "69086180", "41253070", "77445070", "69088200", "53550510", "57017195", "37060700", "69314398", "78117352", "84050110"
             };
-            int IndexArray = rnd.Next(arrayCEP.Length);
-            string cep = arrayCEP[IndexArray];
+            int index = rnd.Next(arrayCEP.Length);
+            string cep = arrayCEP[index];
 
             try
             {
@@ -57,6 +57,5 @@ namespace RoboCriadorDeItens_2.Geradores
                 throw;
             }
         }
-
     }
 }
