@@ -9,27 +9,25 @@ using System.Threading.Tasks;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Client;
 
-
 namespace RoboCriadorDeItens_2
 {
     class Program
     {
-        public static int quantidade = 10;
+        public static int quantidade = 1;
         static void Main(string[] args)
         {
-
             Conexao conexao = new Conexao();
 
             //CRM de Origem
             var serviceProxyOrigem = conexao.ObterConexaoOrigem();
 
-            criaContato(serviceProxyOrigem);
+            //criaContato(serviceProxyOrigem);
 
             //criaConta(serviceProxyOrigem);
 
             //criaClientePotencial(serviceProxyOrigem);
 
-            //criaOrdem(serviceProxyOrigem);
+            criaOrdem(serviceProxyOrigem);
 
             //criaListaPrecos(serviceProxyOrigem);
 
@@ -131,12 +129,29 @@ namespace RoboCriadorDeItens_2
                 Guid registro = new Guid();
 
                 entidade.Attributes.Add("name", $"Cliente nº: {i + 1}");
-                //entidade.Attributes.Add("productid", "{4190122b-0477-eb11-a812-000d3a1c6462}");
                 entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy, tabela: "account", campo: "accountid")));
 
                 registro = serviceProxy.Create(entidade);
+
+                produtoOrdem(serviceProxy, registro);
                 Console.Clear();
                 Console.WriteLine($"Ordem nº: {i}");
+            }
+        }
+        static void produtoOrdem(CrmServiceClient serviceProxy, Guid registroOrdem)
+        {
+            for (int i = 0; i < quantidade; i++)
+            {
+                var entidade = new Entity("salesorderdetail");
+                Guid registro = new Guid();
+                Guid prduct = new Guid("4190122b-0477-eb11-a812-000d3a1c6462");
+                Guid uomid = new Guid("5f753633-aa6e-eb11-b0b2-000d3a55dda2");
+
+                entidade.Attributes.Add("productid", new EntityReference("product", prduct));
+                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", registroOrdem));
+                entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
+
+                registro = serviceProxy.Create(entidade);
             }
         }
         static void criaListaPrecos(CrmServiceClient serviceProxy)
