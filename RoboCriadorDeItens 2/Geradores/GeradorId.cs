@@ -6,10 +6,21 @@ using System.Collections.Generic;
 
 namespace RoboCriadorDeItens_2.Geradores
 {
-    class GeradorId : ListaPersonalizada
+    public class listaId
+    {
+        public listaId() { }
+
+        public Guid Id { get; set; }
+
+        public listaId(Guid id)
+        {
+            this.Id = id;
+        }
+    }
+    class GeradorId : ListaId
     {
         protected static Random rnd = new Random();
-        protected static List<ListaPersonalizada> IdClientePotencial;
+        protected static List<listaId> accountId = new List<listaId>();
         internal static Guid BuscaId(CrmServiceClient serviceProxy)
         {
             QueryExpression queryExpression = new QueryExpression("account");
@@ -17,14 +28,12 @@ namespace RoboCriadorDeItens_2.Geradores
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = serviceProxy.RetrieveMultiple(queryExpression);
 
-            IdClientePotencial = new List<ListaPersonalizada>();
             foreach (var item in colecaoEntidades.Entities)
             {
-                IdClientePotencial.Add(new ListaPersonalizada(item.Id));
+                accountId.Add(new listaId(item.Id));
             }
-            return IdClientePotencial[rnd.Next(0, IdClientePotencial.Count)].Identidade;
-
+            int index = rnd.Next(0, accountId.Count);
+            return accountId[index].Id;
         }
-
     }
 }
