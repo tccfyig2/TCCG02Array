@@ -11,7 +11,7 @@ namespace RoboCriadorDeItens_2.Geradores
         protected static Random rnd = new Random();
         internal static string geradorNome()
         {
-            string[] Homem = //100
+            string[] homem = //100
             {
                 "Rafael", "Bruno", "André", "Luiz", "Tiago", "Felipe", "Guilherme", "Daniel", "Lucas", "Rodrigo",
                 "Fernando", "João", "Pedro", "Fábio", "Marcelo", "Victor", "Eduardo", "Gustavo", "Gabriel", "Paulo",
@@ -24,7 +24,7 @@ namespace RoboCriadorDeItens_2.Geradores
                 "Jefferson", "Celso", "Ronaldo", "Robson", "Mauro", "Fabiano", "Alberto", "Heitor", "Rubens", "Thomas",
                 "Alessandro", "Emerson", "Cristiano", "Everton", "Jonas", "Breno", "Cássio", "Wellington", "Thales", "Evandro"
             };
-            string[] Mulher = //203
+            string[] mulher = //203
             {
                 "Adriana", "Alessandra", "Alice", "Aline", "Alinne", "Amanda", "Ana", "Anna", "Andrea", "Andreia", "Andressa",
                 "Ariane", "Beariz", "Bianca", "Bruna", "Bárbara", "Camila", "Carla", "Carolina", "Caroline", "Cecília",
@@ -41,20 +41,20 @@ namespace RoboCriadorDeItens_2.Geradores
             int sexo = rnd.Next(0, 2);
             if (sexo == 0)
             {
-                int IndexArray = rnd.Next(Homem.Length);
-                return Homem[IndexArray];
+                int index = rnd.Next(homem.Length);
+                return homem[index];
             }
             else
             {
-                int IndexArray = rnd.Next(Mulher.Length);
-                return Mulher[IndexArray];
+                int index = rnd.Next(mulher.Length);
+                return mulher[index];
             }
 
         }
         internal static string geradorSobrenome()
         {
 
-            string[] Sobrenome = //65
+            string[] sobrenome = //65
             {
                 "Aguiar", "Aires", "Alencar", "Almeida", "Alves", "Amorim", "Antunes", "Araújo", "Azevedo", "Barbosa", "Barreto",
                 "Barros", "Borges", "Brito", "Cabral", "Campelo", "Cardoso", "Carvalho", "Castro", "Cavalcante", "Correia",
@@ -64,8 +64,8 @@ namespace RoboCriadorDeItens_2.Geradores
                 "Paiva", "Pereira", "Pinto", "Queiroz", "Ramos", "Ribeiro", "Rocha", "Rodrigues", "Santos", "Saraiva",
                 "Silva", "Soares", "Souza", "Xavier"
             };
-            int IndexArray = rnd.Next(Sobrenome.Length);
-            return Sobrenome[IndexArray];
+            int index = rnd.Next(sobrenome.Length);
+            return Sobrenome[index];
         }
     }
 }
