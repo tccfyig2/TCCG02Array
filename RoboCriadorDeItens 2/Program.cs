@@ -12,14 +12,14 @@ using Microsoft.Xrm.Sdk.Client;
 
 namespace RoboCriadorDeItens_2
 {
-    class Program : ListaPersonalizada
+    class Program
     {
         static void Main(string[] args)
         {
             Conexao conexao = new Conexao();
 
             //CRM de Origem
-            var serviceProxyOrigem = conexao.Obter();
+            var serviceProxyOrigem = conexao.ObterConexaoOrigem();
 
             //criaContato(serviceProxyOrigem);
 
