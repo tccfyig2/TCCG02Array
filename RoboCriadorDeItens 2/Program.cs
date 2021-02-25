@@ -14,18 +14,18 @@ namespace RoboCriadorDeItens_2
 {
     class Program
     {
-        public static int quantidade = 500;
+        public static int quantidade = 10;
         static void Main(string[] args)
         {
-            
+
             Conexao conexao = new Conexao();
 
             //CRM de Origem
             var serviceProxyOrigem = conexao.ObterConexaoOrigem();
 
-            //criaContato(serviceProxyOrigem);
+            criaContato(serviceProxyOrigem);
 
-            criaConta(serviceProxyOrigem);
+            //criaConta(serviceProxyOrigem);
 
             //criaClientePotencial(serviceProxyOrigem);
 
@@ -33,7 +33,7 @@ namespace RoboCriadorDeItens_2
 
             //criaListaPrecos(serviceProxyOrigem);
 
-            Console.WriteLine("Sucesso!!!");
+            Console.WriteLine("Criado com Sucesso!");
             Console.ReadLine();
         }
         static void criaContato(CrmServiceClient serviceProxy)
@@ -52,9 +52,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
 
-                string emailNome = (GeradorNome_Sobrenome.geradorNome());
-                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
-                entidade.Attributes.Add("firstname", emailNome);
+                entidade.Attributes.Add("firstname", GeradorNome_Sobrenome.geradorNome());
                 entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
                 entidade.Attributes.Add("cred2_cpf", GeradorCPF_CNPJ.geradorCPF());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
@@ -62,7 +60,7 @@ namespace RoboCriadorDeItens_2
 
                 registro = serviceProxy.Create(entidade);
                 Console.Clear();
-                Console.WriteLine($"Contato nº: {i}");
+                Console.WriteLine($"Contato nº: {i + 1}");
             }
         }
         static void criaConta(CrmServiceClient serviceProxy)
@@ -81,6 +79,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
 
+                entidade.Attributes.Add("primarycontactid", new EntityReference("contact", GeradorId.BuscaId(serviceProxy, tabela: "contact", campo: "contactid")));
                 string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
                 entidade.Attributes.Add("name", emailSobrenome + " ltda.");
@@ -89,7 +88,7 @@ namespace RoboCriadorDeItens_2
 
                 registro = serviceProxy.Create(entidade);
                 Console.Clear();
-                Console.WriteLine($"Conta nº: {i}");
+                Console.WriteLine($"Conta nº: {i + 1}");
             }
         }
         static void criaClientePotencial(CrmServiceClient serviceProxy)
@@ -120,7 +119,7 @@ namespace RoboCriadorDeItens_2
 
                 registro = serviceProxy.Create(entidade);
                 Console.Clear();
-                Console.WriteLine($"Cliente Petencial nº: {i}");
+                Console.WriteLine($"Cliente Petencial nº: {i + 1}");
             }
         }
         static void criaOrdem(CrmServiceClient serviceProxy)
@@ -131,9 +130,9 @@ namespace RoboCriadorDeItens_2
                 var entidade = new Entity("salesorder");
                 Guid registro = new Guid();
 
-                entidade.Attributes.Add("name", $"Cliente nº: {i}");
+                entidade.Attributes.Add("name", $"Cliente nº: {i + 1}");
                 //entidade.Attributes.Add("productid", "{4190122b-0477-eb11-a812-000d3a1c6462}");
-                entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy)));
+                entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy, tabela: "account", campo: "accountid")));
 
                 registro = serviceProxy.Create(entidade);
                 Console.Clear();
@@ -147,13 +146,13 @@ namespace RoboCriadorDeItens_2
                 var entidade = new Entity("pricelevel");
                 Guid registro = new Guid();
 
-                entidade.Attributes.Add("name", $"Produto {i}");
+                entidade.Attributes.Add("name", $"Produto {i + 1}");
                 entidade.Attributes.Add("begindate", DateTime.Today);
                 entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
 
                 registro = serviceProxy.Create(entidade);
                 Console.Clear();
-                Console.WriteLine($"Lista Precos nº: {i}");
+                Console.WriteLine($"Lista Precos nº: {i + 1}");
             }
         }
     }

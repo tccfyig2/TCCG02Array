@@ -21,10 +21,14 @@ namespace RoboCriadorDeItens_2.Geradores
     {
         protected static Random rnd = new Random();
         protected static List<listaId> accountId = new List<listaId>();
-        internal static Guid BuscaId(CrmServiceClient serviceProxy)
+        internal static Guid BuscaId(
+            CrmServiceClient serviceProxy,
+            string tabela,
+            string campo
+            )
         {
-            QueryExpression queryExpression = new QueryExpression("account");
-            queryExpression.Criteria.AddCondition("accountid", ConditionOperator.NotNull);
+            QueryExpression queryExpression = new QueryExpression(tabela);
+            queryExpression.Criteria.AddCondition(campo, ConditionOperator.NotNull);
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = serviceProxy.RetrieveMultiple(queryExpression);
 
