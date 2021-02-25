@@ -121,8 +121,8 @@ namespace RoboCriadorDeItens_2
                 Guid registro = new Guid();
 
                 entidade.Attributes.Add("name", $"Cliente nº: {i}");
-                entidade.Attributes.Add("productid", "{4190122b-0477-eb11-a812-000d3a1c6462}");
-                //entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy)));
+                //entidade.Attributes.Add("productid", "{4190122b-0477-eb11-a812-000d3a1c6462}");
+                entidade.Attributes.Add("customerid", new EntityReference("account", GeradorId.BuscaId(serviceProxy)));
 
                 registro = serviceProxy.Create(entidade);
             }
