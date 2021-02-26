@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
+using RoboCriadorDeItens_2.Geradores;
 using System;
 
 namespace RoboCriadorDeItens_2
@@ -10,31 +11,29 @@ namespace RoboCriadorDeItens_2
         {
             try
             {
-                Conexao conexao = new Conexao();
-
-                var serviceProxyOrigem = conexao.ObterConexaoCobaia();
-
-                IOrganizationService service;
-                service = (IOrganizationService)serviceProxyOrigem.OrganizationWebProxyClient != null ? (IOrganizationService)serviceProxyOrigem.OrganizationWebProxyClient : (IOrganizationService)serviceProxyOrigem.OrganizationServiceProxy;
-
-                var request = new ExecuteMultipleRequest()
+                for (int i = 0; i < 20; i++)
                 {
-                    Requests = new OrganizationRequestCollection(),
-                    Settings = new ExecuteMultipleSettings
-                    {
-                        ContinueOnError = false,
-                        ReturnResponses = true
-                    }
-                };
+                    var entidade = new Entity("contact");
 
-                for (int i = 0; i < 5; i++)
-                {
-                    Entity tabela = new Entity("account");
-                    tabela["name"] = "Bob " + i.ToString();
+                    string[] endereco = (GeradorEndereco.geradorEndereco());
+                    entidade.Attributes.Add("address1_postalcode", endereco[0]);
+                    entidade.Attributes.Add("address1_line1", endereco[1]);
+                    entidade.Attributes.Add("address1_line2", endereco[2]);
+                    entidade.Attributes.Add("address1_line3", endereco[3]);
+                    entidade.Attributes.Add("address1_city", endereco[4]);
+                    entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
+                    entidade.Attributes.Add("address1_country", "Brasil");
+
+                    string emailNome = GeradorNome_Sobrenome.geradorSobrenome();
+                    entidade.Attributes.Add("firstname", emailNome);
+                    entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
+                    entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
+                    entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.geradorCPF()); // cred2_cpf = Apresentação// crb79_cpf = Cobaia
+                    entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
                     var createRequest = new CreateRequest()
                     {
-                        Target = tabela
+                        Target = entidade
                     };
                     request.Requests.Add(createRequest);
                 }
@@ -50,8 +49,6 @@ namespace RoboCriadorDeItens_2
                     else if (r.Fault != null)
                         Console.WriteLine(r.Fault);
                 }
-
-                Console.ReadLine();
             }
             catch (Exception ex)
             {

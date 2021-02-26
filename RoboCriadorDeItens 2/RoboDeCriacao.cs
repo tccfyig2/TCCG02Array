@@ -16,6 +16,8 @@ namespace RoboCriadorDeItens_2
             //CRM de Origem
             var serviceProxyOrigem = conexao.ObterConexaoCobaia();
 
+
+
             //criaContato(serviceProxyOrigem);
 
             criaConta(serviceProxyOrigem);
