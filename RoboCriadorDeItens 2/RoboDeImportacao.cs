@@ -48,7 +48,6 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_country", "Brasil");
                     entidade.Attributes.Add("primarycontactid", new EntityReference("contact", (Guid) conta["contactId"]));
 
-
                 serviceProxyDestino.Create(entidade);
                     i++;
                 }
@@ -72,7 +71,6 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
                     
-
                     serviceProxyDestino.Create(entidade);
                     i++;
                 }

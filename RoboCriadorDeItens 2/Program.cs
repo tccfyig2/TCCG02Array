@@ -6,8 +6,7 @@ namespace RoboCriadorDeItens_2
     {
         static void Main(string[] args)
         {
-            Pacotao.pacote();
-            //RoboDeCriacao.criacao();
+            RoboDeCriacao.criacao();
             Console.WriteLine("Sucesso!!!");
             Console.ReadLine();
         }
