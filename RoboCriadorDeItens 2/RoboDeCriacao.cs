@@ -7,7 +7,7 @@ namespace RoboCriadorDeItens_2
 {
     class RoboDeCriacao
     {
-        public static int quantidade = 1;
+        public static int quantidade = 500;
         internal static void criacao()
         {
             Conexao conexao = new Conexao();
@@ -114,7 +114,6 @@ namespace RoboCriadorDeItens_2
         }
         static void criaOrdem(CrmServiceClient serviceProxy)
         {
-            // Lista de Preços(pricelevelid) CAMPO PESQUISAVEL
             for (int i = 0; i < quantidade; i++)
             {
                 var entidade = new Entity("salesorder");
@@ -127,7 +126,7 @@ namespace RoboCriadorDeItens_2
 
                 produtoOrdem(serviceProxy, registro);
                 Console.Clear();
-                Console.WriteLine($"Ordem nº: {i}");
+                Console.WriteLine($"Ordem nº: {i + 1}");
             }
         }
         static void produtoOrdem(CrmServiceClient serviceProxy, Guid registroOrdem)
