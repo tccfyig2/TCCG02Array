@@ -19,9 +19,8 @@ namespace RoboCriadorDeItens_2.Geradores
     }
     class GeradorId : listaId
     {
-        protected static Random rnd = new Random();
         protected static List<listaId> accountId = new List<listaId>();
-        internal static Guid BuscaId(
+        internal static List<listaId> BuscaId(
             CrmServiceClient serviceProxy,
             string tabela,
             string campo
@@ -36,8 +35,7 @@ namespace RoboCriadorDeItens_2.Geradores
             {
                 accountId.Add(new listaId(item.Id));
             }
-            int index = rnd.Next(0, accountId.Count);
-            return accountId[index].Id;
+            return accountId;
         }
     }
 }
