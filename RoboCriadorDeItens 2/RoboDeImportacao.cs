@@ -20,9 +20,9 @@ using Microsoft.Xrm.Sdk.Client;
                 Conexao conexao = new Conexao();
 
                 //CRM de Origem
-                var serviceProxyOrigem = conexao.ObterConexaoOrigem();
+                var serviceProxyOrigem = conexao.ObterConexaoApresentacao();
                 
-                var serviceProxyDestino = conexao.ObterConexaoDestino();
+                var serviceProxyDestino = conexao.ObterConexaoCobaia();
 
                 var contas = RetornarMultiplo(serviceProxyOrigem);
                 migration(serviceProxyOrigem, serviceProxyDestino, contas);
