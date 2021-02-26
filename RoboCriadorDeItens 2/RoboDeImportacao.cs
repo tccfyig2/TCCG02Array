@@ -13,24 +13,7 @@ using Microsoft.Xrm.Sdk.Client;
     {
         class RoboDeImportacao
     {
-            public static int quantidade = 10;
-            static void import()
-            {
-
-                Conexao conexao = new Conexao();
-
-                //CRM de Origem
-                var serviceProxyOrigem = conexao.ObterConexaoApresentacao();
-                
-                var serviceProxyDestino = conexao.ObterConexaoCobaia();
-
-                var contas = RetornarMultiplo(serviceProxyOrigem);
-                migration(serviceProxyOrigem, serviceProxyDestino, contas);
-
-                Console.WriteLine("Criado com Sucesso!");
-                Console.ReadLine();
-            }
-            
+ 
             static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxyOrigem)
             {
                 QueryExpression queryExpression = new QueryExpression("account");
@@ -46,19 +29,54 @@ using Microsoft.Xrm.Sdk.Client;
                 return colecaoEntidades;
             }
 
-            static void migration(CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
+            static void ImportaConta(CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
             {
                 int i = 0;
                 foreach (var conta in contas.Entities)
                 {
-                    var c = new Entity("account");
-                    c.Attributes.Add("name", conta["name"].ToString() + i);
-                    c.Attributes.Add("crb79_cnpj", conta["cred2_cnpj"].ToString() + i);
-                    c.Attributes.Add("telephone1", conta["telephone1"].ToString() + i);
-                    serviceProxyDestino.Create(c);
+                    var entidade = new Entity("account");
+                    entidade.Attributes.Add("name", conta["name"].ToString());
+                    entidade.Attributes.Add("crb79_cnpj", conta["cred2_cnpj"].ToString());
+                    entidade.Attributes.Add("telephone1", conta["telephone1"].ToString());
+                    entidade.Attributes.Add("emailaddress1", conta["address1_postalcode"].ToString());
+                    entidade.Attributes.Add("address1_postalcode", conta["address1_postalcode"].ToString());
+                    entidade.Attributes.Add("address1_line1", conta["address1_line1"].ToString());
+                    entidade.Attributes.Add("address1_line2", conta["address1_line2"].ToString());
+                    entidade.Attributes.Add("address1_line3", conta["address1_line3"].ToString());
+                    entidade.Attributes.Add("address1_city", conta["address1_city"].ToString());
+                    entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
+                    entidade.Attributes.Add("address1_country", "Brasil");
+                    entidade.Attributes.Add("primarycontactid", new EntityReference("contact", (Guid) conta["contactId"]));
+
+
+                serviceProxyDestino.Create(entidade);
                     i++;
                 }
             }
-        }
+            static void ImportaContato(CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
+            {
+                int i = 0;
+                foreach (var conta in contas.Entities)
+                {
+                    var entidade = new Entity("contact");
+                    entidade.Attributes.Add("firstname", conta["firstname"].ToString());
+                    entidade.Attributes.Add("lastname", conta["lastname"].ToString());
+                    entidade.Attributes.Add("crb79_cpf", conta["crb79_cpf"].ToString());
+                    entidade.Attributes.Add("mobilephone", conta["mobilephone"].ToString());
+                    entidade.Attributes.Add("emailaddress1", conta["address1_postalcode"].ToString());
+                    entidade.Attributes.Add("address1_postalcode", conta["address1_postalcode"].ToString());
+                    entidade.Attributes.Add("address1_line1", conta["address1_line1"].ToString());
+                    entidade.Attributes.Add("address1_line2", conta["address1_line2"].ToString());
+                    entidade.Attributes.Add("address1_line3", conta["address1_line3"].ToString());
+                    entidade.Attributes.Add("address1_city", conta["address1_city"].ToString());
+                    entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
+                    entidade.Attributes.Add("address1_country", "Brasil");
+                    
+
+                    serviceProxyDestino.Create(entidade);
+                    i++;
+                }
+            }
+    }
     }
 
