@@ -9,7 +9,6 @@ namespace Plugin
         public void Execute(IServiceProvider serviceProvider)
         {
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
-            ITracingService tracingService = (ITracingService)serviceProvider.GetService(typeof(ITracingService));
 
             IOrganizationServiceFactory servicefactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = servicefactory.CreateOrganizationService(context.UserId);
@@ -43,11 +42,8 @@ namespace Plugin
                         {
                             QueryExpression contactQuery = new QueryExpression("contact");
                             contactQuery.ColumnSet = new ColumnSet(campo);
-                            // Se conter cnpj, adicione cnpj em contactQuery.
                             contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cpf);
-                            // Transforma contactQuery em uma entidade.
                             EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
-                            // contactColl não deve conter nada.
 
                             if (contactColl.Entities.Count > 0)
                                 throw new InvalidPluginExecutionException("CPF já cadastrado!");
