@@ -1,9 +1,5 @@
-﻿using System;
-using DotCEP;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DotCEP;
+using System;
 
 namespace RoboCriadorDeItens_2.Geradores
 {
