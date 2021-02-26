@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.Geradores;
 using System;
@@ -14,7 +13,7 @@ namespace RoboCriadorDeItens_2
             Conexao conexao = new Conexao();
 
             //CRM de Origem
-            var serviceProxyOrigem = conexao.ObterConexaoOrigem();
+            var serviceProxyOrigem = conexao.ObterConexaoCobaia();
 
             //criaContato(serviceProxyOrigem);
 
@@ -26,8 +25,6 @@ namespace RoboCriadorDeItens_2
 
             //criaListaPrecos(serviceProxyOrigem);
 
-            Console.WriteLine("Criado com Sucesso!");
-            Console.ReadLine();
         }
         static void criaContato(CrmServiceClient serviceProxy)
         {
@@ -47,7 +44,7 @@ namespace RoboCriadorDeItens_2
 
                 entidade.Attributes.Add("firstname", GeradorNome_Sobrenome.geradorNome());
                 entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
-                entidade.Attributes.Add("cred2_cpf", GeradorCPF_CNPJ.geradorCPF());
+                entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.geradorCPF());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
@@ -76,7 +73,7 @@ namespace RoboCriadorDeItens_2
                 string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
                 entidade.Attributes.Add("name", emailSobrenome + " ltda.");
-                entidade.Attributes.Add("cred2_cnpj", GeradorCPF_CNPJ.geradorCNPJ());
+                entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.geradorCNPJ());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
                 registro = serviceProxy.Create(entidade);
@@ -163,34 +160,6 @@ namespace RoboCriadorDeItens_2
                 registro = serviceProxy.Create(entidade);
                 Console.Clear();
                 Console.WriteLine($"Lista Precos nº: {i + 1}");
-            }
-        }
-        static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxyOrigem)
-        {
-            QueryExpression queryExpression = new QueryExpression("account");
-
-            //queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, "teste");
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-            foreach (var item in colecaoEntidades.Entities)
-            {
-                Console.WriteLine(item["name"]);
-            }
-
-            return colecaoEntidades;
-        }
-
-        static void migration(CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
-        {
-            int i = 0;
-            foreach (var conta in contas.Entities)
-            {
-                var c = new Entity("account");
-                c.Attributes.Add("name", conta["name"].ToString() + i);
-                c.Attributes.Add("name", conta["name"].ToString() + i);
-                c.Attributes.Add("name", conta["name"].ToString() + i);
-                serviceProxyDestino.Create(c);
-                i++;
             }
         }
     }
