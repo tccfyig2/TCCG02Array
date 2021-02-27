@@ -1,19 +1,25 @@
 function CNPJ_Validacao_Duplicados(executionContext) {
-  const cnpjCampo = executionContext.getFormContext().getAttribute("cred2_cnpj");
+  const cnpjCampo = executionContext.getFormContext().getAttribute("cred2_security");
+  const verificado = executionContext.getFormContext().getAttribute("cred2_verificado");
+  verificado.setValue(null);
   if (cnpjCampo.getValue() == null) {
     return;
   }
   else if (validacao_CNPJ(cnpjCampo.getValue())) {
     Xrm.WebApi.online.retrieveMultipleRecords("account", "?$select=" + "cred2_cnpj").then(
       function success(results) {
+        let security = true;
         for (let i = 0; i < results.entities.length; i++) {
           const cnpjBanco = results.entities[i]["cred2_cnpj"];
-  
           if (cnpjBanco == Xrm.Page.getAttribute("cred2_cnpj").getValue()) {
+            security = false;
             cnpjCampo.setValue("");
             Xrm.Navigation.openAlertDialog("CNPJ já cadastrado!");
             return;
           }
+        }
+        if (security == true) {
+          verificado.setValue("true");
         }
       },
       function (error) {
