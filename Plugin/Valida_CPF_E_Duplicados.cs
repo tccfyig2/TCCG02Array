@@ -1,4 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 
@@ -9,52 +9,48 @@ namespace Plugin
         public void Execute(IServiceProvider serviceProvider)
         {
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
-
             IOrganizationServiceFactory servicefactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = servicefactory.CreateOrganizationService(context.UserId);
-
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
             {
                 Entity entity = (Entity)context.InputParameters["Target"];
-
-                if (entity.LogicalName != "contact")
-                {
-                    return;
-                }
-
-                // Evita loop
                 if (context.Depth > 1)
                 {
                     return;
                 }
-
-                try
+                if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
                 {
-                    string campo = "cred2_cpf";
-                    if (!entity.Attributes.Contains(campo))
-                        throw new InvalidPluginExecutionException("CPF é obigatório!");
-
-                    if (entity.Attributes.Contains(campo))
+                    try
                     {
-                        string cpf = entity.GetAttributeValue<string>(campo).ToString();
-
-                        if (validacaoCPF(cpf))
+                        string campo = "cred2_cpf";
+                        if (!entity.Attributes.Contains(campo))
                         {
-                            QueryExpression contactQuery = new QueryExpression("contact");
-                            contactQuery.ColumnSet = new ColumnSet(campo);
-                            contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cpf);
-                            EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
-
-                            if (contactColl.Entities.Count > 0)
-                                throw new InvalidPluginExecutionException("CPF já cadastrado!");
+                            throw new InvalidPluginExecutionException("CPF é obigatório!");
                         }
                         else
-                            throw new InvalidPluginExecutionException("CPF é Inválido!");
+                        {
+                            string cpf = entity.GetAttributeValue<string>(campo).ToString();
+                            if (validacaoCPF(cpf))
+                            {
+                                QueryExpression contactQuery = new QueryExpression("contact");
+                                contactQuery.ColumnSet = new ColumnSet(campo);
+                                contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cpf);
+                                EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
+                                if (contactColl.Entities.Count > 0)
+                                {
+                                    throw new InvalidPluginExecutionException("CPF já cadastrado!");
+                                }
+                            }
+                            else
+                            {
+                                throw new InvalidPluginExecutionException("CPF é Inválido!");
+                            }
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    throw (ex);
+                    catch (Exception ex)
+                    {
+                        throw (ex);
+                    }
                 }
             }
         }
