@@ -1,18 +1,25 @@
 function CPF_Validacao_Duplicados(executionContext) {
   const cpfCampo = executionContext.getFormContext().getAttribute("cred2_cpf");
+  const verificado = executionContext.getFormContext().getAttribute("cred2_verificado");
+  verificado.setValue(null);
   if (cpfCampo.getValue() == null) {
     return;
   }
   else if(validacao_CPF(cpfCampo.getValue())) {
     Xrm.WebApi.online.retrieveMultipleRecords("contact", "?$select=" + "cred2_cpf").then(
       function success(results) {
+        let security = true;
         for (let i = 0; i < results.entities.length; i++) {
           const cpfBanco = results.entities[i]["cred2_cpf"];
   
           if (cpfBanco == cpfCampo.getValue()) {
+            security = false;
             cpfCampo.setValue("");
             Xrm.Navigation.openAlertDialog("CPF já cadastrado!");
             return;
+          }
+          if (security == true) {
+            verificado.setValue("true");
           }
         }
       },
