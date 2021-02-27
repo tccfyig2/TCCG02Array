@@ -1,5 +1,5 @@
 function CNPJ_Validacao_Duplicados(executionContext) {
-  const cnpjCampo = executionContext.getFormContext().getAttribute("cred2_security");
+  const cnpjCampo = executionContext.getFormContext().getAttribute("cred2_cnpj");
   const verificado = executionContext.getFormContext().getAttribute("cred2_verificado");
   verificado.setValue(null);
   if (cnpjCampo.getValue() == null) {
@@ -11,7 +11,8 @@ function CNPJ_Validacao_Duplicados(executionContext) {
         let security = true;
         for (let i = 0; i < results.entities.length; i++) {
           const cnpjBanco = results.entities[i]["cred2_cnpj"];
-          if (cnpjBanco == Xrm.Page.getAttribute("cred2_cnpj").getValue()) {
+          
+          if (cnpjBanco == cnpjCampo.getValue()) {
             security = false;
             cnpjCampo.setValue("");
             Xrm.Navigation.openAlertDialog("CNPJ já cadastrado!");
