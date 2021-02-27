@@ -1,4 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 
@@ -9,52 +9,48 @@ namespace Plugin
         public void Execute(IServiceProvider serviceProvider)
         {
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
-
             IOrganizationServiceFactory servicefactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = servicefactory.CreateOrganizationService(context.UserId);
-
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
             {
                 Entity entity = (Entity)context.InputParameters["Target"];
-
-                if (entity.LogicalName != "account")
-                {
-                    return;
-                }
-
-                // Evita loop
                 if (context.Depth > 1)
                 {
                     return;
                 }
-
-                try
+                if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
                 {
-                    string campo = "cred2_cnpj";
-                    if (!entity.Attributes.Contains(campo))
-                        throw new InvalidPluginExecutionException("CNPJ é obigatório!");
-
-                    if (entity.Attributes.Contains(campo))
+                    try
                     {
-                        string cnpj = entity.GetAttributeValue<string>(campo).ToString();
-                        if (validacaoCNPJ(cnpj))
+                        string campo = "cred2_cnpj";
+                        if (!entity.Attributes.Contains(campo))
                         {
-                            QueryExpression contactQuery = new QueryExpression("account");
-                            contactQuery.ColumnSet = new ColumnSet(campo);
-                            contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cnpj);
-                            EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
-
-                            if (contactColl.Entities.Count > 0)
-                                throw new InvalidPluginExecutionException("CNPJ já cadastrado!");
+                            throw new InvalidPluginExecutionException("CNPJ é obigatório!");
                         }
                         else
-                            throw new InvalidPluginExecutionException("CNPJ é Inválido!");
+                        {
+                            string cnpj = entity.GetAttributeValue<string>(campo).ToString();
+                            if (validacaoCNPJ(cnpj))
+                            {
+                                QueryExpression contactQuery = new QueryExpression("account");
+                                contactQuery.ColumnSet = new ColumnSet(campo);
+                                contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cnpj);
+                                EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
+                                if (contactColl.Entities.Count > 0)
+                                {
+                                    throw new InvalidPluginExecutionException("CNPJ já cadastrado!");
+                                }
+                            }
+                            else
+                            {
+                                throw new InvalidPluginExecutionException("CNPJ é Inválido!");
+                            }
+                        }
                     }
-                }
-
-                catch (Exception ex)
-                {
-                    throw (ex);
+                    catch (Exception ex)
+                    {
+                        throw (ex);
+                    }
                 }
             }
         }
