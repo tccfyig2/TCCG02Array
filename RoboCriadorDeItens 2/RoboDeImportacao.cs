@@ -23,7 +23,7 @@ using Microsoft.Xrm.Sdk.Client;
             //Gera Query em "contact"
             EntityCollection contas = RetornarMultiplo(serviceProxyOrigem, "contact");
             //Importa Contato de um CRM e cria os mesmos dados em outro CRM
-            //ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
+            ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "account"
             contas = QueryExpression(serviceProxyOrigem, "account");
@@ -112,8 +112,9 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_city", conta["address1_city"].ToString());
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
-                    
-                    serviceProxyDestino.Create(entidade);
+                    entidade.Id = conta.Id;
+
+                serviceProxyDestino.Create(entidade);
                     i++;
                     //Console.WriteLine($"existem {i} Contatos");
                 }
@@ -123,7 +124,6 @@ using Microsoft.Xrm.Sdk.Client;
                 int i = 0;
                 foreach (var conta in contas.Entities)
                 {
-                    Guid registro = new Guid();
                     var entidade = new Entity("account");
                     entidade.Attributes.Add("name", conta["name"].ToString());
                     entidade.Attributes.Add("cred2_verificado","true");
@@ -139,8 +139,9 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_country", "Brasil");
                     //EntityCollection contact = RetornarMultiplo(serviceProxyOrigem, "contact");
                     entidade.Attributes.Add("primarycontactid", conta["primarycontactid"]);
+                    entidade.Id = conta.Id;
 
-                    serviceProxyDestino.Create(entidade);
+                serviceProxyDestino.Create(entidade);
                     i++;
                     //Console.WriteLine(new Guid(conta["primarycontactid"].ToString()));
                 }
