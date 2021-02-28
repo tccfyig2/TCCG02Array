@@ -20,8 +20,13 @@ namespace RoboCriadorDeItens_2
             //criaConta(_serviceProxy);
             //criaClientePotencial(_serviceProxy);
             //criaOrdem(_serviceProxy);
+            /*
+                Unidade Padrão = Primary unit - Business
+                Lista de Preços = Default
+                Produto = Notebook Lenovo
+                Item da lista de preços = Notebook Lenovo
+             */
             //produtoOrdem(_serviceProxy);
-
         }
         static void criaContato(CrmServiceClient _serviceProxy)
         {
