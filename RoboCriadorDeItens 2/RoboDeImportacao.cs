@@ -23,7 +23,7 @@ using Microsoft.Xrm.Sdk.Client;
             //Gera Query em "contact"
             EntityCollection contas = RetornarMultiplo(serviceProxyOrigem, "contact");
             //Importa Contato de um CRM e cria os mesmos dados em outro CRM
-            ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
+            //ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "account"
             contas = QueryExpression(serviceProxyOrigem, "account");
