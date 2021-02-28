@@ -19,7 +19,7 @@ namespace RoboCriadorDeItens_2.Geradores
     }
     class GeradorId : listaId
     {
-        protected static List<listaId> accountId = new List<listaId>();
+        protected static List<listaId> listId = new List<listaId>();
         internal static List<listaId> BuscaId(
             CrmServiceClient _serviceProxy,
             string tabela,
@@ -33,9 +33,9 @@ namespace RoboCriadorDeItens_2.Geradores
 
             foreach (var item in colecaoEntidades.Entities)
             {
-                accountId.Add(new listaId(item.Id));
+                listId.Add(new listaId(item.Id));
             }
-            return accountId;
+            return listId;
         }
     }
 }
