@@ -31,38 +31,38 @@ using Microsoft.Xrm.Sdk.Client;
             ImportaConta(serviceProxyOrigem,serviceProxyDestino,contas);
 
             //Gera Query em "salesorder"
-            contas = RetornarMultiplo(serviceProxyOrigem, "lead");
+           // contas = RetornarMultiplo(serviceProxyOrigem, "lead");
             //Importa Ordem de um CRM e cria os mesmos dados em outro CRM
-            ImportaContatoPotencial(serviceProxyOrigem, serviceProxyDestino, contas);
+           // ImportaContatoPotencial(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "salesorder"
-            contas = RetornarMultiplo(serviceProxyOrigem, "salesorder");
+            //contas = RetornarMultiplo(serviceProxyOrigem, "salesorder");
             //Importa Ordem de um CRM e cria os mesmos dados em outro CRM
-            ImportaOrdem(serviceProxyOrigem, serviceProxyDestino, contas);
+           // ImportaOrdem(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "salesorderdetail"
-            contas = RetornarMultiplo(serviceProxyOrigem, "salesorderdetail");
+           // contas = RetornarMultiplo(serviceProxyOrigem, "salesorderdetail");
             //Importa Produto da Ordem de um CRM e cria os mesmos dados em outro CRM
-            ImportaProdutoOrdem(serviceProxyOrigem, serviceProxyDestino, contas);
+          //  ImportaProdutoOrdem(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "pricelevel"
-            contas = RetornarMultiplo(serviceProxyOrigem, "pricelevel");
+          //  contas = RetornarMultiplo(serviceProxyOrigem, "pricelevel");
             //Importa Lista de Preço de um CRM e cria os mesmos dados em outro CRM
-            ImportaListaPrecos(serviceProxyOrigem, serviceProxyDestino, contas);
+           // ImportaListaPrecos(serviceProxyOrigem, serviceProxyDestino, contas);
 
 
         }
 
         static EntityCollection QueryExpression(CrmServiceClient serviceProxyOrigem, string entidade)
         {
-            QueryExpression queryExpression = new QueryExpression("account");
+            QueryExpression queryExpression = new QueryExpression(entidade);
             queryExpression.ColumnSet = new ColumnSet(true);
 
             //ConditionExpression condicao = new ConditionExpression("address1_city", ConditionOperator.Equal, "Natal");
             //queryExpression.Criteria.AddCondition(condicao);
 
             LinkEntity link = new LinkEntity("account", "contact", "primarycontactid", "contactid", JoinOperator.Inner);
-            link.Columns = new ColumnSet("firstname", "lastname");
+            link.Columns = new ColumnSet(true);
             link.EntityAlias = "Contato";
 
             queryExpression.LinkEntities.Add(link);
@@ -99,10 +99,10 @@ using Microsoft.Xrm.Sdk.Client;
                 int i = 0;
                 foreach (var conta in contas.Entities)
                 {
-                    var entidade = new Entity("contact");
+                   var entidade = new Entity("contact");
                     entidade.Attributes.Add("firstname", conta["firstname"].ToString());
                     entidade.Attributes.Add("lastname", conta["lastname"].ToString());
-                    entidade.Attributes.Add("crb79_cpf", conta["crb79_cpf"].ToString());
+                    entidade.Attributes.Add("cred2_cpf", conta["crb79_cpf"].ToString());
                     entidade.Attributes.Add("mobilephone", conta["mobilephone"].ToString());
                     entidade.Attributes.Add("emailaddress1", conta["address1_postalcode"].ToString());
                     entidade.Attributes.Add("address1_postalcode", conta["address1_postalcode"].ToString());
@@ -113,9 +113,9 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
                     
-                    //serviceProxyDestino.Create(entidade);
+                    serviceProxyDestino.Create(entidade);
                     i++;
-                    Console.WriteLine($"existem {i} Contatos");
+                    //Console.WriteLine($"existem {i} Contatos");
                 }
             }
             static void ImportaConta(CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
@@ -123,9 +123,11 @@ using Microsoft.Xrm.Sdk.Client;
                 int i = 0;
                 foreach (var conta in contas.Entities)
                 {
+                    Guid registro = new Guid();
                     var entidade = new Entity("account");
                     entidade.Attributes.Add("name", conta["name"].ToString());
-                    entidade.Attributes.Add("crb79_cnpj", conta["crb79_cnpj"].ToString());
+                    entidade.Attributes.Add("cred2_verificado","true");
+                    entidade.Attributes.Add("cred2_cnpj", conta["crb79_cnpj"].ToString());
                     entidade.Attributes.Add("telephone1", conta["telephone1"].ToString());
                     entidade.Attributes.Add("emailaddress1", conta["address1_postalcode"].ToString());
                     entidade.Attributes.Add("address1_postalcode", conta["address1_postalcode"].ToString());
@@ -136,11 +138,11 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
                     //EntityCollection contact = RetornarMultiplo(serviceProxyOrigem, "contact");
-                    entidade.Attributes.Add("primarycontactid",(AliasedValue)entidade["Contato.contactid"]);
+                    entidade.Attributes.Add("primarycontactid", conta["primarycontactid"]);
 
-                    //serviceProxyDestino.Create(entidade);
+                    serviceProxyDestino.Create(entidade);
                     i++;
-                    Console.WriteLine($"existem {i} Contas");
+                    //Console.WriteLine(new Guid(conta["primarycontactid"].ToString()));
                 }
             }
 
