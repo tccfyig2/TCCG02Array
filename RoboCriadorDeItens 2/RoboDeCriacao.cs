@@ -21,6 +21,7 @@ namespace RoboCriadorDeItens_2
             //criaClientePotencial(_serviceProxy);
             //criaOrdem(_serviceProxy);
             //produtoOrdem(_serviceProxy);
+
         }
         static void criaContato(CrmServiceClient _serviceProxy)
         {
