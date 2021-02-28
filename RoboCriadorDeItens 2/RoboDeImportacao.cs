@@ -26,7 +26,7 @@ using Microsoft.Xrm.Sdk.Client;
             ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "account"
-            contas = RetornarMultiplo(serviceProxyOrigem,"account");
+            contas = QueryExpression(serviceProxyOrigem, "account");
             //Importa Conta de um CRM e cria os mesmos dados em outro CRM
             ImportaConta(serviceProxyOrigem,serviceProxyDestino,contas);
 
@@ -53,13 +53,13 @@ using Microsoft.Xrm.Sdk.Client;
 
         }
 
-        static void QueryExpression(CrmServiceClient serviceProxyOrigem)
+        static EntityCollection QueryExpression(CrmServiceClient serviceProxyOrigem, string entidade)
         {
             QueryExpression queryExpression = new QueryExpression("account");
             queryExpression.ColumnSet = new ColumnSet(true);
 
-            ConditionExpression condicao = new ConditionExpression("address1_city", ConditionOperator.Equal, "Natal");
-            queryExpression.Criteria.AddCondition(condicao);
+            //ConditionExpression condicao = new ConditionExpression("address1_city", ConditionOperator.Equal, "Natal");
+            //queryExpression.Criteria.AddCondition(condicao);
 
             LinkEntity link = new LinkEntity("account", "contact", "primarycontactid", "contactid", JoinOperator.Inner);
             link.Columns = new ColumnSet("firstname", "lastname");
@@ -68,13 +68,14 @@ using Microsoft.Xrm.Sdk.Client;
             queryExpression.LinkEntities.Add(link);
 
             EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-            foreach (var entidade in colecaoEntidades.Entities)
+            return colecaoEntidades;
+            /*foreach (var entidade in colecaoEntidades.Entities)
             {
                 Console.WriteLine("Id: " + entidade.Id);
                 Console.WriteLine("Nome conta " + entidade["name"]);
                 Console.WriteLine("Nome Contato " + ((AliasedValue)entidade["Contato.firstname"]).Value);
                 Console.WriteLine("Sobrenome Contato " + ((AliasedValue)entidade["Contato.lastname"]).Value);
-            }
+            }*/
 
         }
 
@@ -134,8 +135,8 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_city", conta["address1_city"].ToString());
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
-                    EntityCollection contact = RetornarMultiplo(serviceProxyOrigem, "contact");
-                    //entidade.Attributes.Add("primarycontactid", new EntityReference("contact", (Guid) contact["contactid"]));
+                    //EntityCollection contact = RetornarMultiplo(serviceProxyOrigem, "contact");
+                    entidade.Attributes.Add("primarycontactid",(AliasedValue)entidade["Contato.contactid"]);
 
                     //serviceProxyDestino.Create(entidade);
                     i++;
