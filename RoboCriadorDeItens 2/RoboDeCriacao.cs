@@ -1,9 +1,11 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.Geradores;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RoboCriadorDeItens_2
 {
@@ -19,7 +21,6 @@ namespace RoboCriadorDeItens_2
             //criaClientePotencial(_serviceProxy);
             //criaOrdem(_serviceProxy);
             //produtoOrdem(_serviceProxy);
-            //criaListaPrecos(_serviceProxy);
         }
         static void criaContato(CrmServiceClient _serviceProxy)
         {
@@ -61,7 +62,7 @@ namespace RoboCriadorDeItens_2
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
             Console.WriteLine("Pacotão de contatos criado!");
 
-            int cont = 1;
+            int cont = 0;
             foreach (var item in response.Responses)
             {
                 if (item.Response != null)
@@ -117,7 +118,7 @@ namespace RoboCriadorDeItens_2
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
             Console.WriteLine("Pacotão de contas criado!");
 
-            int cont = 1;
+            int cont = 0;
             foreach (var item in response.Responses)
             {
                 if (item.Response != null)
@@ -174,7 +175,7 @@ namespace RoboCriadorDeItens_2
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
             Console.WriteLine("Pacotão de clientes potenciais criado!");
 
-            int cont = 1;
+            int cont = 0;
             foreach (var item in response.Responses)
             {
                 if (item.Response != null)
@@ -200,13 +201,16 @@ namespace RoboCriadorDeItens_2
                 }
             };
             List<listaId> accountId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
-            for (int i = 0; i < 50; i++)
+            List<listaId> pricelevelId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "pricelevel", campo: "pricelevelid"));
+
+            for (int i = 0; i < 2; i++)
             {
                 int index = rnd.Next(0, accountId.Count);
                 Entity entidade = new Entity("salesorder");
 
-                entidade.Attributes.Add("name", $"Cliente nº: {i + 1}");
+                entidade.Attributes.Add("name", $"Cliente nº: {rnd.Next(0,5000)}");
                 entidade.Attributes.Add("customerid", new EntityReference("account", accountId[index].Id));
+                entidade.Attributes.Add("pricelevelid", new EntityReference("pricelevel", new Guid("68f3a59e-f779-eb11-a812-00224836bdf5")));
                 
                 CreateRequest createRequest = new CreateRequest()
                 {
@@ -217,7 +221,7 @@ namespace RoboCriadorDeItens_2
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
             Console.WriteLine("Pacotão de ordens criado!");
 
-            int cont = 1;
+            int cont = 0;
             foreach (var item in response.Responses)
             {
                 if (item.Response != null)
@@ -263,7 +267,7 @@ namespace RoboCriadorDeItens_2
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
             Console.WriteLine("Pacotão de produto da ordem criado!");
 
-            int cont = 1;
+            int cont = 0;
             foreach (var item in response.Responses)
             {
                 if (item.Response != null)
@@ -276,48 +280,6 @@ namespace RoboCriadorDeItens_2
                 }
             }
             Console.WriteLine($"Foram criados {cont} produto da ordem com sucesso!");
-        }
-        static void criaListaPrecos(CrmServiceClient _serviceProxy)
-        {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                {
-                    ContinueOnError = false,
-                    ReturnResponses = true
-                }
-            };
-            for (int i = 0; i < 50; i++)
-            {
-                Entity entidade = new Entity("pricelevel");
-
-                entidade.Attributes.Add("name", $"Produto {i + 1}");
-                entidade.Attributes.Add("begindate", DateTime.Today);
-                entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
-
-                CreateRequest createRequest = new CreateRequest()
-                {
-                    Target = entidade
-                };
-                request.Requests.Add(createRequest);
-            }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacotão de Lista de Preços criado!");
-
-            int cont = 1;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    cont++;
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine(item.Fault);
-                }
-            }
-            Console.WriteLine($"Foram criados {cont} Lista de Preços da ordem com sucesso!");
         }
     }
 }

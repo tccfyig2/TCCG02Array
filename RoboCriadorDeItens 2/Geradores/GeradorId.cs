@@ -21,7 +21,7 @@ namespace RoboCriadorDeItens_2.Geradores
     {
         protected static List<listaId> accountId = new List<listaId>();
         internal static List<listaId> BuscaId(
-            CrmServiceClient serviceProxy,
+            CrmServiceClient _serviceProxy,
             string tabela,
             string campo
             )
@@ -29,7 +29,7 @@ namespace RoboCriadorDeItens_2.Geradores
             QueryExpression queryExpression = new QueryExpression(tabela);
             queryExpression.Criteria.AddCondition(campo, ConditionOperator.NotNull);
             queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection colecaoEntidades = serviceProxy.RetrieveMultiple(queryExpression);
+            EntityCollection colecaoEntidades = _serviceProxy.RetrieveMultiple(queryExpression);
 
             foreach (var item in colecaoEntidades.Entities)
             {
