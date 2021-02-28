@@ -20,7 +20,7 @@ namespace RoboCriadorDeItens_2
             //criaConta(_serviceProxy);
             //criaClientePotencial(_serviceProxy);
             //criaOrdem(_serviceProxy);
-            //produtoOrdem(_serviceProxy);
+            produtoOrdem(_serviceProxy);
         }
         static void criaContato(CrmServiceClient _serviceProxy)
         {
@@ -203,7 +203,7 @@ namespace RoboCriadorDeItens_2
             List<listaId> accountId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
             List<listaId> pricelevelId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "pricelevel", campo: "pricelevelid"));
 
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 50; i++)
             {
                 int index = rnd.Next(0, accountId.Count);
                 Entity entidade = new Entity("salesorder");
@@ -247,14 +247,16 @@ namespace RoboCriadorDeItens_2
                 }
             };
             List<listaId> OrdemId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "salesorder", campo: "salesorderid"));
-            Guid prduct = new Guid("4190122b-0477-eb11-a812-000d3a1c6462");
-            Guid uomid = new Guid("5f753633-aa6e-eb11-b0b2-000d3a55dda2");
+
+            Guid prduct = new Guid("2bdc8b88-ef79-eb11-a812-00224836bdf5");
+            Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
             for (int i = 0; i < 50; i++)
             {
                 int index = rnd.Next(0, OrdemId.Count);
                 Entity entidade = new Entity("salesorderdetail");
 
                 entidade.Attributes.Add("productid", new EntityReference("product", prduct));
+                entidade.Attributes.Add("quantity", decimal.Parse(rnd.Next(0, 5).ToString()));
                 entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", OrdemId[index].Id));
                 entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
 
