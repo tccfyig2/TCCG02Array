@@ -53,9 +53,30 @@ using Microsoft.Xrm.Sdk.Client;
 
         }
 
+        static void QueryExpression(CrmServiceClient serviceProxyOrigem)
+        {
+            QueryExpression queryExpression = new QueryExpression("account");
+            queryExpression.ColumnSet = new ColumnSet(true);
 
+            ConditionExpression condicao = new ConditionExpression("address1_city", ConditionOperator.Equal, "Natal");
+            queryExpression.Criteria.AddCondition(condicao);
 
+            LinkEntity link = new LinkEntity("account", "contact", "primarycontactid", "contactid", JoinOperator.Inner);
+            link.Columns = new ColumnSet("firstname", "lastname");
+            link.EntityAlias = "Contato";
 
+            queryExpression.LinkEntities.Add(link);
+
+            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+            foreach (var entidade in colecaoEntidades.Entities)
+            {
+                Console.WriteLine("Id: " + entidade.Id);
+                Console.WriteLine("Nome conta " + entidade["name"]);
+                Console.WriteLine("Nome Contato " + ((AliasedValue)entidade["Contato.firstname"]).Value);
+                Console.WriteLine("Sobrenome Contato " + ((AliasedValue)entidade["Contato.lastname"]).Value);
+            }
+
+        }
 
         static EntityCollection RetornarMultiplo(CrmServiceClient serviceProxyOrigem, string entidade)
             {
@@ -103,7 +124,7 @@ using Microsoft.Xrm.Sdk.Client;
                 {
                     var entidade = new Entity("account");
                     entidade.Attributes.Add("name", conta["name"].ToString());
-                    entidade.Attributes.Add("crb79_cnpj", conta["cred2_cnpj"].ToString());
+                    entidade.Attributes.Add("crb79_cnpj", conta["crb79_cnpj"].ToString());
                     entidade.Attributes.Add("telephone1", conta["telephone1"].ToString());
                     entidade.Attributes.Add("emailaddress1", conta["address1_postalcode"].ToString());
                     entidade.Attributes.Add("address1_postalcode", conta["address1_postalcode"].ToString());
@@ -113,7 +134,8 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_city", conta["address1_city"].ToString());
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
-                    entidade.Attributes.Add("primarycontactid", new EntityReference("contact", (Guid) conta["contactId"]));
+                    EntityCollection contact = RetornarMultiplo(serviceProxyOrigem, "contact");
+                    //entidade.Attributes.Add("primarycontactid", new EntityReference("contact", (Guid) contact["contactid"]));
 
                     //serviceProxyDestino.Create(entidade);
                     i++;
