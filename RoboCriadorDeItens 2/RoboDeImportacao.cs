@@ -17,7 +17,7 @@ using Microsoft.Xrm.Sdk.Client;
         {
             Conexao conexao = new Conexao();
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
-            CrmServiceClient serviceProxyDestino = conexao.ObterConexaoCobaia();
+            CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
 
             //Gera Query em "contact"
@@ -28,22 +28,27 @@ using Microsoft.Xrm.Sdk.Client;
             //Gera Query em "account"
             contas = RetornarMultiplo(serviceProxyOrigem,"account");
             //Importa Conta de um CRM e cria os mesmos dados em outro CRM
-            ImportaContato(serviceProxyOrigem,serviceProxyDestino,contas);
+            ImportaConta(serviceProxyOrigem,serviceProxyDestino,contas);
+
+            //Gera Query em "salesorder"
+            contas = RetornarMultiplo(serviceProxyOrigem, "lead");
+            //Importa Ordem de um CRM e cria os mesmos dados em outro CRM
+            ImportaContatoPotencial(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "salesorder"
             contas = RetornarMultiplo(serviceProxyOrigem, "salesorder");
             //Importa Ordem de um CRM e cria os mesmos dados em outro CRM
-            ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
+            ImportaOrdem(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "salesorderdetail"
             contas = RetornarMultiplo(serviceProxyOrigem, "salesorderdetail");
             //Importa Produto da Ordem de um CRM e cria os mesmos dados em outro CRM
-            ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
+            ImportaProdutoOrdem(serviceProxyOrigem, serviceProxyDestino, contas);
 
             //Gera Query em "pricelevel"
             contas = RetornarMultiplo(serviceProxyOrigem, "pricelevel");
             //Importa Lista de Preço de um CRM e cria os mesmos dados em outro CRM
-            ImportaContato(serviceProxyOrigem, serviceProxyDestino, contas);
+            ImportaListaPrecos(serviceProxyOrigem, serviceProxyDestino, contas);
 
 
         }
@@ -59,10 +64,10 @@ using Microsoft.Xrm.Sdk.Client;
                 //queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, "teste");
                 queryExpression.ColumnSet = new ColumnSet(true);
                 EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-                foreach (var item in colecaoEntidades.Entities)
-                {
-                    Console.WriteLine(item["name"]);
-                }
+                //foreach (var item in colecaoEntidades.Entities)
+                //{
+                //    Console.WriteLine(item["name"]);
+                //}
 
                 return colecaoEntidades;
             }
@@ -86,8 +91,9 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
                     
-                    serviceProxyDestino.Create(entidade);
+                    //serviceProxyDestino.Create(entidade);
                     i++;
+                    Console.WriteLine($"existem {i} Contatos");
                 }
             }
             static void ImportaConta(CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
@@ -109,8 +115,9 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_country", "Brasil");
                     entidade.Attributes.Add("primarycontactid", new EntityReference("contact", (Guid) conta["contactId"]));
 
-                    serviceProxyDestino.Create(entidade);
+                    //serviceProxyDestino.Create(entidade);
                     i++;
+                    Console.WriteLine($"existem {i} Contas");
                 }
             }
 
@@ -134,9 +141,10 @@ using Microsoft.Xrm.Sdk.Client;
                     entidade.Attributes.Add("address1_city", conta["address1_city"].ToString());
                     entidade.Attributes.Add("address1_stateorprovince", conta["address1_stateorprovince"].ToString());
                     entidade.Attributes.Add("address1_country", "Brasil");
-                   
-                    serviceProxyDestino.Create(entidade);
+
+                    //serviceProxyDestino.Create(entidade);
                     i++;
+                    Console.WriteLine($"existem {i} Clientes Potenciais");
                 }
             }
 
@@ -151,27 +159,29 @@ using Microsoft.Xrm.Sdk.Client;
 
 
 
-                    serviceProxyDestino.Create(entidade);
+                    //serviceProxyDestino.Create(entidade);
                     i++;
+                    Console.WriteLine($"existem {i} Ordens");
                 }
             }
 
 
             static void ImportaProdutoOrdem(CrmServiceClient serviceProxyOrigem, CrmServiceClient serviceProxyDestino, EntityCollection contas)
             {
-                Guid prduct = new Guid("4190122b-0477-eb11-a812-000d3a1c6462");
-                Guid uomid = new Guid("5f753633-aa6e-eb11-b0b2-000d3a55dda2");
-                int i = 0;
-                foreach (var conta in contas.Entities)
-                {
-                var entidade = new Entity("salesorderdetail");
-                entidade.Attributes.Add("productid", new EntityReference("product", prduct));
-                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", (Guid)conta["salesorderid"]));
-                entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
+                    Guid prduct = new Guid("4190122b-0477-eb11-a812-000d3a1c6462");
+                    Guid uomid = new Guid("5f753633-aa6e-eb11-b0b2-000d3a55dda2");
+                    int i = 0;
+                    foreach (var conta in contas.Entities)
+                    {
+                    var entidade = new Entity("salesorderdetail");
+                    entidade.Attributes.Add("productid", new EntityReference("product", prduct));
+                    entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", (Guid)conta["salesorderid"]));
+                    entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
 
 
-                serviceProxyDestino.Create(entidade);
+                    //serviceProxyDestino.Create(entidade);
                     i++;
+                    Console.WriteLine($"existem {i} Produtos da Ordem");
                 }
             }
 
@@ -184,11 +194,12 @@ using Microsoft.Xrm.Sdk.Client;
                 {
                     var entidade = new Entity("pricelevel");
                     entidade.Attributes.Add("name", conta["name"].ToString());
-                    entidade.Attributes.Add("begindate", conta["begindate"].ToString());
-                    entidade.Attributes.Add("enddate", conta["enddate"].ToString());
+                    entidade.Attributes.Add("begindate", DateTime.Today);
+                    entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
 
-                    serviceProxyDestino.Create(entidade);
+                    //serviceProxyDestino.Create(entidade);
                     i++;
+                    Console.WriteLine($"existem {i} Lista de Preços");
                 }
             }
     }
