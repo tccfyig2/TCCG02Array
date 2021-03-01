@@ -202,5 +202,17 @@ namespace RoboCriadorDeItens_2.Geradores
             int index = rnd.Next(topico.Length);
             return topico[index];
         }
+        internal static string criadorCodigo()
+        {
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var stringChars = new char[5];
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[rnd.Next(chars.Length)];
+            }
+
+            return new String(stringChars);
+        }
     }
 }
