@@ -5,7 +5,6 @@ using RoboCriadorDeItens_2.Geradores;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace RoboCriadorDeItens_2
 {
@@ -27,31 +26,40 @@ namespace RoboCriadorDeItens_2
             */
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
-            CancellationTokenSource tokenSource = new CancellationTokenSource();
             int n = 0;
-            while (n < 3)
+            while (n < 1)
             {
                 Console.WriteLine(n);
 
-                EntityCollection contact = CriaContact();
-                criaNoCrm(_serviceProxy, contact);
-                Task.Delay(5000, tokenSource.Token);
+                //if (n > 0)
+                //{
+                //    Thread.Sleep(10000);
+                //    EntityCollection salesorder = CriaSalesorder(_serviceProxy);
+                //    criaNoCrm(_serviceProxy, salesorder);
+                //}
 
-                EntityCollection account = CriaAccount(_serviceProxy);
-                criaNoCrm(_serviceProxy, account);
-                Task.Delay(5000, tokenSource.Token);
+                //Thread.Sleep(10000);
+                //EntityCollection contact = CriaContact();
+                //criaNoCrm(_serviceProxy, contact);
 
-                EntityCollection lead = CriaLead();
-                criaNoCrm(_serviceProxy, lead);
-                Task.Delay(5000, tokenSource.Token);
+                //Thread.Sleep(10000);
+                //EntityCollection account = CriaAccount(_serviceProxy);
+                //criaNoCrm(_serviceProxy, account);
 
+                //Thread.Sleep(10000);
+                //EntityCollection lead = CriaLead();
+                //criaNoCrm(_serviceProxy, lead);
+
+                if (n == 0)
+                {
+                    Thread.Sleep(10000);
+                    EntityCollection salesorder = CriaSalesorder(_serviceProxy);
+                    criaNoCrm(_serviceProxy, salesorder);
+                }
+
+                Thread.Sleep(40000);
                 EntityCollection salesorderdetail = CriaSalesorderdetail(_serviceProxy);
                 criaNoCrm(_serviceProxy, salesorderdetail);
-                Task.Delay(20000, tokenSource.Token);
-
-                EntityCollection salesorder = CriaSalesorder(_serviceProxy);
-                criaNoCrm(_serviceProxy, salesorder);
-                Task.Delay(5000, tokenSource.Token);
 
                 n++;
             }
