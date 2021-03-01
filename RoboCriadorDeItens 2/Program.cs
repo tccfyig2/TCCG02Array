@@ -6,8 +6,8 @@ namespace RoboCriadorDeItens_2
     {
         static void Main(string[] args)
         {
-            RoboDeCriacao.criacao();
-            //Console.WriteLine("Sucesso!!!");
+            //RoboDeCriacao.criacao();
+           // Console.WriteLine("Sucesso!!!");
             //Console.ReadLine();
 
             //RoboDeImportacao.importacao();
