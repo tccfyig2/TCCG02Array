@@ -26,40 +26,33 @@ namespace RoboCriadorDeItens_2
             */
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
+            List<listaId> accountid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
+            List<listaId> salesorderid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "salesorder", campo: "salesorderid"));
+
             int n = 0;
-            while (n < 1)
+            while (n < 25)
             {
                 Console.WriteLine(n);
 
-                //if (n > 0)
-                //{
-                //    Thread.Sleep(10000);
-                //    EntityCollection salesorder = CriaSalesorder(_serviceProxy);
-                //    criaNoCrm(_serviceProxy, salesorder);
-                //}
-
-                //Thread.Sleep(10000);
                 //EntityCollection contact = CriaContact();
                 //criaNoCrm(_serviceProxy, contact);
+                //Console.WriteLine(" contact criado!");
 
-                //Thread.Sleep(10000);
-                //EntityCollection account = CriaAccount(_serviceProxy);
+                //EntityCollection account = CriaAccount(accountid);
                 //criaNoCrm(_serviceProxy, account);
+                //Console.WriteLine(" account criado!");
 
-                //Thread.Sleep(10000);
-                //EntityCollection lead = CriaLead();
-                //criaNoCrm(_serviceProxy, lead);
+                EntityCollection lead = CriaLead();
+                criaNoCrm(_serviceProxy, lead);
+                Console.WriteLine(" lead criado!");
 
-                if (n == 0)
-                {
-                    Thread.Sleep(10000);
-                    EntityCollection salesorder = CriaSalesorder(_serviceProxy);
-                    criaNoCrm(_serviceProxy, salesorder);
-                }
+                //EntityCollection salesorder = CriaSalesorder(accountid);
+                //criaNoCrm(_serviceProxy, salesorder);
+                //Console.WriteLine(" salesorder criado!");
 
-                Thread.Sleep(40000);
-                EntityCollection salesorderdetail = CriaSalesorderdetail(_serviceProxy);
-                criaNoCrm(_serviceProxy, salesorderdetail);
+                //EntityCollection salesorderdetail = CriaSalesorderdetail(salesorderid);
+                //criaNoCrm(_serviceProxy, salesorderdetail);
+                //Console.WriteLine(" salesorderdetail criado!");
 
                 n++;
             }
@@ -94,12 +87,12 @@ namespace RoboCriadorDeItens_2
                     Console.WriteLine(item.Fault);
                 }
             }
-            Console.WriteLine($"Foram criados {cont}!");
+            Console.Write(cont);
         }
         static EntityCollection CriaContact()
         {
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int a = 0; a < 20; a++)
+            for (int a = 0; a < 200; a++)
             {
                 Entity entidade = new Entity("contact");
 
@@ -123,14 +116,13 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaAccount(CrmServiceClient _serviceProxy)
+        static EntityCollection CriaAccount(List<listaId> accountid)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
-            List<listaId> contactId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "contact", campo: "contactid"));
 
-            for (int b = 0; b < 20; b++)
+            for (int b = 0; b < 200; b++)
             {
-                int index = rnd.Next(0, contactId.Count);
+                int index = rnd.Next(0, accountid.Count);
                 Entity entidade = new Entity("account");
 
                 string[] endereco = (GeradorEndereco.geradorEndereco());
@@ -142,7 +134,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
 
-                entidade.Attributes.Add("primarycontactid", new EntityReference("contact", contactId[index].Id));
+                entidade.Attributes.Add("primarycontactid", new EntityReference("contact", accountid[index].Id));
                 string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
                 entidade.Attributes.Add("name", emailSobrenome + " ltda.");
@@ -157,7 +149,7 @@ namespace RoboCriadorDeItens_2
         {
             EntityCollection colecaoEntidades = new EntityCollection();
 
-            for (int c = 0; c < 20; c++)
+            for (int c = 0; c < 200; c++)
             {
                 Entity entidade = new Entity("lead");
 
@@ -184,13 +176,12 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorder(CrmServiceClient _serviceProxy)
+        static EntityCollection CriaSalesorder(List<listaId> accountid)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
-            List<listaId> accountid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
             Guid pricelevelid = new Guid("68f3a59e-f779-eb11-a812-00224836bdf5");
 
-            for (int d = 0; d < 20; d++)
+            for (int d = 0; d < 200; d++)
             {
                 int index = rnd.Next(0, accountid.Count);
                 Entity entidade = new Entity("salesorder");
@@ -203,21 +194,20 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorderdetail(CrmServiceClient _serviceProxy)
+        static EntityCollection CriaSalesorderdetail(List<listaId> salesorderid)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
-            List<listaId> OrdemId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "salesorder", campo: "salesorderid"));
 
             Guid productid = new Guid("2bdc8b88-ef79-eb11-a812-00224836bdf5");
             Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
             for (int e = 0; e < 20; e++)
             {
-                int index = rnd.Next(0, OrdemId.Count);
+                int index = rnd.Next(0, salesorderid.Count);
                 Entity entidade = new Entity("salesorderdetail");
 
                 entidade.Attributes.Add("productid", new EntityReference("product", productid));
                 entidade.Attributes.Add("quantity", decimal.Parse(rnd.Next(1, 5).ToString()));
-                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", OrdemId[index].Id));
+                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", salesorderid[index].Id));
                 entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
 
                 colecaoEntidades.Entities.Add(entidade);
