@@ -1,4 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 
@@ -9,20 +9,24 @@ namespace Plugin
         public void Execute(IServiceProvider serviceProvider)
         {
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
+
             IOrganizationServiceFactory servicefactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = servicefactory.CreateOrganizationService(context.UserId);
+
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
             {
                 Entity entity = (Entity)context.InputParameters["Target"];
+                // Evita loop
                 if (context.Depth > 1)
                 {
                     return;
                 }
+                // Se verificação já foi feira pelo JavaScript não refaça as verificações.
                 if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
                 {
+                    string campo = "cred2_cpf";
                     try
                     {
-                        string campo = "cred2_cpf";
                         if (!entity.Attributes.Contains(campo))
                         {
                             throw new InvalidPluginExecutionException("CPF é obigatório!");
