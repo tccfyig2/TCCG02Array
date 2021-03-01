@@ -4,7 +4,7 @@ using System;
 
 namespace Plugin
 {
-    public class Valida_CPF_E_Duplicados : IPlugin
+    public class Valida_CNPJ_E_Duplicados : IPlugin
     {
         public void Execute(IServiceProvider serviceProvider)
         {
