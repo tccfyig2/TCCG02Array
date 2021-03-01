@@ -16,29 +16,64 @@ namespace RoboCriadorDeItens_2
         {
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
-            //criaContato(_serviceProxy);
-            //criaConta(_serviceProxy);
-            //criaClientePotencial(_serviceProxy);
-            //criaOrdem(_serviceProxy);
+
+            EntityCollection contact = CriaContact();
+            criaNoCrm(_serviceProxy, contact);
+
+            EntityCollection account = CriaAccount(_serviceProxy);
+            criaNoCrm(_serviceProxy, account);
+
+            EntityCollection lead = CriaLead();
+            criaNoCrm(_serviceProxy, lead);
+
+            EntityCollection salesorder = CriaSalesorder(_serviceProxy);
+            criaNoCrm(_serviceProxy, salesorder);
+
             /*
-                Unidade Padrão = Primary unit - Business
-                Lista de Preços = Default
-                Produto = Notebook Lenovo
-                Item da lista de preços = Notebook Lenovo
+            Unidade Padrão = Primary unit - Business
+            Lista de Preços = Default
+            Produto = Notebook Lenovo
+            Item da lista de preços = Notebook Lenovo
              */
-            //produtoOrdem(_serviceProxy);
+
+            EntityCollection salesorderdetail = CriaSalesorderdetail(_serviceProxy);
+            criaNoCrm(_serviceProxy, salesorderdetail);
         }
-        static void criaContato(CrmServiceClient _serviceProxy)
+        static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection input)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
                 Requests = new OrganizationRequestCollection(),
                 Settings = new ExecuteMultipleSettings
-                {
-                    ContinueOnError = false,
-                    ReturnResponses = true
-                }
+                { ContinueOnError = false, ReturnResponses = true }
             };
+
+            foreach (var entity in input.Entities)
+            {
+                CreateRequest createRequest = new CreateRequest { Target = entity };
+                request.Requests.Add(createRequest);
+            }
+
+            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
+            Console.WriteLine("Pacotão criado!");
+
+            int cont = 0;
+            foreach (var item in response.Responses)
+            {
+                if (item.Response != null)
+                {
+                    cont++;
+                }
+                else if (item.Fault != null)
+                {
+                    Console.WriteLine(item.Fault);
+                }
+            }
+            Console.WriteLine($"Foram criados {cont}!");
+        }
+        static EntityCollection CriaContact()
+        {
+            EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < 2; i++)
             {
                 Entity entidade = new Entity("contact");
@@ -59,41 +94,15 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.geradorCPF()); // cred2_cpf = Apresentação// crb79_cpf = Cobaia
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
-                CreateRequest createRequest = new CreateRequest()
-                {
-                    Target = entidade
-                };
-                request.Requests.Add(createRequest);
+                colecaoEntidades.Entities.Add(entidade);
             }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacotão de contatos criado!");
-
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    cont++;
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine(item.Fault);
-                }
-            }
-            Console.WriteLine($"Foram criados {cont} contatos com sucesso!");
+            return colecaoEntidades;
         }
-        static void criaConta(CrmServiceClient _serviceProxy)
+        static EntityCollection CriaAccount(CrmServiceClient _serviceProxy)
         {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                {
-                    ContinueOnError = false,
-                    ReturnResponses = true
-                }
-            };
+            EntityCollection colecaoEntidades = new EntityCollection();
             List<listaId> contactId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "contact", campo: "contactid"));
+
             for (int i = 0; i < 2; i++)
             {
                 int index = rnd.Next(0, contactId.Count);
@@ -115,41 +124,15 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.geradorCNPJ()); // cred2_cnpj = Apresentação// crb79_cnpj = Cobaia
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
-                CreateRequest createRequest = new CreateRequest()
-                {
-                    Target = entidade
-                };
-                request.Requests.Add(createRequest);
+                colecaoEntidades.Entities.Add(entidade);
             }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacotão de contas criado!");
-
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    cont++;
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine(item.Fault);
-                }
-            }
-            Console.WriteLine($"Foram criados {cont} contas com sucesso!");
+            return colecaoEntidades;
         }
-        static void criaClientePotencial(CrmServiceClient _serviceProxy)
+        static EntityCollection CriaLead()
         {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                {
-                    ContinueOnError = false,
-                    ReturnResponses = true
-                }
-            };
-            for (int i = 0; i < 50; i++)
+            EntityCollection colecaoEntidades = new EntityCollection();
+
+            for (int i = 0; i < 2; i++)
             {
                 Entity entidade = new Entity("lead");
 
@@ -172,40 +155,13 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
 
-                CreateRequest createRequest = new CreateRequest()
-                {
-                    Target = entidade
-                };
-                request.Requests.Add(createRequest);
+                colecaoEntidades.Entities.Add(entidade);
             }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacotão de clientes potenciais criado!");
-
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    cont++;
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine(item.Fault);
-                }
-            }
-            Console.WriteLine($"Foram criados {cont} clientes potenciais com sucesso!");
+            return colecaoEntidades;
         }
-        static void criaOrdem(CrmServiceClient _serviceProxy)
+        static EntityCollection CriaSalesorder(CrmServiceClient _serviceProxy)
         {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                {
-                    ContinueOnError = false,
-                    ReturnResponses = true
-                }
-            };
+            EntityCollection colecaoEntidades = new EntityCollection();
             List<listaId> accountId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
 
             for (int i = 0; i < 2; i++)
@@ -213,44 +169,17 @@ namespace RoboCriadorDeItens_2
                 int index = rnd.Next(0, accountId.Count);
                 Entity entidade = new Entity("salesorder");
 
-                entidade.Attributes.Add("name", $"Cliente nº: {rnd.Next(0,5000)}");
+                entidade.Attributes.Add("name", $"Cliente nº: {rnd.Next(0, 5000)}");
                 entidade.Attributes.Add("customerid", new EntityReference("account", accountId[index].Id));
                 entidade.Attributes.Add("pricelevelid", new EntityReference("pricelevel", new Guid("68f3a59e-f779-eb11-a812-00224836bdf5")));
-                
-                CreateRequest createRequest = new CreateRequest()
-                {
-                    Target = entidade
-                };
-                request.Requests.Add(createRequest);
-            }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacotão de ordens criado!");
 
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    cont++;
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine(item.Fault);
-                }
+                colecaoEntidades.Entities.Add(entidade);
             }
-            Console.WriteLine($"Foram criados {cont} Ordens com sucesso!");
+            return colecaoEntidades;
         }
-        static void produtoOrdem(CrmServiceClient _serviceProxy)
+        static EntityCollection CriaSalesorderdetail(CrmServiceClient _serviceProxy)
         {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                {
-                    ContinueOnError = false,
-                    ReturnResponses = true
-                }
-            };
+            EntityCollection colecaoEntidades = new EntityCollection();
             List<listaId> OrdemId = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "salesorder", campo: "salesorderid"));
 
             Guid prduct = new Guid("2bdc8b88-ef79-eb11-a812-00224836bdf5");
@@ -265,28 +194,9 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", OrdemId[index].Id));
                 entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
 
-                CreateRequest createRequest = new CreateRequest()
-                {
-                    Target = entidade
-                };
-                request.Requests.Add(createRequest);
+                colecaoEntidades.Entities.Add(entidade);
             }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacotão de produto da ordem criado!");
-
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    cont++;
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine(item.Fault);
-                }
-            }
-            Console.WriteLine($"Foram criados {cont} produto da ordem com sucesso!");
+            return colecaoEntidades;
         }
     }
 }

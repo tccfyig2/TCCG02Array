@@ -126,7 +126,7 @@ using Microsoft.Xrm.Sdk.Client;
                 {
                     var entidade = new Entity("account");
                     entidade.Attributes.Add("name", conta["name"].ToString());
-                    entidade.Attributes.Add("cred2_verificado","true");
+                    //entidade.Attributes.Add("cred2_verificado","true");
                     entidade.Attributes.Add("cred2_cnpj", conta["crb79_cnpj"].ToString());
                     entidade.Attributes.Add("telephone1", conta["telephone1"].ToString());
                     entidade.Attributes.Add("emailaddress1", conta["address1_postalcode"].ToString());
