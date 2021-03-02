@@ -15,6 +15,15 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
+            EntityCollection contas = RetornaEntidades(serviceProxyOrigem, "account");
+            CriacaoRetornoAtualizacaoDelete(serviceProxyDestino, contas);
+
+
+
+            // EntityCollection account = ImportaAccount(contas, 1, n);
+            // ImportaParaCrm(serviceProxyDestino, account);
+            // Console.WriteLine($"Pacote nº: {n} importado para account!");
+
             //Importa Contato!
             int n = 0;
             int tamanhoPacote = 50;
@@ -29,16 +38,16 @@ namespace RoboCriadorDeItens_2
             //}
 
             //// Importa Conta!
-            n = 0;
-            EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
-            int loop = contas.Entities.Count / tamanhoPacote;
-            while (n < 1)
-            {
-                EntityCollection account = ImportaAccount(contas, 1, n);
-                ImportaParaCrm(serviceProxyDestino, account);
-                Console.WriteLine($"Pacote nº: {n} importado para account!");
-                n++;
-            }
+            //n = 0;
+            //EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
+            //int loop = contas.Entities.Count / tamanhoPacote;
+            //while (n < 1)
+            //{
+            //    EntityCollection account = ImportaAccount(contas, 1, n);
+            //    ImportaParaCrm(serviceProxyDestino, account);
+            //    Console.WriteLine($"Pacote nº: {n} importado para account!");
+            //    n++;
+            //}
 
             //// Importa Clientes Potenciais!
             //n = 0;
@@ -326,5 +335,31 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
+
+        static void CriacaoRetornoAtualizacaoDelete(CrmServiceClient serviceProxy, EntityCollection contas)
+        {
+            EntityCollection colecaoEntidades = new EntityCollection();
+
+            for (int i = 0; i < 2; i++)
+            {
+                var entidade = new Entity("account");
+                entidade.Attributes.Add("emailaddress1", contas[i]["emailaddress1"]);
+                serviceProxy.Update(entidade);
+            }
+
+        }
+
+        //Update
+
+        // Entity RegistroResposta = new Entity();
+        //   var RegistroResposta = serviceProxy.Retrieve("account", entidade.Id, new ColumnSet(true));
+        //
+        //
+        //   serviceProxy.Update(RegistroResposta);
+        //   serviceProxy.Delete("account", RegistroResposta.Id);
+        //   Console.WriteLine("Registro Deletado: " + registro.ToString());
+
+
     }
 }
+
