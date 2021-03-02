@@ -15,10 +15,6 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
-            EntityCollection contas = RetornaEntidades(serviceProxyOrigem, "account");
-            CriacaoRetornoAtualizacaoDelete(serviceProxyDestino, contas);
-
-
 
             // EntityCollection account = ImportaAccount(contas, 1, n);
             // ImportaParaCrm(serviceProxyDestino, account);
@@ -27,15 +23,15 @@ namespace RoboCriadorDeItens_2
             //Importa Contato!
             int n = 0;
             int tamanhoPacote = 50;
-            //EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
-            //int loop = contatos.Entities.Count / tamanhoPacote;
-            //while (n < loop)
-            //{
-            //    EntityCollection contact = ImportaContact(contatos, tamanhoPacote, n);
-            //    ImportaParaCrm(serviceProxyDestino, contact);
-            //    Console.WriteLine($"Pacote nº: {n} importado para contact!");
-            //    n++;
-            //}
+            EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
+            int loop = contatos.Entities.Count / tamanhoPacote;
+            while (n < loop)
+            {
+                EntityCollection contact = ImportaContact(contatos, tamanhoPacote, n);
+                ImportaParaCrm(serviceProxyDestino, contact);
+                Console.WriteLine($"Pacote nº: {n} importado para contact!");
+                n++;
+            }
 
             //// Importa Conta!
             //n = 0;
@@ -335,29 +331,6 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-
-        static void CriacaoRetornoAtualizacaoDelete(CrmServiceClient serviceProxy, EntityCollection contas)
-        {
-            EntityCollection colecaoEntidades = new EntityCollection();
-
-            for (int i = 0; i < 2; i++)
-            {
-                var entidade = new Entity("account");
-                entidade.Attributes.Add("emailaddress1", contas[i]["emailaddress1"]);
-                serviceProxy.Update(entidade);
-            }
-
-        }
-
-        //Update
-
-        // Entity RegistroResposta = new Entity();
-        //   var RegistroResposta = serviceProxy.Retrieve("account", entidade.Id, new ColumnSet(true));
-        //
-        //
-        //   serviceProxy.Update(RegistroResposta);
-        //   serviceProxy.Delete("account", RegistroResposta.Id);
-        //   Console.WriteLine("Registro Deletado: " + registro.ToString());
 
 
     }
