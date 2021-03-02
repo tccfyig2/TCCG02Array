@@ -80,13 +80,11 @@ namespace RoboCriadorDeItens_2
             while (n < 40)
             {
                 Console.WriteLine(n);
-
-                int contador = n;
                 if (contador * 125 >= salesorderid.Count)
                 {
-                    return;
+                    break;
                 }
-                EntityCollection salesorderdetail = CriaSalesorderdetail(salesorderid);
+                EntityCollection salesorderdetail = CriaSalesorderdetail(salesorderid + n);
                 criaNoCrm(_serviceProxy, salesorderdetail);
                 Console.WriteLine(" salesorderdetail criado!");
 
@@ -230,10 +228,9 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorderdetail(List<listaId> salesorderid, int ultimo = 0)
+        static EntityCollection CriaSalesorderdetail(List<listaId> salesorderid, int contador)
         {
-            int contador = ultimo;
-
+            contador *= 125;
             EntityCollection colecaoEntidades = new EntityCollection();
             Guid productid = new Guid("2bdc8b88-ef79-eb11-a812-00224836bdf5");
             Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
