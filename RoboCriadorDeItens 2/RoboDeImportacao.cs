@@ -28,7 +28,7 @@ namespace RoboCriadorDeItens_2
             //    n++;
             //}
 
-            //// Importa Conta!
+            // Importa Conta!
             n = 0;
             EntityCollection contas = RetornaEntidades(serviceProxyOrigem, "account");
             int loop = contas.Entities.Count / tamanhoPacote;
@@ -40,10 +40,10 @@ namespace RoboCriadorDeItens_2
                 n++;
             }
 
-            //// Importa Clientes Potenciais!
+            // Importa Clientes Potenciais!
             //n = 0;
             //EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
-            //loop = clientesPotenciais.Entities.Count / tamanhoPacote;
+            //int loop = clientesPotenciais.Entities.Count / tamanhoPacote;
             //while (n < loop)
             //{
             //    EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, n);
