@@ -28,53 +28,53 @@ namespace RoboCriadorDeItens_2
                 n++;
             }
 
-            // Importa Conta!
-            n = 0;
-            EntityCollection contas = RetornaEntidades(serviceProxyOrigem, "account");
-            loop = contas.Entities.Count / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection account = ImportaAccount(contas, tamanhoPacote, n);
-                ImportaParaCrm(serviceProxyDestino, account);
-                Console.WriteLine($"Pacote nº: {n} importado para account!");
-                n++;
-            }
+            //// Importa Conta!
+            //n = 0;
+            //EntityCollection contas = RetornaEntidades(serviceProxyOrigem, "account");
+            //loop = contas.Entities.Count / tamanhoPacote;
+            //while (n < loop)
+            //{
+            //    EntityCollection account = ImportaAccount(contas, tamanhoPacote, n);
+            //    ImportaParaCrm(serviceProxyDestino, account);
+            //    Console.WriteLine($"Pacote nº: {n} importado para account!");
+            //    n++;
+            //}
 
-            // Importa Clientes Potenciais!
-            n = 0;
-            EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
-            loop = clientesPotenciais.Entities.Count / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, n);
-                ImportaParaCrm(serviceProxyDestino, lead);
-                Console.WriteLine($"Pacote nº: {n} importado para lead!");
-                n++;
-            }
+            //// Importa Clientes Potenciais!
+            //n = 0;
+            //EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
+            //loop = clientesPotenciais.Entities.Count / tamanhoPacote;
+            //while (n < loop)
+            //{
+            //    EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, n);
+            //    ImportaParaCrm(serviceProxyDestino, lead);
+            //    Console.WriteLine($"Pacote nº: {n} importado para lead!");
+            //    n++;
+            //}
 
-            // Importa Ordens!
-            n = 0;
-            EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
-            loop = ordens.Entities.Count / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, n);
-                ImportaParaCrm(serviceProxyDestino, salesorder);
-                Console.WriteLine($"Pacote nº: {n} importado para salesorder!");
-                n++;
-            }
+            //// Importa Ordens!
+            //n = 0;
+            //EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
+            //loop = ordens.Entities.Count / tamanhoPacote;
+            //while (n < loop)
+            //{
+            //    EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, n);
+            //    ImportaParaCrm(serviceProxyDestino, salesorder);
+            //    Console.WriteLine($"Pacote nº: {n} importado para salesorder!");
+            //    n++;
+            //}
 
-            // Importa Produtos da Ordem!
-            n = 0;
-            EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
-            loop = produtosDaOrdem.Entities.Count / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, n);
-                ImportaParaCrm(serviceProxyDestino, salesorderdetail);
-                Console.WriteLine($"Pacote nº: {n} importado para salesorderdetail!");
-                n++;
-            }
+            //// Importa Produtos da Ordem!
+            //n = 0;
+            //EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
+            //loop = produtosDaOrdem.Entities.Count / tamanhoPacote;
+            //while (n < loop)
+            //{
+            //    EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, n);
+            //    ImportaParaCrm(serviceProxyDestino, salesorderdetail);
+            //    Console.WriteLine($"Pacote nº: {n} importado para salesorderdetail!");
+            //    n++;
+            //}
 
             //Os abaixo não devem ser necessarios uma vez que ja foram importados!
 

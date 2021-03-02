@@ -33,56 +33,56 @@ namespace RoboCriadorDeItens_2
             int tamanhoPacote = 50;
             // loop de ser um número inteiro! Divisivel por tamanhoPacote!
             int loop = 5000 / tamanhoPacote;
-            //while (n < loop)
-            //{
-            //    EntityCollection contact = CriaContact(tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, contact);
-            //    Console.WriteLine($"Pacote nº: {n} criado em contact!");
-            //    n++;
-            //}
+            while (n < loop)
+            {
+                EntityCollection contact = CriaContact(tamanhoPacote);
+                criaNoCrm(_serviceProxy, contact);
+                Console.WriteLine($"Pacote nº: {n} criado em contact!");
+                n++;
+            }
 
             // Cria Contas!
-            //n = 0;
-            //EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
-            //while (n < loop)
-            //{
-            //    EntityCollection account = CriaAccount(contatos, tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, account);
-            //    Console.WriteLine($"Pacote nº: {n} criado em account!");
-            //    n++;
-            //}
+            n = 0;
+            EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
+            while (n < loop)
+            {
+                EntityCollection account = CriaAccount(contatos, tamanhoPacote);
+                criaNoCrm(_serviceProxy, account);
+                Console.WriteLine($"Pacote nº: {n} criado em account!");
+                n++;
+            }
 
             // Cria Clientes Potenciais!
-            //n = 0;
-            //while (n < loop)
-            //{
-            //    EntityCollection lead = CriaLead(tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, lead);
-            //    Console.WriteLine($"Pacote nº: {n} criado em lead!");
-            //    n++;
-            //}
+            n = 0;
+            while (n < loop)
+            {
+                EntityCollection lead = CriaLead(tamanhoPacote);
+                criaNoCrm(_serviceProxy, lead);
+                Console.WriteLine($"Pacote nº: {n} criado em lead!");
+                n++;
+            }
 
             // Cria Ordens!
-            //n = 0;
-            //EntityCollection contas = retornaEntidades(_serviceProxy, "account");
-            //while (n < loop)
-            //{
-            //    EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, salesorder);
-            //    Console.WriteLine($"Pacote nº: {n} criado em salesorder!");
-            //    n++;
-            //}
+            n = 0;
+            EntityCollection contas = retornaEntidades(_serviceProxy, "account");
+            while (n < loop)
+            {
+                EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote);
+                criaNoCrm(_serviceProxy, salesorder);
+                Console.WriteLine($"Pacote nº: {n} criado em salesorder!");
+                n++;
+            }
 
             // Cria Produtos da Ordem!
-            //n = 0;
-            //EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
-            //while (n < loop)
-            //{
-            //    EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, n);
-            //    criaNoCrm(_serviceProxy, salesorderdetail);
-            //    Console.WriteLine($"Pacote nº: {n} de salesorderdetail!");
-            //    n++;
-            //}
+            n = 0;
+            EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
+            while (n < loop)
+            {
+                EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, n);
+                criaNoCrm(_serviceProxy, salesorderdetail);
+                Console.WriteLine($"Pacote nº: {n} de salesorderdetail!");
+                n++;
+            }
         }
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {

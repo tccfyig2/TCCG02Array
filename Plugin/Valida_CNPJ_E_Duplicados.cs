@@ -19,10 +19,17 @@ namespace Plugin
                 // Evita loop
                 if (context.Depth > 1)
                 {
-                    return;
+                    throw new InvalidPluginExecutionException("Loop Detectado!");
                 }
                 // Se verificação já foi feira pelo JavaScript não refaça as verificações.
-                if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
+                if (entity.Attributes.Contains("cred2_verificado"))
+                {
+                    if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
+                    {
+                        return;
+                    }
+                }
+                else
                 {
                     string campo = "cred2_cnpj";
                     try
@@ -113,7 +120,6 @@ namespace Plugin
                 return false;
             }
         }
-
         public static int Resto(int soma)
         {
             int resto = soma % 11;

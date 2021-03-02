@@ -17,12 +17,19 @@ namespace Plugin
             {
                 Entity entity = (Entity)context.InputParameters["Target"];
                 // Evita loop
-                if (context.Depth > 1)
+                if (context.Depth > 0)
                 {
-                    return;
+                    throw new InvalidPluginExecutionException("Loop Detectado!");
                 }
                 // Se verificação já foi feira pelo JavaScript não refaça as verificações.
-                if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
+                if (entity.Attributes.Contains("cred2_verificado"))
+                {
+                    if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
+                    {
+                        return;
+                    }
+                }
+                else
                 {
                     string campo = "cred2_cpf";
                     try
