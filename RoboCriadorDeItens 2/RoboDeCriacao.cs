@@ -4,7 +4,6 @@ using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.Geradores;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace RoboCriadorDeItens_2
 {
@@ -26,33 +25,70 @@ namespace RoboCriadorDeItens_2
             */
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
-            List<listaId> accountid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
+            //List<listaId> accountid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
             List<listaId> salesorderid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "salesorder", campo: "salesorderid"));
 
             int n = 0;
-            while (n < 25)
+            //while (n < 25)
+            //{
+            //    Console.WriteLine(n);
+
+            //    EntityCollection contact = CriaContact();
+            //    criaNoCrm(_serviceProxy, contact);
+            //    Console.WriteLine(" contact criado!");
+
+            //    n++;
+            //}
+
+            //n = 0;
+            //while (n < 25)
+            //{
+            //    Console.WriteLine(n);
+
+            //    EntityCollection account = CriaAccount(accountid);
+            //    criaNoCrm(_serviceProxy, account);
+            //    Console.WriteLine(" account criado!");
+
+            //    n++;
+            //}
+
+            //n = 0;
+            //while (n < 25)
+            //{
+            //    Console.WriteLine(n);
+
+            //    EntityCollection lead = CriaLead();
+            //    criaNoCrm(_serviceProxy, lead);
+            //    Console.WriteLine(" lead criado!");
+
+            //    n++;
+            //}
+
+            //n = 0;
+            //while (n < 40)
+            //{
+            //    Console.WriteLine(n);
+
+            //    EntityCollection salesorder = CriaSalesorder(accountid);
+            //    criaNoCrm(_serviceProxy, salesorder);
+            //    Console.WriteLine(" salesorder criado!");
+
+            //    n++;
+            //}
+
+            n = 0;
+            while (n < 40)
             {
                 Console.WriteLine(n);
 
-                //EntityCollection contact = CriaContact();
-                //criaNoCrm(_serviceProxy, contact);
-                //Console.WriteLine(" contact criado!");
-
-                //EntityCollection account = CriaAccount(accountid);
-                //criaNoCrm(_serviceProxy, account);
-                //Console.WriteLine(" account criado!");
-
-                EntityCollection lead = CriaLead();
-                criaNoCrm(_serviceProxy, lead);
-                Console.WriteLine(" lead criado!");
-
-                //EntityCollection salesorder = CriaSalesorder(accountid);
-                //criaNoCrm(_serviceProxy, salesorder);
-                //Console.WriteLine(" salesorder criado!");
-
-                //EntityCollection salesorderdetail = CriaSalesorderdetail(salesorderid);
-                //criaNoCrm(_serviceProxy, salesorderdetail);
-                //Console.WriteLine(" salesorderdetail criado!");
+                int contador = n;
+                if (contador * 125 >= salesorderid.Count)
+                {
+                    return;
+                }
+                EntityCollection salesorderdetail = CriaSalesorderdetail(salesorderid);
+                criaNoCrm(_serviceProxy, salesorderdetail);
+                Console.WriteLine(" salesorderdetail criado!");
 
                 n++;
             }
@@ -181,7 +217,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             Guid pricelevelid = new Guid("68f3a59e-f779-eb11-a812-00224836bdf5");
 
-            for (int d = 0; d < 200; d++)
+            for (int d = 0; d < 125; d++)
             {
                 int index = rnd.Next(0, accountid.Count);
                 Entity entidade = new Entity("salesorder");
@@ -194,23 +230,24 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorderdetail(List<listaId> salesorderid)
+        static EntityCollection CriaSalesorderdetail(List<listaId> salesorderid, int ultimo = 0)
         {
-            EntityCollection colecaoEntidades = new EntityCollection();
+            int contador = ultimo;
 
+            EntityCollection colecaoEntidades = new EntityCollection();
             Guid productid = new Guid("2bdc8b88-ef79-eb11-a812-00224836bdf5");
             Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
-            for (int e = 0; e < 20; e++)
+            for (int e = 0; e < 125; e++)
             {
-                int index = rnd.Next(0, salesorderid.Count);
                 Entity entidade = new Entity("salesorderdetail");
 
                 entidade.Attributes.Add("productid", new EntityReference("product", productid));
                 entidade.Attributes.Add("quantity", decimal.Parse(rnd.Next(1, 5).ToString()));
-                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", salesorderid[index].Id));
+                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", salesorderid[contador].Id));
                 entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
 
                 colecaoEntidades.Entities.Add(entidade);
+                contador++;
             }
             return colecaoEntidades;
         }
