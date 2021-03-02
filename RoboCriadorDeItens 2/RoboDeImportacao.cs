@@ -22,9 +22,9 @@ namespace RoboCriadorDeItens_2
 
             //Importando Contato!
 
-            int n = 1;
+            int n = 0;
             EntityCollection contatos = RetornarMultiplo(serviceProxyOrigem, "contact");
-            while (n <= 25)
+            while (n < 25)
             {
                 Console.WriteLine(n);
 
@@ -37,9 +37,9 @@ namespace RoboCriadorDeItens_2
 
             //Importando Conta!
 
-            //int n = 1;
+            //int n = 0;
             //EntityCollection conta = RetornarMultiplo(serviceProxyOrigem, "account");
-            //while (n <= 25)
+            //while (n < 25)
             //{
             //    Console.WriteLine(n);
             //
@@ -52,9 +52,9 @@ namespace RoboCriadorDeItens_2
 
             //Importando Contato Potencial!
 
-            //int n = 1;
+            //int n = 0;
             //EntityCollection contatoPotencial = RetornarMultiplo(serviceProxyOrigem, "lead");
-            //while (n <= 25)
+            //while (n < 25)
             //{
             //    Console.WriteLine(n);
             //
@@ -67,9 +67,9 @@ namespace RoboCriadorDeItens_2
 
             //Importando Ordem!
 
-            //int n = 1;
+            //int n = 0;
             //EntityCollection ordem = RetornarMultiplo(serviceProxyOrigem, "salesorder");
-            //while (n <= 25)
+            //while (n < 25)
             //{
             //    Console.WriteLine(n);
             //
@@ -82,9 +82,9 @@ namespace RoboCriadorDeItens_2
 
             //Importando Produtos da Ordem!
 
-            //int n = 1;
+            //int n = 0;
             //EntityCollection produtoOrdem = RetornarMultiplo(serviceProxyOrigem, "salesorderdetail");
-            //while (n <= 25)
+            //while (n < 25)
             //{
             //    Console.WriteLine(n);
             //
@@ -161,8 +161,15 @@ namespace RoboCriadorDeItens_2
                         return colecaoEntidades;
                     }
         static EntityCollection ImportaContato(EntityCollection query, int tamanhoPacote, int contador)
-        {   
-            contador *= tamanhoPacote;
+        {
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador-1); i < tamanhoPacote; contador++)
             {
@@ -186,11 +193,18 @@ namespace RoboCriadorDeItens_2
             return colecaoEntidades;
         }
         static EntityCollection ImportaConta(EntityCollection query, int tamanhoPacote, int contador)
-        {
+        {   
+            if(contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
-                contador *= tamanhoPacote;
                 var entidade = new Entity("account");
                 entidade.Attributes.Add("name", query[i]["name"]);
                 //entidade.Attributes.Add("cred2_verificado","true");
@@ -215,10 +229,17 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaContatoPotencial(EntityCollection query, int tamanhoPacote, int contador)
         {
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
-                contador *= tamanhoPacote;
                 var entidade = new Entity("lead");
                 entidade.Attributes.Add("firstname", query[i]["firstname"]);
                 entidade.Attributes.Add("lastname", query[i]["lastname"]);
@@ -243,7 +264,14 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaOrdem(EntityCollection query, int tamanhoPacote, int contador)
         {
-            contador *= tamanhoPacote;
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
@@ -262,7 +290,14 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaUnidadePadrao(EntityCollection query, int tamanhoPacote, int contador)
         {
-            contador *= tamanhoPacote;
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
@@ -278,7 +313,14 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaListaPrecos(EntityCollection query, int tamanhoPacote, int contador)
         {
-            contador *= tamanhoPacote;
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
@@ -294,7 +336,14 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaGrupoUnidades(EntityCollection query, int tamanhoPacote, int contador)
         {
-            contador *= tamanhoPacote;
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
@@ -311,10 +360,17 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaProduto(EntityCollection query, int tamanhoPacote, int contador)
         {
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
-                contador *= tamanhoPacote;
                 var entidade = new Entity("product");
                 entidade.Attributes.Add("name", query[i]["name"]);
                 entidade.Attributes.Add("productnumber", query[i]["productnumber"]);
@@ -329,10 +385,17 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaProdutoOrdem(EntityCollection query, int tamanhoPacote, int contador)
         {
+            if (contador == 0)
+            {
+                contador = 1;
+            }
+            else
+            {
+                contador *= tamanhoPacote;
+            }
             EntityCollection colecaoEntidades = new EntityCollection();
             for (var i = (contador - 1); i < tamanhoPacote; contador++)
             {
-                contador *= tamanhoPacote;
                 var entidade = new Entity("salesorderdetail");
                 entidade.Attributes.Add("productid", query[i]["productid"]);
                 entidade.Attributes.Add("salesorderid", query[i]["salesorderid"]);
