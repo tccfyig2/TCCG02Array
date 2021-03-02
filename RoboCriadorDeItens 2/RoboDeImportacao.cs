@@ -30,11 +30,11 @@ namespace RoboCriadorDeItens_2
 
             // Importa Conta!
             n = 0;
-            EntityCollection contas = RetornaEntidades(serviceProxyOrigem, "account");
+            EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
             int loop = contas.Entities.Count / tamanhoPacote;
-            while (n < loop)
+            while (n < 1)
             {
-                EntityCollection account = ImportaAccount(contas, tamanhoPacote, n);
+                EntityCollection account = ImportaAccount(contas, 1, n);
                 ImportaParaCrm(serviceProxyDestino, account);
                 Console.WriteLine($"Pacote nº: {n} importado para account!");
                 n++;
@@ -108,6 +108,20 @@ namespace RoboCriadorDeItens_2
 
             return colecaoEntidades;
         }
+        static EntityCollection QueryExpression(CrmServiceClient serviceProxyOrigem, string entidade)
+        {
+            QueryExpression queryExpression = new QueryExpression(entidade);
+            queryExpression.ColumnSet = new ColumnSet(true);
+
+            LinkEntity link = new LinkEntity("account", "contact", "primarycontactid", "contactid", JoinOperator.Inner);
+            link.Columns = new ColumnSet(true);
+            link.EntityAlias = "Contato";
+
+            queryExpression.LinkEntities.Add(link);
+
+            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+            return colecaoEntidades;
+        }
         static void ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
@@ -152,7 +166,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("cred2_cpf", query[contador]["crb79_cpf"]);
                 //entidade.Attributes.Add("cred2_verificado","true");
                 entidade.Attributes.Add("mobilephone", query[contador]["mobilephone"]);
-                entidade.Attributes.Add("emailaddress1", query[contador]["address1_postalcode"]);
+                entidade.Attributes.Add("emailaddress1", query[contador]["emailaddress1"]);
                 entidade.Attributes.Add("address1_postalcode", query[contador]["address1_postalcode"]);
                 entidade.Attributes.Add("address1_line1", query[contador]["address1_line1"]);
                 entidade.Attributes.Add("address1_line2", query[contador]["address1_line2"]);
@@ -178,7 +192,7 @@ namespace RoboCriadorDeItens_2
                 //entidade.Attributes.Add("cred2_verificado","true");
                 entidade.Attributes.Add("cred2_cnpj", query[contador]["crb79_cnpj"]);
                 entidade.Attributes.Add("telephone1", query[contador]["telephone1"]);
-                entidade.Attributes.Add("emailaddress1", query[contador]["address1_postalcode"]);
+                entidade.Attributes.Add("emailaddress1", query[contador]["emailaddress1"]);
                 entidade.Attributes.Add("address1_postalcode", query[contador]["address1_postalcode"]);
                 entidade.Attributes.Add("address1_line1", query[contador]["address1_line1"]);
                 entidade.Attributes.Add("address1_line2", query[contador]["address1_line2"]);
@@ -207,7 +221,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("mobilephone", query[contador]["mobilephone"]);
                 entidade.Attributes.Add("telephone1", query[contador]["telephone1"]);
                 entidade.Attributes.Add("subject", query[contador]["subject"]);
-                entidade.Attributes.Add("emailaddress1", query[contador]["address1_postalcode"]);
+                entidade.Attributes.Add("emailaddress1", query[contador]["emailaddress1"]);
                 entidade.Attributes.Add("address1_postalcode", query[contador]["address1_postalcode"]);
                 entidade.Attributes.Add("address1_line1", query[contador]["address1_line1"]);
                 entidade.Attributes.Add("address1_line2", query[contador]["address1_line2"]);
