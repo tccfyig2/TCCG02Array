@@ -30,7 +30,7 @@ namespace RoboCriadorDeItens_2
 
             // Cria Contatos!
             int n = 0;
-            int tamanhoPacote = 100;
+            int tamanhoPacote = 50;
             // loop de ser um número inteiro! Divisivel por tamanhoPacote!
             int loop = 5000 / tamanhoPacote;
             //while (n < loop)
@@ -74,15 +74,15 @@ namespace RoboCriadorDeItens_2
             //}
 
             // Cria Produtos da Ordem!
-            n = 0;
-            EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
-            while (n < loop)
-            {
-                EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, n);
-                criaNoCrm(_serviceProxy, salesorderdetail);
-                Console.WriteLine($"Pacote nº: {n} de salesorderdetail!");
-                n++;
-            }
+            //n = 0;
+            //EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
+            //while (n < loop)
+            //{
+            //    EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, n);
+            //    criaNoCrm(_serviceProxy, salesorderdetail);
+            //    Console.WriteLine($"Pacote nº: {n} de salesorderdetail!");
+            //    n++;
+            //}
         }
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {
@@ -113,7 +113,7 @@ namespace RoboCriadorDeItens_2
             {
                 if (item.Response != null)
                 {
-                    //Console.WriteLine($"Item do pacote nº: {cont} criado!");
+                    //Console.WriteLine($"Entidade nº: {cont} criado!");
                 }
                 else if (item.Fault != null)
                 {
