@@ -15,40 +15,35 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
-
-            // EntityCollection account = ImportaAccount(contas, 1, n);
-            // ImportaParaCrm(serviceProxyDestino, account);
-            // Console.WriteLine($"Pacote nº: {n} importado para account!");
-
-            //Importa Contato!
+            // Importa Contato!
             int n = 0;
             int tamanhoPacote = 50;
-            EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
-            int loop = contatos.Entities.Count / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection contact = ImportaContact(contatos, tamanhoPacote, n);
-                ImportaParaCrm(serviceProxyDestino, contact);
-                Console.WriteLine($"Pacote nº: {n} importado para contact!");
-                n++;
-            }
+            //EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
+            //int loop = contatos.Entities.Count / tamanhoPacote;
+            //while (n < loop)
+            //{
+            //    EntityCollection contact = ImportaContact(contatos, tamanhoPacote, n);
+            //    ImportaParaCrm(serviceProxyDestino, contact);
+            //    Console.WriteLine($"Pacote nº: {n} importado para contact!");
+            //    n++;
+            //}
 
-            //// Importa Conta!
+            // Importa Conta!
             //n = 0;
             //EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
             //int loop = contas.Entities.Count / tamanhoPacote;
-            //while (n < 1)
+            //while (n < loop)
             //{
-            //    EntityCollection account = ImportaAccount(contas, 1, n);
+            //    EntityCollection account = ImportaAccount(contas, tamanhoPacote, n);
             //    ImportaParaCrm(serviceProxyDestino, account);
             //    Console.WriteLine($"Pacote nº: {n} importado para account!");
             //    n++;
             //}
 
-            //// Importa Clientes Potenciais!
+            // Importa Clientes Potenciais!
             //n = 0;
             //EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
-            //loop = clientesPotenciais.Entities.Count / tamanhoPacote;
+            //int loop = clientesPotenciais.Entities.Count / tamanhoPacote;
             //while (n < loop)
             //{
             //    EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, n);
@@ -59,15 +54,15 @@ namespace RoboCriadorDeItens_2
 
             //// Importa Ordens!
             //n = 0;
-            //EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
-            //loop = ordens.Entities.Count / tamanhoPacote;
-            //while (n < loop)
-            //{
-            //    EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, n);
-            //    ImportaParaCrm(serviceProxyDestino, salesorder);
-            //    Console.WriteLine($"Pacote nº: {n} importado para salesorder!");
-            //    n++;
-            //}
+            EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
+            int loop = ordens.Entities.Count / tamanhoPacote;
+            while (n < loop)
+            {
+                EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, n);
+                ImportaParaCrm(serviceProxyDestino, salesorder);
+                Console.WriteLine($"Pacote nº: {n} importado para salesorder!");
+                n++;
+            }
 
             //// Importa Produtos da Ordem!
             //n = 0;
@@ -107,7 +102,7 @@ namespace RoboCriadorDeItens_2
         static EntityCollection RetornaEntidadesComCondicao(CrmServiceClient serviceProxyOrigem, string entidade, string campo, string condicao)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
+            queryExpression.Criteria.AddCondition(campo, ConditionOperator.EqualUserId, condicao);
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
 
@@ -331,8 +326,6 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-
-
     }
 }
 
