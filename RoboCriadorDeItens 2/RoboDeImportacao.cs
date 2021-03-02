@@ -24,7 +24,7 @@ namespace RoboCriadorDeItens_2
             {
                 EntityCollection contact = ImportaContact(contatos, tamanhoPacote, n);
                 ImportaParaCrm(serviceProxyDestino, contact);
-                Console.WriteLine($"{n * tamanhoPacote} entidades importadas para contact!");
+                Console.WriteLine($"Pacote nº: {n} importado para contact!");
                 n++;
             }
 
@@ -35,7 +35,7 @@ namespace RoboCriadorDeItens_2
             {
                 EntityCollection account = ImportaAccount(contas, tamanhoPacote, n);
                 ImportaParaCrm(serviceProxyDestino, account);
-                Console.WriteLine($"{n * tamanhoPacote} entidades importadas para account!");
+                Console.WriteLine($"Pacote nº: {n} importado para account!");
                 n++;
             }
 
@@ -46,7 +46,7 @@ namespace RoboCriadorDeItens_2
             {
                 EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, n);
                 ImportaParaCrm(serviceProxyDestino, lead);
-                Console.WriteLine($"{n * tamanhoPacote} entidades importadas para lead!");
+                Console.WriteLine($"Pacote nº: {n} importado para lead!");
                 n++;
             }
 
@@ -57,7 +57,7 @@ namespace RoboCriadorDeItens_2
             {
                 EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, n);
                 ImportaParaCrm(serviceProxyDestino, salesorder);
-                Console.WriteLine($"{n * tamanhoPacote} entidades importadas para salesorder!");
+                Console.WriteLine($"Pacote nº: {n} importado para salesorder!");
                 n++;
             }
 
@@ -68,7 +68,7 @@ namespace RoboCriadorDeItens_2
             {
                 EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, n);
                 ImportaParaCrm(serviceProxyDestino, salesorderdetail);
-                Console.WriteLine($"{n * tamanhoPacote} entidades importadas para salesorderdetail!");
+                Console.WriteLine($"Pacote nº: {n} importado para salesorderdetail!");
                 n++;
             }
 
@@ -95,6 +95,15 @@ namespace RoboCriadorDeItens_2
 
             return colecaoEntidades;
         }
+        static EntityCollection RetornaEntidadesComCondicao(CrmServiceClient serviceProxyOrigem, string entidade, string campo, string condicao)
+        {
+            QueryExpression queryExpression = new QueryExpression(entidade);
+            queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+
+            return colecaoEntidades;
+        }
         static void ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
@@ -116,12 +125,13 @@ namespace RoboCriadorDeItens_2
             {
                 if (item.Response != null)
                 {
-                    cont++;
+                    //Console.WriteLine($"Item do pacote nº: {cont} criado!");
                 }
                 else if (item.Fault != null)
                 {
-                    Console.WriteLine($"ERRO!\n{item.Fault}");
+                    Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
                 }
+                cont++;
             }
             Console.WriteLine($"{cont} entidades importadas!");
         }
@@ -232,23 +242,20 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("uomid", query[contador]["uomid"]);
                 entidade.Id = query[contador].Id;
                 colecaoEntidades.Entities.Add(entidade);
-                contador++;
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaUnidadePadrao(EntityCollection query, int tamanhoPacote, int contador)
+        static EntityCollection ImportaUnidadePadrao(EntityCollection query, int tamanhoPacote)
         {
-            contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
                 Entity entidade = new Entity("uom");
-                entidade.Attributes.Add("name", query[contador]["name"]);
-                entidade.Attributes.Add("uomscheduleid", query[contador]["uomscheduleid"]);
-                entidade.Attributes.Add("quantity", query[contador]["quantity"]);
-                entidade.Id = query[contador].Id;
+                entidade.Attributes.Add("name", query[i]["name"]);
+                entidade.Attributes.Add("uomscheduleid", query[i]["uomscheduleid"]);
+                entidade.Attributes.Add("quantity", query[i]["quantity"]);
+                entidade.Id = query[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
-                contador++;
             }
             return colecaoEntidades;
         }

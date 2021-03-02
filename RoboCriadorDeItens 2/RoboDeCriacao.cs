@@ -30,56 +30,57 @@ namespace RoboCriadorDeItens_2
 
             // Cria Contatos!
             int n = 0;
-            int tamanhoPacote = 125;
+            int tamanhoPacote = 100;
+            // loop de ser um número inteiro! Divisivel por tamanhoPacote!
             int loop = 5000 / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection contact = CriaContact(tamanhoPacote);
-                criaNoCrm(_serviceProxy, contact);
-                Console.WriteLine($"{n * tamanhoPacote} entidades criadas em contact!");
-                n++;
-            }
+            //while (n < loop)
+            //{
+            //    EntityCollection contact = CriaContact(tamanhoPacote);
+            //    criaNoCrm(_serviceProxy, contact);
+            //    Console.WriteLine($"Pacote nº: {n} criado em contact!");
+            //    n++;
+            //}
 
             // Cria Contas!
-            n = 0;
-            EntityCollection Contact = retornaEntidades(_serviceProxy, "contact");
-            while (n < loop)
-            {
-                EntityCollection account = CriaAccount(Contact, tamanhoPacote);
-                criaNoCrm(_serviceProxy, account);
-                Console.WriteLine($"{n * tamanhoPacote} entidades criadoa em account!");
-                n++;
-            }
+            //n = 0;
+            //EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
+            //while (n < loop)
+            //{
+            //    EntityCollection account = CriaAccount(contatos, tamanhoPacote);
+            //    criaNoCrm(_serviceProxy, account);
+            //    Console.WriteLine($"Pacote nº: {n} criado em account!");
+            //    n++;
+            //}
 
             // Cria Clientes Potenciais!
-            n = 0;
-            while (n < loop)
-            {
-                EntityCollection lead = CriaLead(tamanhoPacote);
-                criaNoCrm(_serviceProxy, lead);
-                Console.WriteLine($"{n * tamanhoPacote} entidades criadas em lead!");
-                n++;
-            }
+            //n = 0;
+            //while (n < loop)
+            //{
+            //    EntityCollection lead = CriaLead(tamanhoPacote);
+            //    criaNoCrm(_serviceProxy, lead);
+            //    Console.WriteLine($"Pacote nº: {n} criado em lead!");
+            //    n++;
+            //}
 
             // Cria Ordens!
-            n = 0;
-            EntityCollection Account = retornaEntidades(_serviceProxy, "account");
-            while (n < loop)
-            {
-                EntityCollection salesorder = CriaSalesorder(Account, tamanhoPacote);
-                criaNoCrm(_serviceProxy, salesorder);
-                Console.WriteLine($"{n * tamanhoPacote} entidades criadas em salesorder!");
-                n++;
-            }
+            //n = 0;
+            //EntityCollection contas = retornaEntidades(_serviceProxy, "account");
+            //while (n < loop)
+            //{
+            //    EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote);
+            //    criaNoCrm(_serviceProxy, salesorder);
+            //    Console.WriteLine($"Pacote nº: {n} criado em salesorder!");
+            //    n++;
+            //}
 
             // Cria Produtos da Ordem!
             n = 0;
-            EntityCollection Salesorder = retornaEntidades(_serviceProxy, "salesorder");
+            EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
             while (n < loop)
             {
-                EntityCollection salesorderdetail = CriaSalesorderdetail(Salesorder, tamanhoPacote, n);
+                EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, n);
                 criaNoCrm(_serviceProxy, salesorderdetail);
-                Console.WriteLine($"Pacote nº: {n} entidades criadas em salesorderdetail!");
+                Console.WriteLine($"Pacote nº: {n} de salesorderdetail!");
                 n++;
             }
         }
@@ -112,12 +113,13 @@ namespace RoboCriadorDeItens_2
             {
                 if (item.Response != null)
                 {
-                    cont++;
+                    //Console.WriteLine($"Item do pacote nº: {cont} criado!");
                 }
                 else if (item.Fault != null)
                 {
-                    Console.WriteLine($"ERRO!\n{item.Fault}");
+                    Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
                 }
+                cont++;
             }
             Console.WriteLine($"{cont} entidades criadas!");
         }
