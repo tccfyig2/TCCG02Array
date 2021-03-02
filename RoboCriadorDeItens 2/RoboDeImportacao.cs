@@ -32,9 +32,9 @@ namespace RoboCriadorDeItens_2
             n = 0;
             EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
             int loop = contas.Entities.Count / tamanhoPacote;
-            while (n < 1)
+            while (n < loop)
             {
-                EntityCollection account = ImportaAccount(contas, 1, n);
+                EntityCollection account = ImportaAccount(contas, tamanhoPacote, n);
                 ImportaParaCrm(serviceProxyDestino, account);
                 Console.WriteLine($"Pacote nº: {n} importado para account!");
                 n++;
