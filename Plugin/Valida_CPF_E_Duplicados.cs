@@ -17,7 +17,7 @@ namespace Plugin
             {
                 Entity entity = (Entity)context.InputParameters["Target"];
                 // Evita loop
-                if (context.Depth > 0)
+                if (context.Depth > 1)
                 {
                     throw new InvalidPluginExecutionException("Loop Detectado!");
                 }
