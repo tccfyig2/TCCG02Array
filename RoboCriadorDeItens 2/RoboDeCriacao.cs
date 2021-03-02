@@ -1,13 +1,13 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.Geradores;
 using System;
-using System.Collections.Generic;
 
 namespace RoboCriadorDeItens_2
 {
-    class RoboDeCriacao : listaId
+    class RoboDeCriacao
     {
         protected static Random rnd = new Random();
         internal static void criacao()
@@ -23,75 +23,75 @@ namespace RoboCriadorDeItens_2
             * salesorder
             * salesorderdetail
             */
+
+            // Cria Conexão
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
-            //List<listaId> accountid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "account", campo: "accountid"));
-            List<listaId> salesorderid = new List<listaId>(GeradorId.BuscaId(_serviceProxy, tabela: "salesorder", campo: "salesorderid"));
 
+            // Cria Contatos!
             int n = 0;
-            //while (n < 25)
-            //{
-            //    Console.WriteLine(n);
-
-            //    EntityCollection contact = CriaContact();
-            //    criaNoCrm(_serviceProxy, contact);
-            //    Console.WriteLine(" contact criado!");
-
-            //    n++;
-            //}
-
-            //n = 0;
-            //while (n < 25)
-            //{
-            //    Console.WriteLine(n);
-
-            //    EntityCollection account = CriaAccount(accountid);
-            //    criaNoCrm(_serviceProxy, account);
-            //    Console.WriteLine(" account criado!");
-
-            //    n++;
-            //}
-
-            //n = 0;
-            //while (n < 25)
-            //{
-            //    Console.WriteLine(n);
-
-            //    EntityCollection lead = CriaLead();
-            //    criaNoCrm(_serviceProxy, lead);
-            //    Console.WriteLine(" lead criado!");
-
-            //    n++;
-            //}
-
-            //n = 0;
-            //while (n < 40)
-            //{
-            //    Console.WriteLine(n);
-
-            //    EntityCollection salesorder = CriaSalesorder(accountid);
-            //    criaNoCrm(_serviceProxy, salesorder);
-            //    Console.WriteLine(" salesorder criado!");
-
-            //    n++;
-            //}
-
-            n = 0;
-            while (n < 40)
+            int tamanhoPacote = 125;
+            int loop = 5000 / tamanhoPacote;
+            while (n < loop)
             {
-                Console.WriteLine(n);
-                if (contador * 125 >= salesorderid.Count)
-                {
-                    break;
-                }
-                EntityCollection salesorderdetail = CriaSalesorderdetail(salesorderid + n);
-                criaNoCrm(_serviceProxy, salesorderdetail);
-                Console.WriteLine(" salesorderdetail criado!");
+                EntityCollection contact = CriaContact(tamanhoPacote);
+                criaNoCrm(_serviceProxy, contact);
+                Console.WriteLine($"{n * tamanhoPacote} entidades criadas em contact!");
+                n++;
+            }
 
+            // Cria Contas!
+            n = 0;
+            EntityCollection Contact = retornaEntidades(_serviceProxy, "contact");
+            while (n < loop)
+            {
+                EntityCollection account = CriaAccount(Contact, tamanhoPacote);
+                criaNoCrm(_serviceProxy, account);
+                Console.WriteLine($"{n * tamanhoPacote} entidades criadoa em account!");
+                n++;
+            }
+
+            // Cria Clientes Potenciais!
+            n = 0;
+            while (n < loop)
+            {
+                EntityCollection lead = CriaLead(tamanhoPacote);
+                criaNoCrm(_serviceProxy, lead);
+                Console.WriteLine($"{n * tamanhoPacote} entidades criadas em lead!");
+                n++;
+            }
+
+            // Cria Ordens!
+            n = 0;
+            EntityCollection Account = retornaEntidades(_serviceProxy, "account");
+            while (n < loop)
+            {
+                EntityCollection salesorder = CriaSalesorder(Account, tamanhoPacote);
+                criaNoCrm(_serviceProxy, salesorder);
+                Console.WriteLine($"{n * tamanhoPacote} entidades criadas em salesorder!");
+                n++;
+            }
+
+            // Cria Produtos da Ordem!
+            n = 0;
+            EntityCollection Salesorder = retornaEntidades(_serviceProxy, "salesorder");
+            while (n < loop)
+            {
+                EntityCollection salesorderdetail = CriaSalesorderdetail(Salesorder, tamanhoPacote, n);
+                criaNoCrm(_serviceProxy, salesorderdetail);
+                Console.WriteLine($"Pacote nº: {n} entidades criadas em salesorderdetail!");
                 n++;
             }
         }
-        static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection input)
+        static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
+        {
+            QueryExpression queryExpression = new QueryExpression(entidade);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection colecaoEntidades = _serviceProxy.RetrieveMultiple(queryExpression);
+
+            return colecaoEntidades;
+        }
+        static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -100,15 +100,13 @@ namespace RoboCriadorDeItens_2
                 { ContinueOnError = false, ReturnResponses = true }
             };
 
-            foreach (var entity in input.Entities)
+            foreach (var entidade in colecaoEntidades.Entities)
             {
-                CreateRequest createRequest = new CreateRequest { Target = entity };
+                CreateRequest createRequest = new CreateRequest { Target = entidade };
                 request.Requests.Add(createRequest);
             }
-
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacotão criado!");
-
+            Console.WriteLine("Pacote de entidades criado e enviado!");
             int cont = 0;
             foreach (var item in response.Responses)
             {
@@ -118,18 +116,17 @@ namespace RoboCriadorDeItens_2
                 }
                 else if (item.Fault != null)
                 {
-                    Console.WriteLine(item.Fault);
+                    Console.WriteLine($"ERRO!\n{item.Fault}");
                 }
             }
-            Console.Write(cont);
+            Console.WriteLine($"{cont} entidades criadas!");
         }
-        static EntityCollection CriaContact()
+        static EntityCollection CriaContact(int tamanhoPacote)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int a = 0; a < 200; a++)
+            for (int i = 0; i < tamanhoPacote; i++)
             {
                 Entity entidade = new Entity("contact");
-
                 string[] endereco = (GeradorEndereco.geradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
@@ -138,27 +135,22 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-
                 string emailNome = GeradorNome_Sobrenome.geradorSobrenome();
                 entidade.Attributes.Add("firstname", emailNome);
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
                 entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
                 entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.geradorCPF()); // cred2_cpf = Apresentação// crb79_cpf = Cobaia
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
-
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaAccount(List<listaId> accountid)
+        static EntityCollection CriaAccount(EntityCollection contact, int tamanhoPacote)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
-
-            for (int b = 0; b < 200; b++)
+            for (int i = 0; i < tamanhoPacote; i++)
             {
-                int index = rnd.Next(0, accountid.Count);
                 Entity entidade = new Entity("account");
-
                 string[] endereco = (GeradorEndereco.geradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
@@ -167,26 +159,22 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-
-                entidade.Attributes.Add("primarycontactid", new EntityReference("contact", accountid[index].Id));
+                entidade.Attributes.Add("primarycontactid", new EntityReference("contact", contact[rnd.Next(0, contact.Entities.Count)].Id));
                 string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
                 entidade.Attributes.Add("name", emailSobrenome + " ltda.");
                 entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.geradorCNPJ()); // cred2_cnpj = Apresentação// crb79_cnpj = Cobaia
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
-
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaLead()
+        static EntityCollection CriaLead(int tamanhoPacote)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
-
-            for (int c = 0; c < 200; c++)
+            for (int i = 0; i < tamanhoPacote; i++)
             {
                 Entity entidade = new Entity("lead");
-
                 string[] endereco = (GeradorEndereco.geradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
@@ -195,7 +183,6 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-
                 string emailNome = (GeradorNome_Sobrenome.geradorNome());
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
                 entidade.Attributes.Add("firstname", emailNome);
@@ -205,44 +192,37 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("subject", GeradorTelefone_Topico.geredorTopico());
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
                 entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
-
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorder(List<listaId> accountid)
+        static EntityCollection CriaSalesorder(EntityCollection account, int tamanhoPacote)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
             Guid pricelevelid = new Guid("68f3a59e-f779-eb11-a812-00224836bdf5");
-
-            for (int d = 0; d < 125; d++)
+            for (int i = 0; i < tamanhoPacote; i++)
             {
-                int index = rnd.Next(0, accountid.Count);
                 Entity entidade = new Entity("salesorder");
-
                 entidade.Attributes.Add("name", $"Ordem NUM-{GeradorTelefone_Topico.criadorCodigo()}");
-                entidade.Attributes.Add("customerid", new EntityReference("account", accountid[index].Id));
+                entidade.Attributes.Add("customerid", new EntityReference("account", account[rnd.Next(0, account.Entities.Count)].Id));
                 entidade.Attributes.Add("pricelevelid", new EntityReference("pricelevel", pricelevelid));
-
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorderdetail(List<listaId> salesorderid, int contador)
+        static EntityCollection CriaSalesorderdetail(EntityCollection salesorder, int tamanhoPacote, int contador)
         {
-            contador *= 125;
+            contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             Guid productid = new Guid("2bdc8b88-ef79-eb11-a812-00224836bdf5");
             Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
-            for (int e = 0; e < 125; e++)
+            for (int i = 0; i < tamanhoPacote; i++)
             {
                 Entity entidade = new Entity("salesorderdetail");
-
                 entidade.Attributes.Add("productid", new EntityReference("product", productid));
                 entidade.Attributes.Add("quantity", decimal.Parse(rnd.Next(1, 5).ToString()));
-                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", salesorderid[contador].Id));
+                entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", salesorder[contador].Id));
                 entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
-
                 colecaoEntidades.Entities.Add(entidade);
                 contador++;
             }
