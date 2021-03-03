@@ -9,10 +9,8 @@ namespace Plugin
         public void Execute(IServiceProvider serviceProvider)
         {
             IPluginExecutionContext context = (IPluginExecutionContext)serviceProvider.GetService(typeof(IPluginExecutionContext));
-
             IOrganizationServiceFactory servicefactory = (IOrganizationServiceFactory)serviceProvider.GetService(typeof(IOrganizationServiceFactory));
             IOrganizationService service = servicefactory.CreateOrganizationService(context.UserId);
-
             if (context.InputParameters.Contains("Target") && context.InputParameters["Target"] is Entity)
             {
                 Entity entity = (Entity)context.InputParameters["Target"];
@@ -28,9 +26,7 @@ namespace Plugin
                     {
                         return;
                     }
-                    goto Teste;
                 }
-            Teste:
                 string campo = "cred2_cpf";
                 if (!entity.Attributes.Contains(campo))
                 {

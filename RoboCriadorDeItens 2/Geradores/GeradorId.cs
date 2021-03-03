@@ -27,7 +27,6 @@ namespace RoboCriadorDeItens_2.Geradores
             )
         {
             QueryExpression queryExpression = new QueryExpression(tabela);
-            queryExpression.Criteria.AddCondition(campo, ConditionOperator.NotNull);
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = _serviceProxy.RetrieveMultiple(queryExpression);
 

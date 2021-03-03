@@ -2,11 +2,13 @@
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using RoboCriadorDeItens_2.Geradores;
+using System.Collections.Generic;
 using System;
 
 namespace RoboCriadorDeItens_2
 {
-    class RoboDeImportacao
+    class RoboDeImportacao : listaId
     {
         internal static void importacao()
         {
@@ -54,8 +56,9 @@ namespace RoboCriadorDeItens_2
 
             //Importa Ordens!
             n = 0;
-            EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
-            EntityCollection ordensDestino = RetornaEntidades(serviceProxyDestino, "salesorder");
+            EntityCollection RetornaOrdens = RetornaEntidades(serviceProxyDestino, "salesorder");
+            EntityCollection ordens = RetornaEntidades(serviceProxyDestino, "salesorder");
+            List<listaId>  ordensDestino = BuscaId(RetornaOrdens); 
             while (n < ordens.Entities.Count / tamanhoPacote)
             {
                 EntityCollection salesorder = ImportaSalesorder(ordens, ordensDestino, tamanhoPacote, n);
@@ -101,6 +104,15 @@ namespace RoboCriadorDeItens_2
             // EntityCollection product = ImportaProduct(serviceProxyOrigem, produtos);
             // ImportaParaCrm(serviceProxyDestino, product);
             // Console.WriteLine($"Pacote importado para product!");
+        }
+        static List<listaId> listId = new List<listaId>();
+        static List<listaId> BuscaId(EntityCollection colecaoEntidades)
+        {
+            foreach (var item in colecaoEntidades.Entities)
+            {
+                listId.Add(new listaId(item.Id));
+            }
+            return listId;
         }
         static EntityCollection RetornaEntidades(CrmServiceClient serviceProxyOrigem, string entidade)
         {
@@ -168,13 +180,10 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < tamanhoPacote; i++)
             {
                 if (contador == query.Entities.Count) { break; }
-                foreach (var item in queryDestino.Entities)
+                if (true/*queryDestino.Entities.Contains(query[contador].Id)*/)
                 {
-                    if (item.Id == query[contador].Id)
-                    {
-                        i--;
-                        goto end;
-                    }
+                    contador++;
+                    break;
                 }
                 Entity entidade = new Entity("contact");
                 entidade.Attributes.Add("firstname", query[contador]["firstname"]);
@@ -192,7 +201,6 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_country", "Brasil");
                 entidade.Id = query[contador].Id;
                 colecaoEntidades.Entities.Add(entidade);
-            end:
                 contador++;
             }
             return colecaoEntidades;
@@ -270,22 +278,16 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaSalesorder(EntityCollection query, EntityCollection queryDestino, int tamanhoPacote, int contador)
+        static EntityCollection ImportaSalesorder(EntityCollection query, List<listaId> queryDestino, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
                 if (contador == query.Entities.Count) { break; }
-                foreach (var item in queryDestino.Entities)
+                if (queryDestino.)//(query[contador].Id)
                 {
-                    if (item.Id == query[contador].Id)
-                    {
-                        Console.WriteLine(item.Id);
-                        Console.WriteLine(query[contador].Id);
-                        i--;
-                        goto end;
-                    }
+
                 }
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("name", query[contador]["name"]);
