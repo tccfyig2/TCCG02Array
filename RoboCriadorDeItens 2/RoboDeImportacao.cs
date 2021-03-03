@@ -2,13 +2,11 @@
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
-using RoboCriadorDeItens_2.Geradores;
-using System.Collections.Generic;
 using System;
 
 namespace RoboCriadorDeItens_2
 {
-    class RoboDeImportacao : listaId
+    class RoboDeImportacao
     {
         internal static void importacao()
         {
@@ -56,9 +54,8 @@ namespace RoboCriadorDeItens_2
 
             //Importa Ordens!
             n = 0;
-            EntityCollection RetornaOrdens = RetornaEntidades(serviceProxyDestino, "salesorder");
             EntityCollection ordens = RetornaEntidades(serviceProxyDestino, "salesorder");
-            List<listaId>  ordensDestino = BuscaId(RetornaOrdens); 
+            EntityCollection ordensDestino = RetornaEntidades(serviceProxyDestino, "salesorder");
             while (n < ordens.Entities.Count / tamanhoPacote)
             {
                 EntityCollection salesorder = ImportaSalesorder(ordens, ordensDestino, tamanhoPacote, n);
@@ -104,15 +101,6 @@ namespace RoboCriadorDeItens_2
             // EntityCollection product = ImportaProduct(serviceProxyOrigem, produtos);
             // ImportaParaCrm(serviceProxyDestino, product);
             // Console.WriteLine($"Pacote importado para product!");
-        }
-        static List<listaId> listId = new List<listaId>();
-        static List<listaId> BuscaId(EntityCollection colecaoEntidades)
-        {
-            foreach (var item in colecaoEntidades.Entities)
-            {
-                listId.Add(new listaId(item.Id));
-            }
-            return listId;
         }
         static EntityCollection RetornaEntidades(CrmServiceClient serviceProxyOrigem, string entidade)
         {
@@ -278,16 +266,20 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaSalesorder(EntityCollection query, List<listaId> queryDestino, int tamanhoPacote, int contador)
+        static EntityCollection ImportaSalesorder(EntityCollection query, EntityCollection queryDestino, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
                 if (contador == query.Entities.Count) { break; }
-                if (queryDestino.)//(query[contador].Id)
+                foreach (var item in queryDestino.Entities)
                 {
-
+                    if (item.Id == query[contador].Id)
+                    {
+                        i--;
+                        goto end;
+                    }
                 }
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("name", query[contador]["name"]);
