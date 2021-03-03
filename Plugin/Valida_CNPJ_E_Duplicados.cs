@@ -24,44 +24,37 @@ namespace Plugin
                 // Se verificação já foi feira pelo JavaScript não refaça as verificações.
                 if (entity.Attributes.Contains("cred2_verificado"))
                 {
-                    if (entity.GetAttributeValue<string>("cred2_verificado").ToString() != "true")
+                    if (entity.GetAttributeValue<string>("cred2_verificado").ToString() == "true")
                     {
                         return;
                     }
+                    goto Teste;
+                }
+            Teste:
+                string campo = "cred2_cnpj";
+                if (!entity.Attributes.Contains(campo))
+                {
+                    throw new InvalidPluginExecutionException("CNPJ é obigatório!");
                 }
                 else
                 {
-                    string campo = "cred2_cnpj";
-                    try
+                    string cnpj = entity.GetAttributeValue<string>(campo).ToString();
+                    if (validacaoCNPJ(cnpj))
                     {
-                        if (!entity.Attributes.Contains(campo))
+                        QueryExpression contactQuery = new QueryExpression("account");
+                        contactQuery.ColumnSet = new ColumnSet(campo);
+                        contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cnpj);
+                        EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
+                        if (contactColl.Entities.Count > 0)
                         {
-                            throw new InvalidPluginExecutionException("CNPJ é obigatório!");
-                        }
-                        else
-                        {
-                            string cnpj = entity.GetAttributeValue<string>(campo).ToString();
-                            if (validacaoCNPJ(cnpj))
-                            {
-                                QueryExpression contactQuery = new QueryExpression("account");
-                                contactQuery.ColumnSet = new ColumnSet(campo);
-                                contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cnpj);
-                                EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
-                                if (contactColl.Entities.Count > 0)
-                                {
-                                    throw new InvalidPluginExecutionException("CNPJ já cadastrado!");
-                                }
-                            }
-                            else
-                            {
-                                throw new InvalidPluginExecutionException("CNPJ é Inválido!");
-                            }
+                            throw new InvalidPluginExecutionException("CNPJ já cadastrado!");
                         }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        throw (ex);
+                        throw new InvalidPluginExecutionException("CNPJ é Inválido!");
                     }
+
                 }
             }
         }
@@ -129,4 +122,5 @@ namespace Plugin
                 return (resto = 11 - resto);
         }
     }
+}
 }
