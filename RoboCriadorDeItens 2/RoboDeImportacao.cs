@@ -15,7 +15,7 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
-            // Importa Contato!
+            //// Importa Contato!
             int n = 0;
             int tamanhoPacote = 50;
             //EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
@@ -28,10 +28,10 @@ namespace RoboCriadorDeItens_2
             //    n++;
             //}
 
-            // Importa Conta!
+            //// Importa Conta!
             //n = 0;
             //EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
-            //int loop = contas.Entities.Count / tamanhoPacote;
+            //loop = contas.Entities.Count / tamanhoPacote;
             //while (n < loop)
             //{
             //    EntityCollection account = ImportaAccount(contas, tamanhoPacote, n);
@@ -40,10 +40,10 @@ namespace RoboCriadorDeItens_2
             //    n++;
             //}
 
-            // Importa Clientes Potenciais!
+            //// Importa Clientes Potenciais!
             //n = 0;
             //EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
-            //int loop = clientesPotenciais.Entities.Count / tamanhoPacote;
+            //loop = clientesPotenciais.Entities.Count / tamanhoPacote;
             //while (n < loop)
             //{
             //    EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, n);
@@ -52,8 +52,8 @@ namespace RoboCriadorDeItens_2
             //    n++;
             //}
 
-            //// Importa Ordens!
-            //n = 0;
+            // Importa Ordens!
+            n = 0;
             EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
             int loop = ordens.Entities.Count / tamanhoPacote;
             while (n < loop)
@@ -64,17 +64,17 @@ namespace RoboCriadorDeItens_2
                 n++;
             }
 
-            //// Importa Produtos da Ordem!
-            //n = 0;
-            //EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
-            //loop = produtosDaOrdem.Entities.Count / tamanhoPacote;
-            //while (n < loop)
-            //{
-            //    EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, n);
-            //    ImportaParaCrm(serviceProxyDestino, salesorderdetail);
-            //    Console.WriteLine($"Pacote nº: {n} importado para salesorderdetail!");
-            //    n++;
-            //}
+            // Importa Produtos da Ordem!
+            n = 0;
+            EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
+            loop = produtosDaOrdem.Entities.Count / tamanhoPacote;
+            while (n < loop)
+            {
+                EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, n);
+                ImportaParaCrm(serviceProxyDestino, salesorderdetail);
+                Console.WriteLine($"Pacote nº: {n} importado para salesorderdetail!");
+                n++;
+            }
 
             //Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
@@ -164,7 +164,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("firstname", query[contador]["firstname"]);
                 entidade.Attributes.Add("lastname", query[contador]["lastname"]);
                 entidade.Attributes.Add("cred2_cpf", query[contador]["crb79_cpf"]);
-                //entidade.Attributes.Add("cred2_verificado","true");
+                entidade.Attributes.Add("cred2_verificado","true");
                 entidade.Attributes.Add("mobilephone", query[contador]["mobilephone"]);
                 entidade.Attributes.Add("emailaddress1", query[contador]["emailaddress1"]);
                 entidade.Attributes.Add("address1_postalcode", query[contador]["address1_postalcode"]);
@@ -189,7 +189,7 @@ namespace RoboCriadorDeItens_2
                 if (contador > query.Entities.Count) { break; }
                 Entity entidade = new Entity("account");
                 entidade.Attributes.Add("name", query[contador]["name"]);
-                //entidade.Attributes.Add("cred2_verificado","true");
+                entidade.Attributes.Add("cred2_verificado","true");
                 entidade.Attributes.Add("cred2_cnpj", query[contador]["crb79_cnpj"]);
                 entidade.Attributes.Add("telephone1", query[contador]["telephone1"]);
                 entidade.Attributes.Add("emailaddress1", query[contador]["emailaddress1"]);
@@ -331,4 +331,3 @@ namespace RoboCriadorDeItens_2
         }
     }
 }
-
