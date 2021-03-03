@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
+using System.Linq;
 
 namespace RoboCriadorDeItens_2
 {
@@ -15,20 +16,21 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
-            //// Importa Contato!
+            // Importa Contato!
             int n = 0;
             int tamanhoPacote = 50;
             //EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
+            //EntityCollection contatosDestino = RetornaEntidades(serviceProxyDestino, "contact");
             //int loop = contatos.Entities.Count / tamanhoPacote;
             //while (n < loop)
             //{
-            //    EntityCollection contact = ImportaContact(contatos, tamanhoPacote, n);
+            //    EntityCollection contact = ImportaContact(contatos, contatosDestino, tamanhoPacote, n);
             //    ImportaParaCrm(serviceProxyDestino, contact);
             //    Console.WriteLine($"Pacote nº: {n} importado para contact!");
             //    n++;
             //}
 
-            //// Importa Conta!
+            // Importa Conta!
             //n = 0;
             //EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
             //loop = contas.Entities.Count / tamanhoPacote;
@@ -40,7 +42,7 @@ namespace RoboCriadorDeItens_2
             //    n++;
             //}
 
-            //// Importa Clientes Potenciais!
+            // Importa Clientes Potenciais!
             //n = 0;
             //EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
             //loop = clientesPotenciais.Entities.Count / tamanhoPacote;
@@ -76,26 +78,31 @@ namespace RoboCriadorDeItens_2
                 n++;
             }
 
-            //Os abaixo não devem ser necessarios uma vez que ja foram importados!
+            // Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
-            //FILIPE não entendi oq vc quis dizer com o negocio do criteria la pq a maneira que eu pensei de colocar foi só se fizesse duas query oq não fez muito sentido na minha cabeça, de qualquer forma esses ai devem rodar com talvez alguns caso as tabelas não estejam vazias!
+            // Importa Unidade
+            // EntityCollection unidade = RetornaEntidadesCondicao(serviceProxyOrigem, "uom", "item");
+            // EntityCollection uom = ImportaUom(serviceProxyOrigem, unidade);
+            // ImportaParaCrm(serviceProxyDestino, uom);
+            // Console.WriteLine($"Pacote importado para uom!");
 
-            EntityCollection uom = ImportaUnidadePadrao(serviceProxyOrigem);
-            ImportaParaCrm(serviceProxyDestino, uom);
-            Console.WriteLine($"Pacote importado para uom!");
+            // Importa Lista de Preços
+            // EntityCollection listaDePreços = RetornaEntidadesCondicao(serviceProxyOrigem, "pricelevel", "Default");
+            // EntityCollection pricelevel = ImportaPricelevel(serviceProxyOrigem, listaDePreços);
+            // ImportaParaCrm(serviceProxyDestino, pricelevel);
+            // Console.WriteLine($"Pacote importado para pricelevel!");
 
-            EntityCollection pricelevel = ImportaListaPrecos(serviceProxyOrigem);
-            ImportaParaCrm(serviceProxyDestino, pricelevel);
-            Console.WriteLine($"Pacote importado para pricelevel!");
+            // Importa Grupo de Unidades
+            // EntityCollection grupoDeUnidades = RetornaEntidadesCondicao(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
+            // EntityCollection uomschedule = ImportaUomschedule(serviceProxyOrigem, grupoDeUnidades);
+            // ImportaParaCrm(serviceProxyDestino, pricelevel);
+            // Console.WriteLine($"Pacote importado para uomschedule!");
 
-            EntityCollection uomschedule = ImportaGrupoUnidades(serviceProxyOrigem);
-            ImportaParaCrm(serviceProxyDestino, pricelevel);
-            Console.WriteLine($"Pacote importado para uomschedule!");
-
-            EntityCollection product = ImportaProduto(serviceProxyOrigem);
-            ImportaParaCrm(serviceProxyDestino, product);
-            Console.WriteLine($"Pacote importado para product!");
-            
+            //Importa Produtos
+            // EntityCollection produtos = RetornaEntidadesCondicao(serviceProxyOrigem, "product", "Notebook Lenovo");
+            // EntityCollection product = ImportaProduct(serviceProxyOrigem, produtos);
+            // ImportaParaCrm(serviceProxyDestino, product);
+            // Console.WriteLine($"Pacote importado para product!");
         }
         static EntityCollection RetornaEntidades(CrmServiceClient serviceProxyOrigem, string entidade)
         {
@@ -105,10 +112,10 @@ namespace RoboCriadorDeItens_2
 
             return colecaoEntidades;
         }
-        static EntityCollection RetornaEntidadesComCondicao(CrmServiceClient serviceProxyOrigem, string entidade, string campo, string condicao)
+        static EntityCollection RetornaEntidadesCondicao(CrmServiceClient serviceProxyOrigem, string entidade, string condicao)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
+            queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
 
@@ -118,14 +125,12 @@ namespace RoboCriadorDeItens_2
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
             queryExpression.ColumnSet = new ColumnSet(true);
-
             LinkEntity link = new LinkEntity("account", "contact", "primarycontactid", "contactid", JoinOperator.Inner);
             link.Columns = new ColumnSet(true);
             link.EntityAlias = "Contato";
-
             queryExpression.LinkEntities.Add(link);
-
             EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+
             return colecaoEntidades;
         }
         static void ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades)
@@ -136,7 +141,6 @@ namespace RoboCriadorDeItens_2
                 Settings = new ExecuteMultipleSettings
                 { ContinueOnError = false, ReturnResponses = true }
             };
-
             foreach (var entidade in colecaoEntidades.Entities)
             {
                 CreateRequest createRequest = new CreateRequest { Target = entidade };
@@ -159,13 +163,18 @@ namespace RoboCriadorDeItens_2
             }
             Console.WriteLine($"{cont} entidades importadas!");
         }
-        static EntityCollection ImportaContact(EntityCollection query, int tamanhoPacote, int contador)
+        static EntityCollection ImportaContact(EntityCollection query, EntityCollection queryDestino, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
                 if (contador > query.Entities.Count) { break; }
+                //if (queryDestino.Entities.Contains(query[contador].Id))
+                //{
+                //    i--;
+                //    goto end;
+                //}
                 Entity entidade = new Entity("contact");
                 entidade.Attributes.Add("firstname", query[contador]["firstname"]);
                 entidade.Attributes.Add("lastname", query[contador]["lastname"]);
@@ -182,6 +191,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_country", "Brasil");
                 entidade.Id = query[contador].Id;
                 colecaoEntidades.Entities.Add(entidade);
+            //end:
                 contador++;
             }
             return colecaoEntidades;
@@ -275,79 +285,59 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaUnidadePadrao(CrmServiceClient serviceProxyOrigem)
+        static EntityCollection ImportaUom(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
-            QueryExpression queryExpression = new QueryExpression("uom");
-            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection unidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < unidades.Entities.Count; i++)
+            for (int i = 0; i < query.Entities.Count; i++)
             {
                 Entity entidade = new Entity("uom");
-                entidade.Attributes.Add("name", unidades[i]["name"]);
-                entidade.Attributes.Add("uomscheduleid", unidades[i]["uomscheduleid"]);
-                entidade.Attributes.Add("quantity", unidades[i]["quantity"]);
-                entidade.Id = unidades[i].Id;
+                entidade.Attributes.Add("name", query[i]["name"]);
+                entidade.Attributes.Add("uomscheduleid", query[i]["uomscheduleid"]);
+                entidade.Attributes.Add("quantity", query[i]["quantity"]);
+                entidade.Id = query[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaListaPrecos(CrmServiceClient serviceProxyOrigem)
+        static EntityCollection ImportaPricelevel(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
-            QueryExpression queryExpression = new QueryExpression("pricelevel");
-            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection listaPrecos = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < listaPrecos.Entities.Count; i++)
+            for (int i = 0; i < query.Entities.Count; i++)
             {
                 Entity entidade = new Entity("pricelevel");
-                entidade.Attributes.Add("name", listaPrecos[i]["name"]);
+                entidade.Attributes.Add("name", query[i]["name"]);
                 entidade.Attributes.Add("begindate", DateTime.Today);
                 entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
-                entidade.Id = listaPrecos[i].Id;
+                entidade.Id = query[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaGrupoUnidades(CrmServiceClient serviceProxyOrigem)
+        static EntityCollection ImportaUomschedule(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
-            QueryExpression queryExpression = new QueryExpression("uomschedule");
-            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection grupoUnidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < grupoUnidades.Entities.Count; i++)
+            for (int i = 0; i < query.Entities.Count; i++)
             {
                 Entity entidade = new Entity("uomschedule");
-                entidade.Attributes.Add("name", grupoUnidades[i]["name"]);
-                entidade.Attributes.Add("baseuomname", grupoUnidades[i]["baseuomname"]);
-                entidade.Id = grupoUnidades[i].Id;
+                entidade.Attributes.Add("name", query[i]["name"]);
+                entidade.Attributes.Add("baseuomname", query[i]["baseuomname"]);
+                entidade.Id = query[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaProduto(CrmServiceClient serviceProxyOrigem)
+        static EntityCollection ImportaProduct(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
-            QueryExpression queryExpression = new QueryExpression("product");
-            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
-            queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection produtos = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < produtos.Entities.Count; i++)
+            for (int i = 0; i < query.Entities.Count; i++)
             {
                 Entity entidade = new Entity("product");
-                entidade.Attributes.Add("name", produtos[i]["name"]);
-                entidade.Attributes.Add("productnumber", produtos[i]["productnumber"]);
+                entidade.Attributes.Add("name", query[i]["name"]);
+                entidade.Attributes.Add("productnumber", query[i]["productnumber"]);
                 entidade.Attributes.Add("defaultuomscheduleid", new EntityReference("uomschedule", new Guid("2e7091ef-c6da-4a3b-b657-89f057e3612e")));
                 entidade.Attributes.Add("defaultuomid", new EntityReference("uom", new Guid("70812c78-3a7a-eb11-a812-000d3a9d0d9a")));
-                entidade.Attributes.Add("quantitydecimal", produtos[i]["quantitydecimal"]);
-                entidade.Id = produtos[i].Id;
+                entidade.Attributes.Add("quantitydecimal", query[i]["quantitydecimal"]);
+                entidade.Id = query[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
