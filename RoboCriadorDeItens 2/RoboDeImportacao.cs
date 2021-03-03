@@ -102,7 +102,7 @@ namespace RoboCriadorDeItens_2
         static EntityCollection RetornaEntidadesComCondicao(CrmServiceClient serviceProxyOrigem, string entidade, string campo, string condicao)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition(campo, ConditionOperator.EqualUserId, condicao);
+            queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
             queryExpression.ColumnSet = new ColumnSet(true);
             EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
 
@@ -271,6 +271,9 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection ImportaUnidadePadrao(EntityCollection query)
         {
+
+
+
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < query.Entities.Count; i++)
             {
