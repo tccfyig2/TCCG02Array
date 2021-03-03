@@ -19,16 +19,16 @@ namespace RoboCriadorDeItens_2
             // Importa Contato!
             int n = 0;
             int tamanhoPacote = 50;
-            //EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
-            //EntityCollection contatosDestino = RetornaEntidades(serviceProxyDestino, "contact");
-            //int loop = contatos.Entities.Count / tamanhoPacote;
-            //while (n < loop)
-            //{
-            //    EntityCollection contact = ImportaContact(contatos, contatosDestino, tamanhoPacote, n);
-            //    ImportaParaCrm(serviceProxyDestino, contact);
-            //    Console.WriteLine($"Pacote nº: {n} importado para contact!");
-            //    n++;
-            //}
+            EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
+            EntityCollection contatosDestino = RetornaEntidades(serviceProxyDestino, "contact");
+            int loop = contatos.Entities.Count / tamanhoPacote;
+            while (n < loop)
+            {
+                EntityCollection contact = ImportaContact(contatos, contatosDestino, tamanhoPacote, n);
+                ImportaParaCrm(serviceProxyDestino, contact);
+                Console.WriteLine($"Pacote nº: {n} importado para contact!");
+                n++;
+            }
 
             // Importa Conta!
             //n = 0;
@@ -55,28 +55,28 @@ namespace RoboCriadorDeItens_2
             //}
 
             // Importa Ordens!
-            n = 0;
-            EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
-            int loop = ordens.Entities.Count / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, n);
-                ImportaParaCrm(serviceProxyDestino, salesorder);
-                Console.WriteLine($"Pacote nº: {n} importado para salesorder!");
-                n++;
-            }
+            //n = 0;
+            //EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
+            //int loop = ordens.Entities.Count / tamanhoPacote;
+            //while (n < loop)
+            //{
+            //    EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, n);
+            //    ImportaParaCrm(serviceProxyDestino, salesorder);
+            //    Console.WriteLine($"Pacote nº: {n} importado para salesorder!");
+            //    n++;
+            //}
 
             // Importa Produtos da Ordem!
-            n = 0;
-            EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
-            loop = produtosDaOrdem.Entities.Count / tamanhoPacote;
-            while (n < loop)
-            {
-                EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, n);
-                ImportaParaCrm(serviceProxyDestino, salesorderdetail);
-                Console.WriteLine($"Pacote nº: {n} importado para salesorderdetail!");
-                n++;
-            }
+            //n = 0;
+            //EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
+            //loop = produtosDaOrdem.Entities.Count / tamanhoPacote;
+            //while (n < loop)
+            //{
+            //    EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, n);
+            //    ImportaParaCrm(serviceProxyDestino, salesorderdetail);
+            //    Console.WriteLine($"Pacote nº: {n} importado para salesorderdetail!");
+            //    n++;
+            //}
 
             // Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
@@ -169,12 +169,17 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador > query.Entities.Count) { break; }
-                //if (queryDestino.Entities.Contains(query[contador].Id))
-                //{
-                //    i--;
-                //    goto end;
-                //}
+                if (contador == query.Entities.Count) { break; }
+                foreach (var item in queryDestino.Entities)
+                {
+                    if (item.Id == query[contador].Id)
+                    {
+                        Console.WriteLine("Repetido");
+                        i--;
+                        goto end;
+                    }
+                }
+                Console.WriteLine("Passou");
                 Entity entidade = new Entity("contact");
                 entidade.Attributes.Add("firstname", query[contador]["firstname"]);
                 entidade.Attributes.Add("lastname", query[contador]["lastname"]);
@@ -191,7 +196,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_country", "Brasil");
                 entidade.Id = query[contador].Id;
                 colecaoEntidades.Entities.Add(entidade);
-            //end:
+            end:
                 contador++;
             }
             return colecaoEntidades;
