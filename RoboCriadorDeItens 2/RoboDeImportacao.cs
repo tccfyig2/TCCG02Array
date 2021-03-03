@@ -78,18 +78,24 @@ namespace RoboCriadorDeItens_2
 
             //Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
-            //query = RetornaEntidades(serviceProxyOrigem, "uom");
-            //ImportaUnidadePadrao(serviceProxyDestino, query);
-            //
-            //
-            //query = RetornaEntidades(serviceProxyOrigem, "pricelevel");
-            // ImportaListaPrecos(serviceProxyDestino, query);
-            //
-            //query = RetornaEntidades(serviceProxyOrigem, "uomschedule");
-            //ImportaGrupoUnidades(serviceProxyDestino, query);
-            //
-            //query = RetornaEntidades(serviceProxyOrigem, "product");
-            //ImportaProduto(serviceProxyDestino, query);
+            //FILIPE não entendi oq vc quis dizer com o negocio do criteria la pq a maneira que eu pensei de colocar foi só se fizesse duas query oq não fez muito sentido na minha cabeça, de qualquer forma esses ai devem rodar com talvez alguns caso as tabelas não estejam vazias!
+
+            EntityCollection uom = ImportaUnidadePadrao(serviceProxyOrigem);
+            ImportaParaCrm(serviceProxyDestino, uom);
+            Console.WriteLine($"Pacote importado para uom!");
+
+            EntityCollection pricelevel = ImportaListaPrecos(serviceProxyOrigem);
+            ImportaParaCrm(serviceProxyDestino, pricelevel);
+            Console.WriteLine($"Pacote importado para pricelevel!");
+
+            EntityCollection uomschedule = ImportaGrupoUnidades(serviceProxyOrigem);
+            ImportaParaCrm(serviceProxyDestino, pricelevel);
+            Console.WriteLine($"Pacote importado para uomschedule!");
+
+            EntityCollection product = ImportaProduto(serviceProxyOrigem);
+            ImportaParaCrm(serviceProxyDestino, product);
+            Console.WriteLine($"Pacote importado para product!");
+            
         }
         static EntityCollection RetornaEntidades(CrmServiceClient serviceProxyOrigem, string entidade)
         {
@@ -164,7 +170,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("firstname", query[contador]["firstname"]);
                 entidade.Attributes.Add("lastname", query[contador]["lastname"]);
                 entidade.Attributes.Add("cred2_cpf", query[contador]["crb79_cpf"]);
-                entidade.Attributes.Add("cred2_verificado","true");
+                entidade.Attributes.Add("cred2_verificado", "true");
                 entidade.Attributes.Add("mobilephone", query[contador]["mobilephone"]);
                 entidade.Attributes.Add("emailaddress1", query[contador]["emailaddress1"]);
                 entidade.Attributes.Add("address1_postalcode", query[contador]["address1_postalcode"]);
@@ -189,7 +195,7 @@ namespace RoboCriadorDeItens_2
                 if (contador > query.Entities.Count) { break; }
                 Entity entidade = new Entity("account");
                 entidade.Attributes.Add("name", query[contador]["name"]);
-                entidade.Attributes.Add("cred2_verificado","true");
+                entidade.Attributes.Add("cred2_verificado", "true");
                 entidade.Attributes.Add("cred2_cnpj", query[contador]["crb79_cnpj"]);
                 entidade.Attributes.Add("telephone1", query[contador]["telephone1"]);
                 entidade.Attributes.Add("emailaddress1", query[contador]["emailaddress1"]);
@@ -269,62 +275,79 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaUnidadePadrao(EntityCollection query)
+        static EntityCollection ImportaUnidadePadrao(CrmServiceClient serviceProxyOrigem)
         {
-
-
+            QueryExpression queryExpression = new QueryExpression("uom");
+            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection unidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
 
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < query.Entities.Count; i++)
+            for (int i = 0; i < unidades.Entities.Count; i++)
             {
                 Entity entidade = new Entity("uom");
-                entidade.Attributes.Add("name", query[i]["name"]);
-                entidade.Attributes.Add("uomscheduleid", query[i]["uomscheduleid"]);
-                entidade.Attributes.Add("quantity", query[i]["quantity"]);
-                entidade.Id = query[i].Id;
+                entidade.Attributes.Add("name", unidades[i]["name"]);
+                entidade.Attributes.Add("uomscheduleid", unidades[i]["uomscheduleid"]);
+                entidade.Attributes.Add("quantity", unidades[i]["quantity"]);
+                entidade.Id = unidades[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaListaPrecos(EntityCollection query)
+        static EntityCollection ImportaListaPrecos(CrmServiceClient serviceProxyOrigem)
         {
+            QueryExpression queryExpression = new QueryExpression("pricelevel");
+            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection listaPrecos = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < query.Entities.Count; i++)
+            for (int i = 0; i < listaPrecos.Entities.Count; i++)
             {
                 Entity entidade = new Entity("pricelevel");
-                entidade.Attributes.Add("name", query[i]["name"]);
+                entidade.Attributes.Add("name", listaPrecos[i]["name"]);
                 entidade.Attributes.Add("begindate", DateTime.Today);
                 entidade.Attributes.Add("enddate", DateTime.Today.AddYears(1));
-                entidade.Id = query[i].Id;
+                entidade.Id = listaPrecos[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaGrupoUnidades(EntityCollection query)
+        static EntityCollection ImportaGrupoUnidades(CrmServiceClient serviceProxyOrigem)
         {
+            QueryExpression queryExpression = new QueryExpression("uomschedule");
+            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection grupoUnidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < query.Entities.Count; i++)
+            for (int i = 0; i < grupoUnidades.Entities.Count; i++)
             {
                 Entity entidade = new Entity("uomschedule");
-                entidade.Attributes.Add("name", query[i]["name"]);
-                entidade.Attributes.Add("baseuomname", query[i]["baseuomname"]);
-                entidade.Id = query[i].Id;
+                entidade.Attributes.Add("name", grupoUnidades[i]["name"]);
+                entidade.Attributes.Add("baseuomname", grupoUnidades[i]["baseuomname"]);
+                entidade.Id = grupoUnidades[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaProduto(EntityCollection query)
+        static EntityCollection ImportaProduto(CrmServiceClient serviceProxyOrigem)
         {
+            QueryExpression queryExpression = new QueryExpression("product");
+            //queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, condicao);
+            queryExpression.ColumnSet = new ColumnSet(true);
+            EntityCollection produtos = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+
             EntityCollection colecaoEntidades = new EntityCollection();
-            for (int i = 0; i < query.Entities.Count; i++)
+            for (int i = 0; i < produtos.Entities.Count; i++)
             {
                 Entity entidade = new Entity("product");
-                entidade.Attributes.Add("name", query[i]["name"]);
-                entidade.Attributes.Add("productnumber", query[i]["productnumber"]);
+                entidade.Attributes.Add("name", produtos[i]["name"]);
+                entidade.Attributes.Add("productnumber", produtos[i]["productnumber"]);
                 entidade.Attributes.Add("defaultuomscheduleid", new EntityReference("uomschedule", new Guid("2e7091ef-c6da-4a3b-b657-89f057e3612e")));
                 entidade.Attributes.Add("defaultuomid", new EntityReference("uom", new Guid("70812c78-3a7a-eb11-a812-000d3a9d0d9a")));
-                entidade.Attributes.Add("quantitydecimal", query[i]["quantitydecimal"]);
-                entidade.Id = query[i].Id;
+                entidade.Attributes.Add("quantitydecimal", produtos[i]["quantitydecimal"]);
+                entidade.Id = produtos[i].Id;
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
