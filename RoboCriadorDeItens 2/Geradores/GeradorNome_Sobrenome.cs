@@ -7,7 +7,7 @@ namespace RoboCriadorDeItens_2.Geradores
         protected static Random rnd = new Random();
         internal static string geradorNome()
         {
-            string[] homem = //100
+            string[] homem = //1000
             {
                 "Matheus", "Davi", "Heitor", "Henrique", "Bruno", "Samuel", "Felipe", "Lorenzo", "Benjamim", "Vinícius",
                 "Eduardo", "Noah", "Antônio", "Leonardo", "Diego", "Nicolas", "Daniel", "Thiago", "José", "Gael",
@@ -110,7 +110,7 @@ namespace RoboCriadorDeItens_2.Geradores
                 "Florêncio", "Elliot", "Evangelista", "Valério", "Ézio", "Raj", "Spencer", "Alex Sandro", "Erasmo", "Abílio",
                 "Adailton", "Hans", "Niklaus", "Fênix", "Amauri", "Lionel", "Elísio", "Norberto", "Gregory"
             };
-            string[] mulher = //203
+            string[] mulher = //1000
             {
                 "Isabela", "Lara", "Camila", "Letícia", "Valentina", "Luana", "Amanda", "Yasmin", "Sophia", "Juliana",
                 "Cecília", "Bruna", "Fernanda", "Isadora", "Lorena", "Lívia", "Manuela", "Vitória", "Sara", "Aline",
