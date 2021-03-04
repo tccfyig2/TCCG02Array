@@ -153,6 +153,7 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < tamanhoPacote; i++)
             {
                 Entity entidade = new Entity("account");
+                int numero = rnd.Next(0, 999);
                 string[] endereco = (GeradorEndereco.geradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
@@ -164,7 +165,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("primarycontactid", new EntityReference("contact", contact[rnd.Next(0, contact.Entities.Count)].Id));
                 string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
-                entidade.Attributes.Add("name", emailSobrenome + " ltda.");
+                entidade.Attributes.Add("name", $"{emailSobrenome} {numero} ltda.");
                 entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.geradorCNPJ()); // cred2_cnpj = Apresentação// crb79_cnpj = Cobaia
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
