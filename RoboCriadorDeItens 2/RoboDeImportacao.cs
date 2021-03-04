@@ -149,32 +149,26 @@ namespace RoboCriadorDeItens_2
 
             EntityCollection atualizar = new EntityCollection();
             int cont = 0;
-            //foreach (var item in response.Results)
-            //{
-            //    Console.WriteLine(item.Value);
-            //    Console.WriteLine(item.Value);
-            //    //if (item.Fault != null)
-            //    //{
-            //    //    Console.WriteLine($"ERRO na entidade nº: {cont}!");
-            //    //}
-            //    //else
-            //    //{
-            //    // Quando passar a entidade para crm DESINO:
-            //    // retornar id para uma lista e atualizar COMPO bool crm ORIGEM.
-
-            //    //Entity entidade = new Entity(tabela);    // RECEBER TABELA QUE DEVE SER ATUALIZADA!!!!!!
-
-            //    // Entidade tem que receber o Id do item que foi criado.
-
-            //    //Console.WriteLine(item.Response);
-
-            //    //entidade.Id = new Guid(item.Response);
-
-            //    //    entidade.Attributes.Add("crb79_importado", true);    // COMPO bool crm ORIGEM.
-            //    //    atualizar.Entities.Add(entidade);
-            //    //}
-            //    //cont++;
-            //}
+            foreach (var item in response.Responses)
+            {
+                if (item.Fault != null)
+                {
+                    Console.WriteLine($"ERRO na entidade nº: {cont}!");
+                }
+                else
+                {
+                    // Quando passar a entidade para crm DESINO:
+                    // retornar id para uma lista e atualizar COMPO bool crm ORIGEM.
+                    Entity entidade = new Entity(tabela);    // RECEBER TABELA QUE DEVE SER ATUALIZADA!!!!!!
+                    // Entidade tem que receber o Id do item que foi criado.
+                    Console.WriteLine(item.Response);
+                    string id = (item.Response.Results["id"].ToString());
+                    Console.WriteLine(id);
+                    entidade.Attributes.Add("crb79_importado", true);    // COMPO bool crm ORIGEM.
+                    atualizar.Entities.Add(entidade);
+                }
+                cont++;
+            }
             Console.WriteLine($"{cont} entidades importadas!");
             return atualizar;
         }
