@@ -28,61 +28,51 @@ namespace RoboCriadorDeItens_2
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
 
-            // Cria Contatos!
-            //int n = 0;
-            //int tamanhoPacote = 50;
-            //// loop de ser um número inteiro! Divisivel por tamanhoPacote!
-            //int loop = 5000 / tamanhoPacote;
-            //while (n < loop)
-            //{
+            //Cria Contatos!
+            int tamanhoPacote = 50;
+            // loop de ser um número inteiro! Divisivel por tamanhoPacote!
+            int loop = 5000 / tamanhoPacote;
+            // for (int i = 0; i < loop; i++)
+            // {
             //    EntityCollection contact = CriaContact(tamanhoPacote);
             //    criaNoCrm(_serviceProxy, contact);
-            //    Console.WriteLine($"Pacote nº: {n} criado em contact!");
-            //    n++;
-            //}
+            //    Console.WriteLine($"Pacote nº: {i} criado em contact!");
+            // }
 
             // Cria Contas!
-            //n = 0;
-            //EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
-            //while (n < loop)
-            //{
-            //    EntityCollection account = CriaAccount(contatos, tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, account);
-            //    Console.WriteLine($"Pacote nº: {n} criado em account!");
-            //    n++;
-            //}
+            EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
+            for (int i = 0; i < loop; i++)
+            {
+               EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
+               criaNoCrm(_serviceProxy, account);
+               Console.WriteLine($"Pacote nº: {i} criado em account!");
+            }
 
             // Cria Clientes Potenciais!
-            //n = 0;
-            //while (n < loop)
-            //{
-            //    EntityCollection lead = CriaLead(tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, lead);
-            //    Console.WriteLine($"Pacote nº: {n} criado em lead!");
-            //    n++;
-            //}
+            for (int i = 0; i < loop; i++)
+            {
+               EntityCollection lead = CriaLead(tamanhoPacote);
+               criaNoCrm(_serviceProxy, lead);
+               Console.WriteLine($"Pacote nº: {i} criado em lead!");
+            }
 
             // Cria Ordens!
-            //n = 0;
-            //EntityCollection contas = retornaEntidades(_serviceProxy, "account");
-            //while (n < loop)
-            //{
-            //    EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, salesorder);
-            //    Console.WriteLine($"Pacote nº: {n} criado em salesorder!");
-            //    n++;
-            //}
+            EntityCollection contas = retornaEntidades(_serviceProxy, "account");
+            for (int i = 0; i < loop; i++)
+            {
+               EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i);
+               criaNoCrm(_serviceProxy, salesorder);
+               Console.WriteLine($"Pacote nº: {i} criado em salesorder!");
+            }
 
             // Cria Produtos da Ordem!
-            //n = 0;
-            //EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
-            //while (n < loop)
-            //{
-            //    EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, n);
-            //    criaNoCrm(_serviceProxy, salesorderdetail);
-            //    Console.WriteLine($"Pacote nº: {n} de salesorderdetail!");
-            //    n++;
-            //}
+            EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
+            for (int i = 0; i < loop; i++)
+            {
+               EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
+               criaNoCrm(_serviceProxy, salesorderdetail);
+               Console.WriteLine($"Pacote nº: {i} de salesorderdetail!");
+            }
         }
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {
@@ -147,8 +137,9 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaAccount(EntityCollection contact, int tamanhoPacote)
+        static EntityCollection CriaAccount(EntityCollection contact, int tamanhoPacote, int contador)
         {
+            contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
@@ -162,7 +153,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-                entidade.Attributes.Add("primarycontactid", new EntityReference("contact", contact[rnd.Next(0, contact.Entities.Count)].Id));
+                entidade.Attributes.Add("primarycontactid", new EntityReference("contact", contact[contador].Id));
                 string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
                 entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
                 entidade.Attributes.Add("name", $"{emailSobrenome} {numero} ltda.");
@@ -199,15 +190,18 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorder(EntityCollection account, int tamanhoPacote)
+        static EntityCollection CriaSalesorder(EntityCollection account, int tamanhoPacote, int contador)
         {
+            contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             Guid pricelevelid = new Guid("68f3a59e-f779-eb11-a812-00224836bdf5");
             for (int i = 0; i < tamanhoPacote; i++)
             {
                 Entity entidade = new Entity("salesorder");
-                entidade.Attributes.Add("name", $"Ordem NUM-{GeradorTelefone_Topico.criadorCodigo()}");
-                entidade.Attributes.Add("customerid", new EntityReference("account", account[rnd.Next(0, account.Entities.Count)].Id));
+                string codigo = $"cod-{10000 + contador}";
+                entidade.Attributes.Add("name", $"Ordem {codigo}");
+                entidade.Attributes.Add("crb79_codigo", codigo);
+                entidade.Attributes.Add("customerid", new EntityReference("account", account[contador].Id));
                 entidade.Attributes.Add("pricelevelid", new EntityReference("pricelevel", pricelevelid));
                 colecaoEntidades.Entities.Add(entidade);
             }
