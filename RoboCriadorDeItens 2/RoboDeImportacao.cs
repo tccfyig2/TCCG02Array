@@ -162,7 +162,8 @@ namespace RoboCriadorDeItens_2
                     Entity entidade = new Entity(tabela);    // RECEBER TABELA QUE DEVE SER ATUALIZADA!!!!!!
                     // Entidade tem que receber o Id do item que foi criado.
                     Console.WriteLine(item.Response);
-                    entidade.Id = new Guid(item.Response);
+                    string id = (item.Response.Results["id"].ToString());
+                    Console.WriteLine(id);
                     entidade.Attributes.Add("crb79_importado", true);    // COMPO bool crm ORIGEM.
                     atualizar.Entities.Add(entidade);
                 }
