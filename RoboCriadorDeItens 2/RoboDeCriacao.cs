@@ -32,21 +32,21 @@ namespace RoboCriadorDeItens_2
             int tamanhoPacote = 50;
             // loop de ser um número inteiro! Divisivel por tamanhoPacote!
             int loop = 5000 / tamanhoPacote;
-            for (int i = 0; i < loop; i++)
-            {
-                EntityCollection contact = CriaContact(tamanhoPacote);
-                criaNoCrm(_serviceProxy, contact);
-                Console.WriteLine($"Pacote nº: {i} criado em contact!");
-            }
-
-            // Cria Contas!
-            //EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
             //for (int i = 0; i < loop; i++)
             //{
-            //   EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
-            //   criaNoCrm(_serviceProxy, account);
-            //   Console.WriteLine($"Pacote nº: {i} criado em account!");
+            //    EntityCollection contact = CriaContact(tamanhoPacote);
+            //    criaNoCrm(_serviceProxy, contact);
+            //    Console.WriteLine($"Pacote nº: {i} criado em contact!");
             //}
+
+            // Cria Contas!
+            EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
+            for (int i = 0; i < loop; i++)
+            {
+                EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
+                criaNoCrm(_serviceProxy, account);
+                Console.WriteLine($"Pacote nº: {i} criado em account!");
+            }
 
             // Cria Clientes Potenciais!
             //for (int i = 0; i < loop; i++)
