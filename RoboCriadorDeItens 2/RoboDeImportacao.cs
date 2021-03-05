@@ -279,6 +279,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == query.Entities.Count) { break; }
                 Entity entidade = new Entity("account");
                 entidade.Attributes.Add("name", query[contador]["name"]);
                 entidade.Attributes.Add("cred2_verificado", "true");
@@ -305,6 +306,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == query.Entities.Count) { break; }
                 Entity entidade = new Entity("lead");
                 entidade.Attributes.Add("firstname", query[contador]["firstname"]);
                 entidade.Attributes.Add("lastname", query[contador]["lastname"]);
@@ -332,6 +334,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == query.Entities.Count) { break; }
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("name", query[contador]["name"]);
                 entidade.Attributes.Add("cred2_codigo", query[contador]["crb79_codigo"]);
@@ -349,6 +352,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == query.Entities.Count) { break; }
                 Entity entidade = new Entity("salesorderdetail");
                 entidade.Attributes.Add("productid", query[contador]["productid"]);
                 entidade.Attributes.Add("salesorderid", query[contador]["salesorderid"]);
