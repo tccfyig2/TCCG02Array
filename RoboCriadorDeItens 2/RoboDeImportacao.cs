@@ -16,25 +16,25 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
             // Importa Contato!
-            int tamanhoPacote = 2;
-            EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
-            for (int i = 0; i < (contatos.Entities.Count / tamanhoPacote); i++)
-            {
-                EntityCollection contact = ImportaContact(contatos, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, contact, "contact");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
-                Console.WriteLine($"Pacote nº: {i} importado para contact!");
-            }
+            int tamanhoPacote = 50;
+            //EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
+            //for (int i = 0; i < (contatos.Entities.Count / tamanhoPacote); i++)
+            //{
+            //    EntityCollection contact = ImportaContact(contatos, tamanhoPacote, i);
+            //    EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, contact, "contact");
+            //    AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+            //    Console.WriteLine($"Pacote nº: {i} importado para contact!");
+            //}
 
             // Importa Conta!
-            //EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
-            //for (int i = 0; i < (contas.Entities.Count / tamanhoPacote); i++)
-            //{
-            //    EntityCollection account = ImportaAccount(contas, tamanhoPacote, i);
-            //    EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, account, "account");
-            //    AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
-            //    Console.WriteLine($"Pacote nº: {i} importado para account!");
-            //}
+            EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
+            for (int i = 0; i < (contas.Entities.Count / tamanhoPacote); i++)
+            {
+                EntityCollection account = ImportaAccount(contas, tamanhoPacote, i);
+                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, account, "account");
+                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                Console.WriteLine($"Pacote nº: {i} importado para account!");
+            }
 
             // Importa Clientes Potenciais!
             //EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
@@ -91,12 +91,12 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection RetornaEntidades(CrmServiceClient serviceProxyOrigem, string entidade)  //DAL
         {
-            EntityCollection itens = new EntityCollection();
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);    // Alterar
+            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
             queryExpression.ColumnSet = new ColumnSet(true);
 
-            queryExpression.PageInfo = new Microsoft.Xrm.Sdk.Query.PagingInfo();
+            EntityCollection itens = new EntityCollection();
+            queryExpression.PageInfo = new PagingInfo();
             queryExpression.PageInfo.PageNumber = 1;
             bool moreData = true;
             while (moreData)
@@ -112,24 +112,47 @@ namespace RoboCriadorDeItens_2
         static EntityCollection RetornaEntidadesCondicao(CrmServiceClient serviceProxyOrigem, string entidade, string condicao)  //DAL
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);   // Alterar
+            queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);
             queryExpression.ColumnSet = new ColumnSet(true);
-            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
 
-            return colecaoEntidades;
+            EntityCollection itens = new EntityCollection();
+            queryExpression.PageInfo = new Microsoft.Xrm.Sdk.Query.PagingInfo();
+            queryExpression.PageInfo.PageNumber = 1;
+            bool moreData = true;
+            while (moreData)
+            {
+                EntityCollection result = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+                itens.Entities.AddRange(result.Entities);
+                moreData = result.MoreRecords;
+                queryExpression.PageInfo.PageNumber++;
+                queryExpression.PageInfo.PagingCookie = result.PagingCookie;
+            }
+            return itens;
         }
         static EntityCollection QueryExpression(CrmServiceClient serviceProxyOrigem, string entidade)  //DAL
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);    // Alterar
+            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
             queryExpression.ColumnSet = new ColumnSet(true);
+
             LinkEntity link = new LinkEntity("account", "contact", "primarycontactid", "contactid", JoinOperator.Inner);
             link.Columns = new ColumnSet(true);
             link.EntityAlias = "Contato";
             queryExpression.LinkEntities.Add(link);
-            EntityCollection colecaoEntidades = serviceProxyOrigem.RetrieveMultiple(queryExpression);
 
-            return colecaoEntidades;
+            EntityCollection itens = new EntityCollection();
+            queryExpression.PageInfo = new Microsoft.Xrm.Sdk.Query.PagingInfo();
+            queryExpression.PageInfo.PageNumber = 1;
+            bool moreData = true;
+            while (moreData)
+            {
+                EntityCollection result = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+                itens.Entities.AddRange(result.Entities);
+                moreData = result.MoreRecords;
+                queryExpression.PageInfo.PageNumber++;
+                queryExpression.PageInfo.PagingCookie = result.PagingCookie;
+            }
+            return itens;
         }
         static EntityCollection ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades, string tabela)  //DAL
         {
@@ -153,7 +176,7 @@ namespace RoboCriadorDeItens_2
             {
                 if (item.Fault != null)
                 {
-                    Console.WriteLine($"ERRO na entidade nº: {cont}!");
+                    Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
                 }
                 else
                 {
@@ -161,9 +184,7 @@ namespace RoboCriadorDeItens_2
                     // retornar id para uma lista e atualizar COMPO bool crm ORIGEM.
                     Entity entidade = new Entity(tabela);    // RECEBER TABELA QUE DEVE SER ATUALIZADA!!!!!!
                     // Entidade tem que receber o Id do item que foi criado.
-                    Console.WriteLine(item.Response);
-                    string id = (item.Response.Results["id"].ToString());
-                    Console.WriteLine(id);
+                    entidade.Id = (Guid)item.Response.Results["id"];
                     entidade.Attributes.Add("crb79_importado", true);    // COMPO bool crm ORIGEM.
                     atualizar.Entities.Add(entidade);
                 }

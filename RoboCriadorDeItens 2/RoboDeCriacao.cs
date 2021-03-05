@@ -76,10 +76,10 @@ namespace RoboCriadorDeItens_2
         }
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {
-            EntityCollection itens = new EntityCollection();
             QueryExpression queryExpression = new QueryExpression(entidade);
             queryExpression.ColumnSet = new ColumnSet(true);
 
+            EntityCollection itens = new EntityCollection();
             queryExpression.PageInfo = new Microsoft.Xrm.Sdk.Query.PagingInfo();
             queryExpression.PageInfo.PageNumber = 1;
             bool moreData = true;
