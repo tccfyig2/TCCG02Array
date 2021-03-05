@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using RoboCriadorDeItens_2.DAL;
 using RoboCriadorDeItens_2.Geradores;
-using System.Diagnostics;
 using System;
+using System.Diagnostics;
 
 namespace RoboCriadorDeItens_2
 {
@@ -45,7 +45,7 @@ namespace RoboCriadorDeItens_2
 
             // Cria Contas!
             cronometro.Start();
-            EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
+            EntityCollection contatos = Query.RetornaEntidades(_serviceProxy, "contact");
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
@@ -68,7 +68,7 @@ namespace RoboCriadorDeItens_2
 
             // Cria Ordens!
             cronometro.Start();
-            EntityCollection contas = retornaEntidades(_serviceProxy, "account");
+            EntityCollection contas = Query.RetornaEntidades(_serviceProxy, "account");
             Console.WriteLine("Digite o valor inicial do código da Ordem!");
             int semente = int.Parse(Console.ReadLine());
             for (int i = 0; i < loop; i++)
@@ -82,7 +82,7 @@ namespace RoboCriadorDeItens_2
 
             // Cria Produtos da Ordem!
             cronometro.Start();
-            EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
+            EntityCollection ordens = Query.RetornaEntidades(_serviceProxy, "salesorder");
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
@@ -91,26 +91,6 @@ namespace RoboCriadorDeItens_2
             }
             cronometro.Stop();
             Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
-        }
-        static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
-        {
-            QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);   // Evita pegar entidaes que ja foram para o novo ambiente.
-            queryExpression.ColumnSet = new ColumnSet(true);
-
-            EntityCollection itens = new EntityCollection();
-            queryExpression.PageInfo = new Microsoft.Xrm.Sdk.Query.PagingInfo();
-            queryExpression.PageInfo.PageNumber = 1;
-            bool moreData = true;
-            while (moreData)
-            {
-                EntityCollection result = _serviceProxy.RetrieveMultiple(queryExpression);
-                itens.Entities.AddRange(result.Entities);
-                moreData = result.MoreRecords;
-                queryExpression.PageInfo.PageNumber++;
-                queryExpression.PageInfo.PagingCookie = result.PagingCookie;
-            }
-            return itens;
         }
         static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
         {
@@ -149,7 +129,7 @@ namespace RoboCriadorDeItens_2
             {
                 Entity entidade = new Entity("contact");
                 entidade.Attributes.Add("crb79_importado", false);
-                string[] endereco = (GeradorEndereco.geradorEndereco());
+                string[] endereco = (GeradorForm.geradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
                 entidade.Attributes.Add("address1_line2", endereco[2]);
@@ -157,12 +137,12 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-                string emailNome = GeradorNome_Sobrenome.geradorSobrenome();
+                string emailNome = GeradorForm.geradorSobrenome();
                 entidade.Attributes.Add("firstname", emailNome);
-                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
-                entidade.Attributes.Add("lastname", GeradorNome_Sobrenome.geradorSobrenome());
+                entidade.Attributes.Add("emailaddress1", GeradorForm.geradorEmail(emailNome));
+                entidade.Attributes.Add("lastname", GeradorForm.geradorSobrenome());
                 entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.geradorCPF()); // cred2_cpf = Apresentação// crb79_cpf = Cobaia
-                entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
+                entidade.Attributes.Add("mobilephone", GeradorForm.geredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;
@@ -177,7 +157,7 @@ namespace RoboCriadorDeItens_2
                 Entity entidade = new Entity("account");
                 int numero = rnd.Next(0, 999);
                 entidade.Attributes.Add("crb79_importado", false);
-                string[] endereco = (GeradorEndereco.geradorEndereco());
+                string[] endereco = (GeradorForm.geradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
                 entidade.Attributes.Add("address1_line2", endereco[2]);
@@ -186,11 +166,11 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
                 entidade.Attributes.Add("primarycontactid", new EntityReference("contact", contact[contador].Id));
-                string emailSobrenome = GeradorNome_Sobrenome.geradorSobrenome();
-                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailSobrenome));
+                string emailSobrenome = GeradorForm.geradorSobrenome();
+                entidade.Attributes.Add("emailaddress1", GeradorForm.geradorEmail(emailSobrenome));
                 entidade.Attributes.Add("name", $"{emailSobrenome} {numero} ltda.");
                 entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.geradorCNPJ()); // cred2_cnpj = Apresentação// crb79_cnpj = Cobaia
-                entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
+                entidade.Attributes.Add("telephone1", GeradorForm.geredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
                 contador++;
             }
@@ -203,7 +183,7 @@ namespace RoboCriadorDeItens_2
             {
                 Entity entidade = new Entity("lead");
                 entidade.Attributes.Add("crb79_importado", false);
-                string[] endereco = (GeradorEndereco.geradorEndereco());
+                string[] endereco = (GeradorForm.geradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
                 entidade.Attributes.Add("address1_line2", endereco[2]);
@@ -211,15 +191,15 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-                string emailNome = (GeradorNome_Sobrenome.geradorNome());
-                entidade.Attributes.Add("emailaddress1", GeradorEmail.geradorEmail(emailNome));
+                string emailNome = (GeradorForm.geradorNome());
+                entidade.Attributes.Add("emailaddress1", GeradorForm.geradorEmail(emailNome));
                 entidade.Attributes.Add("firstname", emailNome);
-                string sobrenomeEmpresa = (GeradorNome_Sobrenome.geradorSobrenome());
+                string sobrenomeEmpresa = (GeradorForm.geradorSobrenome());
                 entidade.Attributes.Add("lastname", sobrenomeEmpresa);
                 entidade.Attributes.Add("companyname", sobrenomeEmpresa + " ltda.");
-                entidade.Attributes.Add("subject", GeradorTelefone_Topico.geredorTopico());
-                entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
-                entidade.Attributes.Add("mobilephone", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
+                entidade.Attributes.Add("subject", GeradorForm.geredorTopico());
+                entidade.Attributes.Add("telephone1", GeradorForm.geredorTelefone(endereco[5]));
+                entidade.Attributes.Add("mobilephone", GeradorForm.geredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
             }
             return colecaoEntidades;

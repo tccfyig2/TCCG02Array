@@ -62,16 +62,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conexao.cs" />
-    <Compile Include="Geradores\GeradorCPF_CNPJ.cs" />
-    <Compile Include="Geradores\GeradorEmail.cs" />
-    <Compile Include="Geradores\GeradorEndereco.cs" />
-    <Compile Include="Geradores\GeradorId.cs" />
-    <Compile Include="Geradores\GeradorNome_Sobrenome.cs" />
-    <Compile Include="Geradores\GeradorTelefone_Topico.cs" />
+    <Compile Include="DAL\Query.cs" />
+    <Compile Include="MODEL\Geradores\GeradorCPF_CNPJ.cs" />
+    <Compile Include="MODEL\Geradores\GeradorForm.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RoboDeCriacao.cs" />
-    <Compile Include="RoboDeImportacao.cs" />
+    <Compile Include="MODEL\RoboDeCriacao.cs" />
+    <Compile Include="MODEL\RoboDeImportacao.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -120,5 +117,6 @@
       <Version>4.3.2</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
-using System.Diagnostics;
+using RoboCriadorDeItens_2.DAL;
 using System;
+using System.Diagnostics;
 
 namespace RoboCriadorDeItens_2
 {
@@ -20,7 +20,7 @@ namespace RoboCriadorDeItens_2
             // Importa Contato!
             int tamanhoPacote = 50;
             cronometro.Start();
-            EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
+            EntityCollection contatos = Query.RetornaEntidades(serviceProxyOrigem, "contact");
             int loop = (int)Math.Ceiling((float)contatos.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
@@ -34,7 +34,7 @@ namespace RoboCriadorDeItens_2
 
             // Importa Conta!
             cronometro.Start();
-            EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
+            EntityCollection contas = Query.QueryExpression(serviceProxyOrigem, "account");
             loop = (int)Math.Ceiling((float)contas.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
@@ -48,7 +48,7 @@ namespace RoboCriadorDeItens_2
 
             // Importa Clientes Potenciais!
             cronometro.Start();
-            EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
+            EntityCollection clientesPotenciais = Query.RetornaEntidades(serviceProxyOrigem, "lead");
             loop = (int)Math.Ceiling((float)clientesPotenciais.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
@@ -62,7 +62,7 @@ namespace RoboCriadorDeItens_2
 
             //Importa Ordens!
             cronometro.Start();
-            EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
+            EntityCollection ordens = Query.RetornaEntidades(serviceProxyOrigem, "salesorder");
             loop = (int)Math.Ceiling((float)ordens.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
@@ -76,7 +76,7 @@ namespace RoboCriadorDeItens_2
 
             // Importa Produtos da Ordem!
             cronometro.Start();
-            EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
+            EntityCollection produtosDaOrdem = Query.RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
             loop = (int)Math.Ceiling((float)produtosDaOrdem.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
@@ -91,93 +91,28 @@ namespace RoboCriadorDeItens_2
             // Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
             // Importa Unidade
-            // EntityCollection unidade = RetornaEntidadesCondicao(serviceProxyOrigem, "uom", "item");
+            // EntityCollection unidade = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uom", "item");
             // EntityCollection uom = ImportaUom(serviceProxyOrigem, unidade);
             // ImportaParaCrm(serviceProxyDestino, uom);
             // Console.WriteLine($"Pacote importado para uom!");
 
             // Importa Lista de Preços
-            // EntityCollection listaDePreços = RetornaEntidadesCondicao(serviceProxyOrigem, "pricelevel", "Default");
+            // EntityCollection listaDePreços = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "pricelevel", "Default");
             // EntityCollection pricelevel = ImportaPricelevel(serviceProxyOrigem, listaDePreços);
             // ImportaParaCrm(serviceProxyDestino, pricelevel);
             // Console.WriteLine($"Pacote importado para pricelevel!");
 
             // Importa Grupo de Unidades
-            // EntityCollection grupoDeUnidades = RetornaEntidadesCondicao(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
+            // EntityCollection grupoDeUnidades = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
             // EntityCollection uomschedule = ImportaUomschedule(serviceProxyOrigem, grupoDeUnidades);
             // ImportaParaCrm(serviceProxyDestino, pricelevel);
             // Console.WriteLine($"Pacote importado para uomschedule!");
 
             //Importa Produtos
-            // EntityCollection produtos = RetornaEntidadesCondicao(serviceProxyOrigem, "product", "Notebook Lenovo");
+            // EntityCollection produtos = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "product", "Notebook Lenovo");
             // EntityCollection product = ImportaProduct(serviceProxyOrigem, produtos);
             // ImportaParaCrm(serviceProxyDestino, product);
             // Console.WriteLine($"Pacote importado para product!");
-        }
-        static EntityCollection RetornaEntidades(CrmServiceClient serviceProxyOrigem, string entidade)  //DAL
-        {
-            QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
-            queryExpression.ColumnSet = new ColumnSet(true);
-
-            EntityCollection itens = new EntityCollection();
-            queryExpression.PageInfo = new PagingInfo();
-            queryExpression.PageInfo.PageNumber = 1;
-            bool moreData = true;
-            while (moreData)
-            {
-                EntityCollection result = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-                itens.Entities.AddRange(result.Entities);
-                moreData = result.MoreRecords;
-                queryExpression.PageInfo.PageNumber++;
-                queryExpression.PageInfo.PagingCookie = result.PagingCookie;
-            }
-            return itens;
-        }
-        static EntityCollection RetornaEntidadesCondicao(CrmServiceClient serviceProxyOrigem, string entidade, string condicao)  //DAL
-        {
-            QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);
-            queryExpression.ColumnSet = new ColumnSet(true);
-
-            EntityCollection itens = new EntityCollection();
-            queryExpression.PageInfo = new Microsoft.Xrm.Sdk.Query.PagingInfo();
-            queryExpression.PageInfo.PageNumber = 1;
-            bool moreData = true;
-            while (moreData)
-            {
-                EntityCollection result = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-                itens.Entities.AddRange(result.Entities);
-                moreData = result.MoreRecords;
-                queryExpression.PageInfo.PageNumber++;
-                queryExpression.PageInfo.PagingCookie = result.PagingCookie;
-            }
-            return itens;
-        }
-        static EntityCollection QueryExpression(CrmServiceClient serviceProxyOrigem, string entidade)  //DAL
-        {
-            QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
-            queryExpression.ColumnSet = new ColumnSet(true);
-
-            LinkEntity link = new LinkEntity("account", "contact", "primarycontactid", "contactid", JoinOperator.Inner);
-            link.Columns = new ColumnSet(true);
-            link.EntityAlias = "Contato";
-            queryExpression.LinkEntities.Add(link);
-
-            EntityCollection itens = new EntityCollection();
-            queryExpression.PageInfo = new Microsoft.Xrm.Sdk.Query.PagingInfo();
-            queryExpression.PageInfo.PageNumber = 1;
-            bool moreData = true;
-            while (moreData)
-            {
-                EntityCollection result = serviceProxyOrigem.RetrieveMultiple(queryExpression);
-                itens.Entities.AddRange(result.Entities);
-                moreData = result.MoreRecords;
-                queryExpression.PageInfo.PageNumber++;
-                queryExpression.PageInfo.PagingCookie = result.PagingCookie;
-            }
-            return itens;
         }
         static EntityCollection ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades, string tabela)  //DAL
         {
