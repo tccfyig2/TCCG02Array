@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.Geradores;
+using System.Diagnostics;
 using System;
 
 namespace RoboCriadorDeItens_2
@@ -23,7 +24,7 @@ namespace RoboCriadorDeItens_2
             * salesorder
             * salesorderdetail
             */
-
+            Stopwatch cronometro = new Stopwatch();
             // Cria Conexão
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
@@ -32,14 +33,18 @@ namespace RoboCriadorDeItens_2
             int tamanhoPacote = 50;
             // loop de ser um número inteiro! Divisivel por tamanhoPacote!
             int loop = 5000 / tamanhoPacote;
+            cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = CriaContact(tamanhoPacote);
                 criaNoCrm(_serviceProxy, contact);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Cria Contas!
+            cronometro.Start();
             EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
             for (int i = 0; i < loop; i++)
             {
@@ -47,25 +52,34 @@ namespace RoboCriadorDeItens_2
                 criaNoCrm(_serviceProxy, account);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Cria Clientes Potenciais!
+            cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection lead = CriaLead(tamanhoPacote);
                 criaNoCrm(_serviceProxy, lead);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em lead!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Cria Ordens!
+            cronometro.Start();
             EntityCollection contas = retornaEntidades(_serviceProxy, "account");
             for (int i = 0; i < loop; i++)
             {
-               EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i);
-               criaNoCrm(_serviceProxy, salesorder);
-               Console.WriteLine($"Pacote nº: {i+1} criado em salesorder!");
+                EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i);
+                criaNoCrm(_serviceProxy, salesorder);
+                Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Cria Produtos da Ordem!
+            cronometro.Start();
             EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
             for (int i = 0; i < loop; i++)
             {
@@ -73,6 +87,8 @@ namespace RoboCriadorDeItens_2
                 criaNoCrm(_serviceProxy, salesorderdetail);
                 Console.WriteLine($"Pacote nº: {i + 1} de salesorderdetail!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
         }
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {
@@ -108,7 +124,6 @@ namespace RoboCriadorDeItens_2
                 request.Requests.Add(createRequest);
             }
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            Console.WriteLine("Pacote de entidades criado e enviado!");
             int cont = 0;
             foreach (var item in response.Responses)
             {
@@ -155,7 +170,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == contact.Entities.Count){break;};
+                if (contador == contact.Entities.Count) { break; };
                 Entity entidade = new Entity("account");
                 int numero = rnd.Next(0, 999);
                 entidade.Attributes.Add("crb79_importado", false);
@@ -213,7 +228,7 @@ namespace RoboCriadorDeItens_2
             Guid pricelevelid = new Guid("68f3a59e-f779-eb11-a812-00224836bdf5");
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == account.Entities.Count){break;};
+                if (contador == account.Entities.Count) { break; };
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("crb79_importado", false);
                 string codigo = $"cod-{10000 + contador}";
@@ -234,7 +249,7 @@ namespace RoboCriadorDeItens_2
             Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == salesorder.Entities.Count){break;};
+                if (contador == salesorder.Entities.Count) { break; };
                 Entity entidade = new Entity("salesorderdetail");
                 entidade.Attributes.Add("crb79_importado", false);
                 entidade.Attributes.Add("productid", new EntityReference("product", productid));

@@ -2,6 +2,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
+using System.Diagnostics;
 using System;
 
 namespace RoboCriadorDeItens_2
@@ -10,6 +11,7 @@ namespace RoboCriadorDeItens_2
     {
         internal static void importacao()   // MODEL
         {
+            Stopwatch cronometro = new Stopwatch();
             // Cria conexões!
             Conexao conexao = new Conexao();
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
@@ -17,6 +19,7 @@ namespace RoboCriadorDeItens_2
 
             // Importa Contato!
             int tamanhoPacote = 50;
+            cronometro.Start();
             EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
             for (int i = 0; i < (contatos.Entities.Count / tamanhoPacote); i++)
             {
@@ -25,8 +28,11 @@ namespace RoboCriadorDeItens_2
                 AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para contact!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Importa Conta!
+            cronometro.Start();
             EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
             for (int i = 0; i < (contas.Entities.Count / tamanhoPacote); i++)
             {
@@ -35,18 +41,24 @@ namespace RoboCriadorDeItens_2
                 AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para account!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Importa Clientes Potenciais!
+            cronometro.Start();
             EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
             for (int i = 0; i < (clientesPotenciais.Entities.Count / tamanhoPacote); i++)
             {
                 EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, i);
                 EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, lead, "lead");
                 AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
-                Console.WriteLine($"Pacote nº: {i+1} importado para lead!");
+                Console.WriteLine($"Pacote nº: {i + 1} importado para lead!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             //Importa Ordens!
+            cronometro.Start();
             EntityCollection ordens = RetornaEntidades(serviceProxyDestino, "salesorder");
             for (int i = 0; i < (ordens.Entities.Count / tamanhoPacote); i++)
             {
@@ -55,8 +67,11 @@ namespace RoboCriadorDeItens_2
                 AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para salesorder!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Importa Produtos da Ordem!
+            cronometro.Start();
             EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
             for (int i = 0; i < (produtosDaOrdem.Entities.Count / tamanhoPacote); i++)
             {
@@ -65,6 +80,8 @@ namespace RoboCriadorDeItens_2
                 AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para salesorderdetail!");
             }
+            cronometro.Stop();
+            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
 
             // Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
@@ -171,8 +188,6 @@ namespace RoboCriadorDeItens_2
                 request.Requests.Add(createRequest);
             }
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)serviceProxyDestino.Execute(request);
-            Console.WriteLine("Pacote de entidades criado e enviado!");
-
             EntityCollection atualizar = new EntityCollection();
             int cont = 0;
             foreach (var item in response.Responses)
@@ -211,7 +226,6 @@ namespace RoboCriadorDeItens_2
                 request.Requests.Add(updateRequest);
             }
             ExecuteMultipleResponse response = (ExecuteMultipleResponse)serviceProxyOrigem.Execute(request);
-            Console.WriteLine("Pacote de ATUALIZAÇÃO de entidades criado e enviado!");
             int cont = 0;
             foreach (var item in response.Responses)
             {
