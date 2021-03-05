@@ -32,29 +32,29 @@ namespace RoboCriadorDeItens_2
             int tamanhoPacote = 50;
             // loop de ser um número inteiro! Divisivel por tamanhoPacote!
             int loop = 5000 / tamanhoPacote;
-            //for (int i = 0; i < loop; i++)
-            //{
-            //    EntityCollection contact = CriaContact(tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, contact);
-            //    Console.WriteLine($"Pacote nº: {i+1} criado em contact!");
-            //}
+            for (int i = 0; i < loop; i++)
+            {
+                EntityCollection contact = CriaContact(tamanhoPacote);
+                criaNoCrm(_serviceProxy, contact);
+                Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
+            }
 
             // Cria Contas!
-            //EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
-            //for (int i = 0; i < loop; i++)
-            //{
-            //    EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
-            //    criaNoCrm(_serviceProxy, account);
-            //    Console.WriteLine($"Pacote nº: {i+1} criado em account!");
-            //}
+            EntityCollection contatos = retornaEntidades(_serviceProxy, "contact");
+            for (int i = 0; i < loop; i++)
+            {
+                EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
+                criaNoCrm(_serviceProxy, account);
+                Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
+            }
 
             // Cria Clientes Potenciais!
-            //for (int i = 0; i < loop; i++)
-            //{
-            //    EntityCollection lead = CriaLead(tamanhoPacote);
-            //    criaNoCrm(_serviceProxy, lead);
-            //    Console.WriteLine($"Pacote nº: {i+1} criado em lead!");
-            //}
+            for (int i = 0; i < loop; i++)
+            {
+                EntityCollection lead = CriaLead(tamanhoPacote);
+                criaNoCrm(_serviceProxy, lead);
+                Console.WriteLine($"Pacote nº: {i + 1} criado em lead!");
+            }
 
             // Cria Ordens!
             EntityCollection contas = retornaEntidades(_serviceProxy, "account");
@@ -66,13 +66,13 @@ namespace RoboCriadorDeItens_2
             }
 
             // Cria Produtos da Ordem!
-            //EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
-            //for (int i = 0; i < loop; i++)
-            //{
-            //   EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
-            //   criaNoCrm(_serviceProxy, salesorderdetail);
-            //   Console.WriteLine($"Pacote nº: {i+1} de salesorderdetail!");
-            //}
+            EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
+            for (int i = 0; i < loop; i++)
+            {
+                EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
+                criaNoCrm(_serviceProxy, salesorderdetail);
+                Console.WriteLine($"Pacote nº: {i + 1} de salesorderdetail!");
+            }
         }
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {

@@ -11,8 +11,8 @@ namespace RoboCriadorDeItens_2
             cronometro.Start();
 
             RoboDeCriacao.criacao();
-            //RoboDeImportacao.importacao();
-            //Console.WriteLine("Sucesso!!!");
+            RoboDeImportacao.importacao();
+            Console.WriteLine("Sucesso!!!");
             cronometro.Stop();
             Console.WriteLine($"O processo foi concluido após {cronometro.Elapsed.Minutes} minutos e {cronometro.Elapsed.Seconds} segundos");
             Console.ReadLine();
