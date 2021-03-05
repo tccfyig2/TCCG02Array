@@ -1,5 +1,4 @@
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.DAL;
 using System;
@@ -9,7 +8,7 @@ namespace RoboCriadorDeItens_2
 {
     class RoboDeImportacao
     {
-        internal static void importacao()   // MODEL
+        internal static void importacao()
         {
             Stopwatch cronometro = new Stopwatch();
             // Cria conexões!
@@ -25,8 +24,8 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = ImportaContact(contatos, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, contact, "contact");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = Query.ImportaParaCrm(serviceProxyDestino, contact, "contact");
+                Query.AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para contact!");
             }
             cronometro.Stop();
@@ -39,8 +38,8 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = ImportaAccount(contas, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, account, "account");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = Query.ImportaParaCrm(serviceProxyDestino, account, "account");
+                Query.AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para account!");
             }
             cronometro.Stop();
@@ -53,8 +52,8 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, lead, "lead");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = Query.ImportaParaCrm(serviceProxyDestino, lead, "lead");
+                Query.AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para lead!");
             }
             cronometro.Stop();
@@ -67,8 +66,8 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorder, "salesorder");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = Query.ImportaParaCrm(serviceProxyDestino, salesorder, "salesorder");
+                Query.AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para salesorder!");
             }
             cronometro.Stop();
@@ -81,8 +80,8 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorderdetail, "salesorderdetail");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = Query.ImportaParaCrm(serviceProxyDestino, salesorderdetail, "salesorderdetail");
+                Query.AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para salesorderdetail!");
             }
             cronometro.Stop();
@@ -91,97 +90,30 @@ namespace RoboCriadorDeItens_2
             // Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
             // Importa Unidade
-            // EntityCollection unidade = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uom", "item");
-            // EntityCollection uom = ImportaUom(serviceProxyOrigem, unidade);
-            // ImportaParaCrm(serviceProxyDestino, uom);
-            // Console.WriteLine($"Pacote importado para uom!");
+            //EntityCollection unidade = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uom", "item");
+            //EntityCollection uom = ImportaUom(serviceProxyOrigem, unidade);
+            //Query.ImportaParaCrm(serviceProxyDestino, uom, "uom");
+            //Console.WriteLine($"Pacote importado para uom!");
 
             // Importa Lista de Preços
-            // EntityCollection listaDePreços = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "pricelevel", "Default");
-            // EntityCollection pricelevel = ImportaPricelevel(serviceProxyOrigem, listaDePreços);
-            // ImportaParaCrm(serviceProxyDestino, pricelevel);
-            // Console.WriteLine($"Pacote importado para pricelevel!");
+            //EntityCollection listaDePreços = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "pricelevel", "Default");
+            //EntityCollection pricelevel = ImportaPricelevel(serviceProxyOrigem, listaDePreços);
+            //Query.ImportaParaCrm(serviceProxyDestino, pricelevel, "pricelevel");
+            //Console.WriteLine($"Pacote importado para pricelevel!");
 
             // Importa Grupo de Unidades
-            // EntityCollection grupoDeUnidades = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
-            // EntityCollection uomschedule = ImportaUomschedule(serviceProxyOrigem, grupoDeUnidades);
-            // ImportaParaCrm(serviceProxyDestino, pricelevel);
-            // Console.WriteLine($"Pacote importado para uomschedule!");
+            //EntityCollection grupoDeUnidades = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
+            //EntityCollection uomschedule = ImportaUomschedule(serviceProxyOrigem, grupoDeUnidades);
+            //Query.ImportaParaCrm(serviceProxyDestino, pricelevel, "uomschedule");
+            //Console.WriteLine($"Pacote importado para uomschedule!");
 
             //Importa Produtos
-            // EntityCollection produtos = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "product", "Notebook Lenovo");
-            // EntityCollection product = ImportaProduct(serviceProxyOrigem, produtos);
-            // ImportaParaCrm(serviceProxyDestino, product);
-            // Console.WriteLine($"Pacote importado para product!");
+            //EntityCollection produtos = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "product", "Notebook Lenovo");
+            //EntityCollection product = ImportaProduct(serviceProxyOrigem, produtos);
+            //Query.ImportaParaCrm(serviceProxyDestino, product, "product");
+            //Console.WriteLine($"Pacote importado para product!");
         }
-        static EntityCollection ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades, string tabela)  //DAL
-        {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                { ContinueOnError = false, ReturnResponses = true }
-            };
-            foreach (var entidade in colecaoEntidades.Entities)
-            {
-                CreateRequest createRequest = new CreateRequest { Target = entidade };
-                request.Requests.Add(createRequest);
-            }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)serviceProxyDestino.Execute(request);
-            EntityCollection atualizar = new EntityCollection();
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Fault != null)
-                {
-                    Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
-                }
-                else
-                {
-                    // Quando passar a entidade para crm DESINO:
-                    // retornar id para uma lista e atualizar COMPO bool crm ORIGEM.
-                    Entity entidade = new Entity(tabela);    // RECEBER TABELA QUE DEVE SER ATUALIZADA!!!!!!
-                    // Entidade tem que receber o Id do item que foi criado.
-                    entidade.Id = (Guid)item.Response.Results["id"];
-                    entidade.Attributes.Add("crb79_importado", true);    // COMPO bool crm ORIGEM.
-                    atualizar.Entities.Add(entidade);
-                }
-                cont++;
-            }
-            Console.WriteLine($"{cont} entidades importadas!");
-            return atualizar;
-        }
-        static void AtualizaCrmOrigem(CrmServiceClient serviceProxyOrigem, EntityCollection colecaoEntidades)  //DAL
-        {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                { ContinueOnError = false, ReturnResponses = true }
-            };
-
-            foreach (var entidade in colecaoEntidades.Entities)
-            {
-                UpdateRequest updateRequest = new UpdateRequest { Target = entidade };
-                request.Requests.Add(updateRequest);
-            }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)serviceProxyOrigem.Execute(request);
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    //Console.WriteLine($"Entidade nº: {cont} criado!");
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
-                }
-                cont++;
-            }
-            Console.WriteLine($"{cont} entidades ATUALIZADAS!");
-        }
-        static EntityCollection ImportaContact(EntityCollection query, int tamanhoPacote, int contador) // MODEL
+        static EntityCollection ImportaContact(EntityCollection query, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
@@ -208,7 +140,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaAccount(EntityCollection query, int tamanhoPacote, int contador) // MODEL
+        static EntityCollection ImportaAccount(EntityCollection query, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
@@ -235,7 +167,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaLead(EntityCollection query, int tamanhoPacote, int contador) // MODEL
+        static EntityCollection ImportaLead(EntityCollection query, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
@@ -263,7 +195,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaSalesorder(EntityCollection query, int tamanhoPacote, int contador) // MODEL
+        static EntityCollection ImportaSalesorder(EntityCollection query, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
@@ -281,7 +213,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaSalesorderdetail(EntityCollection query, int tamanhoPacote, int contador) // MODEL
+        static EntityCollection ImportaSalesorderdetail(EntityCollection query, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
@@ -298,7 +230,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaUom(CrmServiceClient serviceProxyOrigem, EntityCollection query) // MODEL
+        static EntityCollection ImportaUom(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < query.Entities.Count; i++)
@@ -312,7 +244,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaPricelevel(CrmServiceClient serviceProxyOrigem, EntityCollection query) // MODEL
+        static EntityCollection ImportaPricelevel(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < query.Entities.Count; i++)
@@ -326,7 +258,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaUomschedule(CrmServiceClient serviceProxyOrigem, EntityCollection query) // MODEL
+        static EntityCollection ImportaUomschedule(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < query.Entities.Count; i++)
@@ -339,7 +271,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection ImportaProduct(CrmServiceClient serviceProxyOrigem, EntityCollection query) // MODEL
+        static EntityCollection ImportaProduct(CrmServiceClient serviceProxyOrigem, EntityCollection query)
         {
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < query.Entities.Count; i++)
