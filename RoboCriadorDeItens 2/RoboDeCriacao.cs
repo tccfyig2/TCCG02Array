@@ -31,7 +31,7 @@ namespace RoboCriadorDeItens_2
 
             int tamanhoPacote = 10;
             // loop de ser um número inteiro! Divisivel por tamanhoPacote!
-            int loop = 1 / tamanhoPacote;
+            int loop = (int)Math.Ceiling((float)1 / tamanhoPacote);
             //Cria Contatos!
             cronometro.Start();
             for (int i = 0; i < loop; i++)

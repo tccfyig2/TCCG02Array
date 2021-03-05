@@ -21,7 +21,8 @@ namespace RoboCriadorDeItens_2
             int tamanhoPacote = 50;
             cronometro.Start();
             EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
-            for (int i = 0; i < (contatos.Entities.Count / tamanhoPacote); i++)
+            int loop = (int)Math.Ceiling((float)contatos.Entities.Count / tamanhoPacote);
+            for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = ImportaContact(contatos, tamanhoPacote, i);
                 EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, contact, "contact");
@@ -34,7 +35,8 @@ namespace RoboCriadorDeItens_2
             // Importa Conta!
             cronometro.Start();
             EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
-            for (int i = 0; i < (contas.Entities.Count / tamanhoPacote); i++)
+            loop = (int)Math.Ceiling((float)contas.Entities.Count / tamanhoPacote);
+            for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = ImportaAccount(contas, tamanhoPacote, i);
                 EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, account, "account");
@@ -47,7 +49,8 @@ namespace RoboCriadorDeItens_2
             // Importa Clientes Potenciais!
             cronometro.Start();
             EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
-            for (int i = 0; i < (clientesPotenciais.Entities.Count / tamanhoPacote); i++)
+            loop = (int)Math.Ceiling((float)clientesPotenciais.Entities.Count / tamanhoPacote);
+            for (int i = 0; i < loop; i++)
             {
                 EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, i);
                 EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, lead, "lead");
@@ -60,7 +63,8 @@ namespace RoboCriadorDeItens_2
             //Importa Ordens!
             cronometro.Start();
             EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
-            for (int i = 0; i < (ordens.Entities.Count / tamanhoPacote); i++)
+            loop = (int)Math.Ceiling((float)ordens.Entities.Count / tamanhoPacote);
+            for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, i);
                 EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorder, "salesorder");
@@ -73,7 +77,8 @@ namespace RoboCriadorDeItens_2
             // Importa Produtos da Ordem!
             cronometro.Start();
             EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
-            for (int i = 0; i < (produtosDaOrdem.Entities.Count / tamanhoPacote); i++)
+            loop = (int)Math.Ceiling((float)produtosDaOrdem.Entities.Count / tamanhoPacote);
+            for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, i);
                 EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorderdetail, "salesorderdetail");
