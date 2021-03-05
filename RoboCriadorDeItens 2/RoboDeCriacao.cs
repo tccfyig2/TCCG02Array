@@ -155,6 +155,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == contact.Count){break;};
                 Entity entidade = new Entity("account");
                 int numero = rnd.Next(0, 999);
                 entidade.Attributes.Add("crb79_importado", false);
@@ -173,6 +174,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.geradorCNPJ()); // cred2_cnpj = Apresentação// crb79_cnpj = Cobaia
                 entidade.Attributes.Add("telephone1", GeradorTelefone_Topico.geredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
+                contador++;
             }
             return colecaoEntidades;
         }
@@ -211,14 +213,16 @@ namespace RoboCriadorDeItens_2
             Guid pricelevelid = new Guid("68f3a59e-f779-eb11-a812-00224836bdf5");
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == account.Count){break;};
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("crb79_importado", false);
-                string codigo = $"cod-{10000 + (contador + i)}";
+                string codigo = $"cod-{10000 + contador}";
                 entidade.Attributes.Add("name", $"Ordem {codigo}");
                 entidade.Attributes.Add("crb79_codigo", codigo);
                 entidade.Attributes.Add("customerid", new EntityReference("account", account[contador].Id));
                 entidade.Attributes.Add("pricelevelid", new EntityReference("pricelevel", pricelevelid));
                 colecaoEntidades.Entities.Add(entidade);
+                contador++;
             }
             return colecaoEntidades;
         }
@@ -230,6 +234,7 @@ namespace RoboCriadorDeItens_2
             Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == salesorder.Count){break;};
                 Entity entidade = new Entity("salesorderdetail");
                 entidade.Attributes.Add("crb79_importado", false);
                 entidade.Attributes.Add("productid", new EntityReference("product", productid));
