@@ -30,7 +30,7 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
 
             int tamanhoPacote = 10;
-            // loop de ser um número inteiro! Divisivel por tamanhoPacote!
+            // loop deve ser um número inteiro! Divisivel por tamanhoPacote!
             int loop = (int)Math.Ceiling((float)1 / tamanhoPacote);
             //Cria Contatos!
             cronometro.Start();
@@ -69,10 +69,10 @@ namespace RoboCriadorDeItens_2
             // Cria Ordens!
             cronometro.Start();
             EntityCollection contas = retornaEntidades(_serviceProxy, "account");
+            Console.WriteLine("Digite o valor inicial do código da Ordem!");
+            int semente = int.Parse(Console.ReadLine());
             for (int i = 0; i < loop; i++)
             {
-                Console.WriteLine("Digite o valor inicial do código da Ordem!");
-                int semente = int.Parse(Console.ReadLine());
                 EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i, semente);
                 criaNoCrm(_serviceProxy, salesorder);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
@@ -95,7 +95,7 @@ namespace RoboCriadorDeItens_2
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);   // Evita pegar entidaes que ja foram pa o novo ambiente.
+            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);   // Evita pegar entidaes que ja foram para o novo ambiente.
             queryExpression.ColumnSet = new ColumnSet(true);
 
             EntityCollection itens = new EntityCollection();
