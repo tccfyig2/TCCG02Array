@@ -23,27 +23,28 @@ namespace RoboCriadorDeItens_2
             //    EntityCollection contact = ImportaContact(contatos, tamanhoPacote, i);
             //    EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, contact, "contact");
             //    AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
-            //    Console.WriteLine($"Pacote nº: {i} importado para contact!");
+            //    Console.WriteLine($"Pacote nº: {i+1} importado para contact!");
             //}
 
             // Importa Conta!
-            EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
-            for (int i = 0; i < (contas.Entities.Count / tamanhoPacote); i++)
-            {
-                EntityCollection account = ImportaAccount(contas, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, account, "account");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
-                Console.WriteLine($"Pacote nº: {i} importado para account!");
-            }
+            //EntityCollection contas = QueryExpression(serviceProxyOrigem, "account");
+            //for (int i = 0; i < (contas.Entities.Count / tamanhoPacote); i++)
+            //{
+            //    EntityCollection account = ImportaAccount(contas, tamanhoPacote, i);
+            //    EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, account, "account");
+            //    AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+            //    Console.WriteLine($"Pacote nº: {i+1} importado para account!");
+            //}
 
             // Importa Clientes Potenciais!
-            //EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
-            //for (int i = 0; i < (clientesPotenciais.Entities.Count / tamanhoPacote); i++)
-            //{
-            //    EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, i);
-            //    EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, lead, "lead");
-            //    Console.WriteLine($"Pacote nº: {i} importado para lead!");
-            //}
+            EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
+            for (int i = 0; i < (clientesPotenciais.Entities.Count / tamanhoPacote); i++)
+            {
+                EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, i);
+                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, lead, "lead");
+                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                Console.WriteLine($"Pacote nº: {i+1} importado para lead!");
+            }
 
             //Importa Ordens!
             //EntityCollection ordens = RetornaEntidades(serviceProxyDestino, "salesorder");
@@ -51,7 +52,8 @@ namespace RoboCriadorDeItens_2
             //{
             //    EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, i);
             //    EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorder, "salesorder");
-            //    Console.WriteLine($"Pacote nº: {i} importado para salesorder!");
+            //    AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+            //    Console.WriteLine($"Pacote nº: {i+1} importado para salesorder!");
             //}
 
             // Importa Produtos da Ordem!
@@ -60,7 +62,7 @@ namespace RoboCriadorDeItens_2
             //{
             //    EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, i);
             //    EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorderdetail, "salesorderdetail");
-            //    Console.WriteLine($"Pacote nº: {i} importado para salesorderdetail!");
+            //    Console.WriteLine($"Pacote nº: {i+1} importado para salesorderdetail!");
             //}
 
             // Os abaixo não devem ser necessarios uma vez que ja foram importados!

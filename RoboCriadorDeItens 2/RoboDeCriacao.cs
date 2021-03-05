@@ -36,7 +36,7 @@ namespace RoboCriadorDeItens_2
             //{
             //    EntityCollection contact = CriaContact(tamanhoPacote);
             //    criaNoCrm(_serviceProxy, contact);
-            //    Console.WriteLine($"Pacote nº: {i} criado em contact!");
+            //    Console.WriteLine($"Pacote nº: {i+1} criado em contact!");
             //}
 
             // Cria Contas!
@@ -45,25 +45,25 @@ namespace RoboCriadorDeItens_2
             //{
             //    EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
             //    criaNoCrm(_serviceProxy, account);
-            //    Console.WriteLine($"Pacote nº: {i} criado em account!");
+            //    Console.WriteLine($"Pacote nº: {i+1} criado em account!");
             //}
 
             // Cria Clientes Potenciais!
-            for (int i = 0; i < loop; i++)
-            {
-                EntityCollection lead = CriaLead(tamanhoPacote);
-                criaNoCrm(_serviceProxy, lead);
-                Console.WriteLine($"Pacote nº: {i} criado em lead!");
-            }
-
-            // Cria Ordens!
-            //EntityCollection contas = retornaEntidades(_serviceProxy, "account");
             //for (int i = 0; i < loop; i++)
             //{
-            //   EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i);
-            //   criaNoCrm(_serviceProxy, salesorder);
-            //   Console.WriteLine($"Pacote nº: {i} criado em salesorder!");
+            //    EntityCollection lead = CriaLead(tamanhoPacote);
+            //    criaNoCrm(_serviceProxy, lead);
+            //    Console.WriteLine($"Pacote nº: {i+1} criado em lead!");
             //}
+
+            // Cria Ordens!
+            EntityCollection contas = retornaEntidades(_serviceProxy, "account");
+            for (int i = 0; i < loop; i++)
+            {
+               EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i);
+               criaNoCrm(_serviceProxy, salesorder);
+               Console.WriteLine($"Pacote nº: {i+1} criado em salesorder!");
+            }
 
             // Cria Produtos da Ordem!
             //EntityCollection ordens = retornaEntidades(_serviceProxy, "salesorder");
@@ -71,7 +71,7 @@ namespace RoboCriadorDeItens_2
             //{
             //   EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
             //   criaNoCrm(_serviceProxy, salesorderdetail);
-            //   Console.WriteLine($"Pacote nº: {i} de salesorderdetail!");
+            //   Console.WriteLine($"Pacote nº: {i+1} de salesorderdetail!");
             //}
         }
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
@@ -213,7 +213,7 @@ namespace RoboCriadorDeItens_2
             {
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("crb79_importado", false);
-                string codigo = $"cod-{10000 + contador}";
+                string codigo = $"cod-{10000 + (contador + i)}";
                 entidade.Attributes.Add("name", $"Ordem {codigo}");
                 entidade.Attributes.Add("crb79_codigo", codigo);
                 entidade.Attributes.Add("customerid", new EntityReference("account", account[contador].Id));
