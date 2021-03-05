@@ -155,7 +155,7 @@ namespace RoboCriadorDeItens_2
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == contact.Count){break;};
+                if (contador == contact.Entities.Count){break;};
                 Entity entidade = new Entity("account");
                 int numero = rnd.Next(0, 999);
                 entidade.Attributes.Add("crb79_importado", false);
@@ -213,7 +213,7 @@ namespace RoboCriadorDeItens_2
             Guid pricelevelid = new Guid("68f3a59e-f779-eb11-a812-00224836bdf5");
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == account.Count){break;};
+                if (contador == account.Entities.Count){break;};
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("crb79_importado", false);
                 string codigo = $"cod-{10000 + contador}";
@@ -234,7 +234,7 @@ namespace RoboCriadorDeItens_2
             Guid uomid = new Guid("03a4fff9-216e-eb11-b1ab-000d3ac1779c");
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == salesorder.Count){break;};
+                if (contador == salesorder.Entities.Count){break;};
                 Entity entidade = new Entity("salesorderdetail");
                 entidade.Attributes.Add("crb79_importado", false);
                 entidade.Attributes.Add("productid", new EntityReference("product", productid));
