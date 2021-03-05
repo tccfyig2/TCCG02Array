@@ -29,10 +29,10 @@ namespace RoboCriadorDeItens_2
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
 
-            //Cria Contatos!
-            int tamanhoPacote = 50;
+            int tamanhoPacote = 10;
             // loop de ser um número inteiro! Divisivel por tamanhoPacote!
-            int loop = 5000 / tamanhoPacote;
+            int loop = 1 / tamanhoPacote;
+            //Cria Contatos!
             cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
@@ -71,7 +71,9 @@ namespace RoboCriadorDeItens_2
             EntityCollection contas = retornaEntidades(_serviceProxy, "account");
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i);
+                Console.WriteLine("Digite o valor inicial do código da Ordem!");
+                int semente = int.Parse(Console.ReadLine());
+                EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i, semente);
                 criaNoCrm(_serviceProxy, salesorder);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
@@ -221,7 +223,7 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaSalesorder(EntityCollection account, int tamanhoPacote, int contador)
+        static EntityCollection CriaSalesorder(EntityCollection account, int tamanhoPacote, int contador, int semente)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
@@ -231,7 +233,7 @@ namespace RoboCriadorDeItens_2
                 if (contador == account.Entities.Count) { break; };
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("crb79_importado", false);
-                string codigo = $"cod-{10000 + contador}";
+                string codigo = $"cod-{semente + contador}";  // Semente: VALOR INICIAL DO CONTADOR
                 entidade.Attributes.Add("name", $"Ordem {codigo}");
                 entidade.Attributes.Add("crb79_codigo", codigo);
                 entidade.Attributes.Add("customerid", new EntityReference("account", account[contador].Id));

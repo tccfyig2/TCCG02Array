@@ -19,7 +19,7 @@ namespace RoboCriadorDeItens_2
 
             // Importa Contato!
             int tamanhoPacote = 50;
-            //cronometro.Start();
+            cronometro.Start();
             EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
             for (int i = 0; i < (contatos.Entities.Count / tamanhoPacote); i++)
             {
