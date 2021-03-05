@@ -19,7 +19,7 @@ namespace RoboCriadorDeItens_2
 
             // Importa Contato!
             int tamanhoPacote = 50;
-            cronometro.Start();
+            //cronometro.Start();
             EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
             for (int i = 0; i < (contatos.Entities.Count / tamanhoPacote); i++)
             {
@@ -59,7 +59,7 @@ namespace RoboCriadorDeItens_2
 
             //Importa Ordens!
             cronometro.Start();
-            EntityCollection ordens = RetornaEntidades(serviceProxyDestino, "salesorder");
+            EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
             for (int i = 0; i < (ordens.Entities.Count / tamanhoPacote); i++)
             {
                 EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, i);
@@ -347,7 +347,7 @@ namespace RoboCriadorDeItens_2
                 Entity entidade = new Entity("salesorderdetail");
                 entidade.Attributes.Add("productid", query[contador]["productid"]);
                 entidade.Attributes.Add("salesorderid", query[contador]["salesorderid"]);
-                entidade.Attributes.Add("uomid", query[contador]["uomid"]);
+                entidade.Attributes.Add("uomid", new EntityReference("uom", new Guid("6f80721a-bf77-eb11-a812-000d3a1c6462")));
                 entidade.Id = query[contador].Id;
                 colecaoEntidades.Entities.Add(entidade);
                 contador++;
