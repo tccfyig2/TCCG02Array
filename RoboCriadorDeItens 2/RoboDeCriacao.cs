@@ -95,6 +95,7 @@ namespace RoboCriadorDeItens_2
         static EntityCollection retornaEntidades(CrmServiceClient _serviceProxy, string entidade)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
+            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);   // Evita pegar entidaes que ja foram pa o novo ambiente.
             queryExpression.ColumnSet = new ColumnSet(true);
 
             EntityCollection itens = new EntityCollection();
