@@ -8,7 +8,7 @@ namespace RoboCriadorDeItens_2
         private static CrmServiceClient crmServiceClientOrigem;
         private static CrmServiceClient crmServiceClientDestino;
 
-        public CrmServiceClient ObterConexaoApresentacao()
+        internal CrmServiceClient ObterConexaoApresentacao()
         {
             var connectionStringCRM = @"AuthType=OAuth;
             Username = admin@fyitcc.onmicrosoft.com;
@@ -24,8 +24,7 @@ namespace RoboCriadorDeItens_2
             }
             return crmServiceClientOrigem;
         }
-
-        public CrmServiceClient ObterConexaoCobaia()
+        internal CrmServiceClient ObterConexaoCobaia()
         {
             var connectionStringCRM = @"AuthType=OAuth;
                 Username = adminrobo@adminrobo.onmicrosoft.com;

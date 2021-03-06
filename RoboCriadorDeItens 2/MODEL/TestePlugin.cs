@@ -13,7 +13,7 @@ namespace RoboCriadorDeItens_2.MODEL
             CrmServiceClient _serviceProxy = conexao.ObterConexaoApresentacao();
 
             // Start
-            Console.Write("1 - Plugin CPF Invalido\n2 - Plugin CPF Duplicado\n3 - Plugin CNPJ Invalido\n4 - Plugin CNPJ Duplicado\nDigite o número da opção: ");
+            Console.Write("1 - Plugin CPF Invalido\n2 - Plugin CPF Duplicado\n3 - Plugin CNPJ Invalido\n4 - Plugin CNPJ Duplicado\n5 - Plugin código Duplicado\nDigite o número da opção: ");
             string resposta = Console.ReadLine().ToLower();
             Console.Clear();
             switch (resposta)
@@ -29,6 +29,9 @@ namespace RoboCriadorDeItens_2.MODEL
                     break;
                 case "4":
                     PluginCNPJDuplicado(_serviceProxy);
+                    break;
+                case "5":
+                    PluginCodigoDuplicado(_serviceProxy);
                     break;
                 default:
                     Console.WriteLine("Alternativa inválida!");
@@ -59,5 +62,12 @@ namespace RoboCriadorDeItens_2.MODEL
             entidade.Attributes.Add("cred2_cnpj", "70865518919509");
             _serviceProxy.Create(entidade);
         }
+        static void PluginCodigoDuplicado(CrmServiceClient _serviceProxy)
+        {
+            Entity entidade = new Entity("salesorder");
+            entidade.Attributes.Add("cred2_codigo", "cod-10000");
+            _serviceProxy.Create(entidade);
+        }
+
     }
 }

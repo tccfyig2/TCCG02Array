@@ -6,15 +6,14 @@ namespace RoboCriadorDeItens_2.Geradores
     class GeradorForm
     {
         protected static Random rnd = new Random();
-        internal static string geradorEmail(string nome = "exemplo")
+        internal static string GeradorEmail(string nome = "exemplo")
         {
-
             string[] sufixos = { "live", "yahoo", "uol", "bol", "aol", "gmail", "ymail", "hotmail", "ig" };
             int index = rnd.Next(sufixos.Length);
             string email = $"{nome.ToLower().Trim()}_{rnd.Next(0, 1000)}@{sufixos[index]}.com";
             return email;
         }
-        internal static string[] geradorEndereco()
+        internal static string[] GeradorEndereco()
         {
             string[] arrayCEP = // 500
             {
@@ -71,7 +70,6 @@ namespace RoboCriadorDeItens_2.Geradores
             };
             int index = rnd.Next(0, arrayCEP.Length);
             string cep = arrayCEP[index];
-
             try
             {
                 Endereco enderecoBase = new Endereco();
@@ -91,7 +89,7 @@ namespace RoboCriadorDeItens_2.Geradores
                 throw;
             }
         }
-        internal static string geradorNome()
+        internal static string GeradorNome()
         {
             string[] homem = //1000
             {
@@ -310,11 +308,9 @@ namespace RoboCriadorDeItens_2.Geradores
                 int index = rnd.Next(0, mulher.Length);
                 return mulher[index];
             }
-
         }
-        internal static string geradorSobrenome()
+        internal static string GeradorSobrenome()
         {
-
             string[] sobrenome =
             {
                 "Abranches", "Abreu", "Adães", "Adorno", "Agostinho", "Aguiar", "Albuquerque", "Alcântara", "Aleluia", "Alencar",
@@ -355,12 +351,11 @@ namespace RoboCriadorDeItens_2.Geradores
             int index = rnd.Next(0, sobrenome.Length);
             return sobrenome[index];
         }
-        internal static string geredorTelefone(string estado = "RS")
+        internal static string GeredorTelefone(string estado = "RS")
         {
             string telefone = null;
             int index;
             string[] ddd;
-
             switch (estado)
             {
                 case "SP":
@@ -368,142 +363,115 @@ namespace RoboCriadorDeItens_2.Geradores
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "RJ":
                     ddd = new string[] { "21", "22", "24" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "ES":
                     ddd = new string[] { "27", "28" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "MG":
                     ddd = new string[] { "31", "32", "33", "34", "35", "37", "38" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "PR":
                     ddd = new string[] { "41", "42", "43", "44", "45", "46" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "SC":
                     ddd = new string[] { "47", "48", "49" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "RS":
                     ddd = new string[] { "51", "53", "54", "55" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "DF":
                     telefone = "61";
                     break;
-
                 case "GO":
                     ddd = new string[] { "62", "64" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "TO":
                     telefone = "63";
                     break;
-
                 case "MT":
                     ddd = new string[] { "65", "66" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "MS":
                     telefone = "67";
                     break;
-
                 case "AC":
                     telefone = "68";
                     break;
-
                 case "RO":
                     telefone = "69";
                     break;
-
                 case "BA":
                     ddd = new string[] { "71", "73", "74", "75", "77" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "SE":
                     telefone = "79";
                     break;
-
                 case "PE":
                     ddd = new string[] { "81", "87" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "AL":
                     telefone = "82";
                     break;
-
                 case "PB":
                     telefone = "83";
                     break;
-
                 case "RN":
                     telefone = "84";
                     break;
-
                 case "CE":
                     ddd = new string[] { "85", "88" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "PI":
                     ddd = new string[] { "86", "89" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "PA":
                     ddd = new string[] { "91", "93", "94" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "AM":
                     ddd = new string[] { "92", "97" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
-
                 case "RR":
                     telefone = "95";
                     break;
-
                 case "AP":
                     telefone = "96";
                     break;
-
                 case "MA":
                     ddd = new string[] { "98", "99" };
                     index = rnd.Next(ddd.Length);
                     telefone = ddd[index];
                     break;
             }
-
             string[] operadora =
             {
                 "67", "71", "72", "95", "96", "97", "98", "99", "68", "73", "74",
@@ -513,10 +481,9 @@ namespace RoboCriadorDeItens_2.Geradores
             index = rnd.Next(operadora.Length);
             telefone += operadora[index];
             telefone += rnd.Next(1000000, 9999999);
-
             return telefone;
         }
-        internal static string geredorTopico()
+        internal static string GeredorTopico()
         {
             string[] topico =
             {

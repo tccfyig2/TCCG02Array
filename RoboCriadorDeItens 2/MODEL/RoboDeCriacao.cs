@@ -93,7 +93,7 @@ namespace RoboCriadorDeItens_2.MODEL
                 if (contador == numeroTotal) { break; };
                 Entity entidade = new Entity("contact");
                 entidade.Attributes.Add("crb79_importado", false);
-                string[] endereco = (GeradorForm.geradorEndereco());
+                string[] endereco = (GeradorForm.GeradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
                 entidade.Attributes.Add("address1_line2", endereco[2]);
@@ -101,12 +101,12 @@ namespace RoboCriadorDeItens_2.MODEL
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-                string emailNome = GeradorForm.geradorSobrenome();
+                string emailNome = GeradorForm.GeradorSobrenome();
                 entidade.Attributes.Add("firstname", emailNome);
-                entidade.Attributes.Add("emailaddress1", GeradorForm.geradorEmail(emailNome));
-                entidade.Attributes.Add("lastname", GeradorForm.geradorSobrenome());
-                entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.geradorCPF()); // cred2_cpf = Apresentação// crb79_cpf = Cobaia
-                entidade.Attributes.Add("mobilephone", GeradorForm.geredorTelefone(endereco[5]));
+                entidade.Attributes.Add("emailaddress1", GeradorForm.GeradorEmail(emailNome));
+                entidade.Attributes.Add("lastname", GeradorForm.GeradorSobrenome());
+                entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.GeradorCPF()); // cred2_cpf = Apresentação// crb79_cpf = Cobaia
+                entidade.Attributes.Add("mobilephone", GeradorForm.GeredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
                 contador++;
             }
@@ -122,7 +122,7 @@ namespace RoboCriadorDeItens_2.MODEL
                 Entity entidade = new Entity("account");
                 int numero = rnd.Next(0, 999);
                 entidade.Attributes.Add("crb79_importado", false);
-                string[] endereco = (GeradorForm.geradorEndereco());
+                string[] endereco = (GeradorForm.GeradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
                 entidade.Attributes.Add("address1_line2", endereco[2]);
@@ -131,11 +131,11 @@ namespace RoboCriadorDeItens_2.MODEL
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
                 entidade.Attributes.Add("primarycontactid", new EntityReference("contact", contact[contador].Id));
-                string emailSobrenome = GeradorForm.geradorSobrenome();
-                entidade.Attributes.Add("emailaddress1", GeradorForm.geradorEmail(emailSobrenome));
+                string emailSobrenome = GeradorForm.GeradorSobrenome();
+                entidade.Attributes.Add("emailaddress1", GeradorForm.GeradorEmail(emailSobrenome));
                 entidade.Attributes.Add("name", $"{emailSobrenome} {numero} ltda.");
-                entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.geradorCNPJ()); // cred2_cnpj = Apresentação// crb79_cnpj = Cobaia
-                entidade.Attributes.Add("telephone1", GeradorForm.geredorTelefone(endereco[5]));
+                entidade.Attributes.Add("crb79_cnpj", GeradorCPF_CNPJ.GeradorCNPJ()); // cred2_cnpj = Apresentação// crb79_cnpj = Cobaia
+                entidade.Attributes.Add("telephone1", GeradorForm.GeredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
                 contador++;
             }
@@ -150,7 +150,7 @@ namespace RoboCriadorDeItens_2.MODEL
                 if (contador == numeroTotal) { break; };
                 Entity entidade = new Entity("lead");
                 entidade.Attributes.Add("crb79_importado", false);
-                string[] endereco = (GeradorForm.geradorEndereco());
+                string[] endereco = (GeradorForm.GeradorEndereco());
                 entidade.Attributes.Add("address1_postalcode", endereco[0]);
                 entidade.Attributes.Add("address1_line1", endereco[1]);
                 entidade.Attributes.Add("address1_line2", endereco[2]);
@@ -158,15 +158,15 @@ namespace RoboCriadorDeItens_2.MODEL
                 entidade.Attributes.Add("address1_city", endereco[4]);
                 entidade.Attributes.Add("address1_stateorprovince", endereco[5]);
                 entidade.Attributes.Add("address1_country", "Brasil");
-                string emailNome = (GeradorForm.geradorNome());
-                entidade.Attributes.Add("emailaddress1", GeradorForm.geradorEmail(emailNome));
+                string emailNome = (GeradorForm.GeradorNome());
+                entidade.Attributes.Add("emailaddress1", GeradorForm.GeradorEmail(emailNome));
                 entidade.Attributes.Add("firstname", emailNome);
-                string sobrenomeEmpresa = (GeradorForm.geradorSobrenome());
+                string sobrenomeEmpresa = (GeradorForm.GeradorSobrenome());
                 entidade.Attributes.Add("lastname", sobrenomeEmpresa);
                 entidade.Attributes.Add("companyname", sobrenomeEmpresa + " ltda.");
-                entidade.Attributes.Add("subject", GeradorForm.geredorTopico());
-                entidade.Attributes.Add("telephone1", GeradorForm.geredorTelefone(endereco[5]));
-                entidade.Attributes.Add("mobilephone", GeradorForm.geredorTelefone(endereco[5]));
+                entidade.Attributes.Add("subject", GeradorForm.GeredorTopico());
+                entidade.Attributes.Add("telephone1", GeradorForm.GeredorTelefone(endereco[5]));
+                entidade.Attributes.Add("mobilephone", GeradorForm.GeredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
                 contador++;
             }
