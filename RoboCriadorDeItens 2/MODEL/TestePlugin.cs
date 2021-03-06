@@ -13,8 +13,7 @@ namespace RoboCriadorDeItens_2.MODEL
             CrmServiceClient _serviceProxy = conexao.ObterConexaoApresentacao();
 
             // Start
-            Console.WriteLine("1 - Plugin CPF Invalido\n2 - Plugin CPF Duplicado\n3 - Plugin CNPJ Invalido\n4 - Plugin CNPJ Duplicado");
-            Console.Write("Digite o número da opção: ");
+            Console.Write("1 - Plugin CPF Invalido\n2 - Plugin CPF Duplicado\n3 - Plugin CNPJ Invalido\n4 - Plugin CNPJ Duplicado\nDigite o número da opção: ");
             string resposta = Console.ReadLine().ToLower();
             Console.Clear();
             switch (resposta)

@@ -12,17 +12,6 @@ namespace RoboCriadorDeItens_2.MODEL
         protected static Random rnd = new Random();
         internal static void Criacao()
         {
-            /*
-            * contact
-            * account
-            * lead
-            * Unidade Padrão = Primary unit - Business
-            * Lista de Preços = Default
-            * Produto = Notebook Lenovo
-            * Item da lista de preços = Notebook Lenovo
-            * salesorder
-            * salesorderdetail
-            */
             Stopwatch cronometro = new Stopwatch();
             // Cria Conexão
             Conexao conexao = new Conexao();

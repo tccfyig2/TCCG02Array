@@ -11,10 +11,13 @@ namespace RoboCriadorDeItens_2.DAL
         internal static EntityCollection RetornaEntidades(CrmServiceClient _serviceProxy, string entidade, string condicao = null)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
-            queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
             if (condicao != null)
             {
                 queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);
+            }
+            else
+            {
+                queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
             }
             queryExpression.ColumnSet = new ColumnSet(true);
 

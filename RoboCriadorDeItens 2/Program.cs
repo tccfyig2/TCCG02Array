@@ -10,24 +10,24 @@ namespace RoboCriadorDeItens_2
             bool start = true;
             while (start)
             {
-                Console.WriteLine("Deseja Criar, Importar, Plugin ou Sair? (C / I / P / S)");
+                Console.Write("1- Criar\n2- Importar\n3- Plugin\n4- Sair\nDigite o número da opção: ");
                 string resposta = Console.ReadLine().ToLower();
                 Console.Clear();
                 switch (resposta)
                 {
-                    case "c":
+                    case "1":
                         RoboDeCriacao.Criacao();
                         Console.WriteLine("Sucesso!");
                         break;
-                    case "i":
+                    case "2":
                         RoboDeImportacao.Importacao();
                         Console.WriteLine("Sucesso!");
                         break;
-                    case "p":
+                    case "3":
                         TestePlugin.Plugin();
                         Console.WriteLine("Sucesso!!");
                         break;
-                    case "s":
+                    case "4":
                         start = false;
                         break;
                     default:
