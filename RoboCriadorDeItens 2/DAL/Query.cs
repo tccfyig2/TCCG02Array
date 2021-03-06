@@ -140,5 +140,35 @@ namespace RoboCriadorDeItens_2.DAL
             }
             Console.WriteLine($"{cont} entidades ATUALIZADAS!");
         }
+        internal static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
+        {
+            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
+            {
+                Requests = new OrganizationRequestCollection(),
+                Settings = new ExecuteMultipleSettings
+                { ContinueOnError = false, ReturnResponses = true }
+            };
+
+            foreach (var entidade in colecaoEntidades.Entities)
+            {
+                CreateRequest createRequest = new CreateRequest { Target = entidade };
+                request.Requests.Add(createRequest);
+            }
+            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
+            int cont = 0;
+            foreach (var item in response.Responses)
+            {
+                if (item.Response != null)
+                {
+                    //Console.WriteLine($"Entidade nº: {cont} criado!");
+                }
+                else if (item.Fault != null)
+                {
+                    Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
+                }
+                cont++;
+            }
+            Console.WriteLine($"{cont} entidades criadas!");
+        }
     }
 }

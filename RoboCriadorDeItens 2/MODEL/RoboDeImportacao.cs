@@ -17,8 +17,7 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
             // Especificações
-            Console.WriteLine("Digite o tamanho do pacote!");
-            int tamanhoPacote = int.Parse(Console.ReadLine());
+            int tamanhoPacote = 50;
 
             // Importa Contato!
             cronometro.Start();

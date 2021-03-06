@@ -30,8 +30,7 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
 
             // Especificações
-            Console.WriteLine("Digite o tamanho do pacote!");
-            int tamanhoPacote = int.Parse(Console.ReadLine());
+            int tamanhoPacote = 50;
             // if (tamanho do pacote > numeroTotal) {numreoTotal = tamanhoPacote}
             Console.WriteLine("Digite a quantidade total de itens a ser criado!");
             int numeroTotal = int.Parse(Console.ReadLine());
@@ -41,8 +40,8 @@ namespace RoboCriadorDeItens_2
             cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection contact = CriaContact(tamanhoPacote);
-                criaNoCrm(_serviceProxy, contact);
+                EntityCollection contact = CriaContact(numeroTotal, tamanhoPacote, i);
+                Query.criaNoCrm(_serviceProxy, contact);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
             cronometro.Stop();
@@ -54,7 +53,7 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
-                criaNoCrm(_serviceProxy, account);
+                Query.criaNoCrm(_serviceProxy, account);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
             cronometro.Stop();
@@ -64,8 +63,8 @@ namespace RoboCriadorDeItens_2
             cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection lead = CriaLead(tamanhoPacote);
-                criaNoCrm(_serviceProxy, lead);
+                EntityCollection lead = CriaLead(numeroTotal, tamanhoPacote, i);
+                Query.criaNoCrm(_serviceProxy, lead);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em lead!");
             }
             cronometro.Stop();
@@ -79,7 +78,7 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i, semente);
-                criaNoCrm(_serviceProxy, salesorder);
+                Query.criaNoCrm(_serviceProxy, salesorder);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
             cronometro.Stop();
@@ -91,47 +90,19 @@ namespace RoboCriadorDeItens_2
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
-                criaNoCrm(_serviceProxy, salesorderdetail);
+                Query.criaNoCrm(_serviceProxy, salesorderdetail);
                 Console.WriteLine($"Pacote nº: {i + 1} de salesorderdetail!");
             }
             cronometro.Stop();
             Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
         }
-        static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
+        static EntityCollection CriaContact(int numeroTotal, int tamanhoPacote, int contador)
         {
-            ExecuteMultipleRequest request = new ExecuteMultipleRequest()
-            {
-                Requests = new OrganizationRequestCollection(),
-                Settings = new ExecuteMultipleSettings
-                { ContinueOnError = false, ReturnResponses = true }
-            };
-
-            foreach (var entidade in colecaoEntidades.Entities)
-            {
-                CreateRequest createRequest = new CreateRequest { Target = entidade };
-                request.Requests.Add(createRequest);
-            }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
-            int cont = 0;
-            foreach (var item in response.Responses)
-            {
-                if (item.Response != null)
-                {
-                    //Console.WriteLine($"Entidade nº: {cont} criado!");
-                }
-                else if (item.Fault != null)
-                {
-                    Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
-                }
-                cont++;
-            }
-            Console.WriteLine($"{cont} entidades criadas!");
-        }
-        static EntityCollection CriaContact(int tamanhoPacote)
-        {
+            contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == numeroTotal) { break; };
                 Entity entidade = new Entity("contact");
                 entidade.Attributes.Add("crb79_importado", false);
                 string[] endereco = (GeradorForm.geradorEndereco());
@@ -149,6 +120,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("crb79_cpf", GeradorCPF_CNPJ.geradorCPF()); // cred2_cpf = Apresentação// crb79_cpf = Cobaia
                 entidade.Attributes.Add("mobilephone", GeradorForm.geredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
+                contador++;
             }
             return colecaoEntidades;
         }
@@ -181,11 +153,13 @@ namespace RoboCriadorDeItens_2
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaLead(int tamanhoPacote)
+        static EntityCollection CriaLead(int numeroTotal, int tamanhoPacote, int contador)
         {
+            contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
+                if (contador == numeroTotal) { break; };
                 Entity entidade = new Entity("lead");
                 entidade.Attributes.Add("crb79_importado", false);
                 string[] endereco = (GeradorForm.geradorEndereco());
@@ -206,6 +180,7 @@ namespace RoboCriadorDeItens_2
                 entidade.Attributes.Add("telephone1", GeradorForm.geredorTelefone(endereco[5]));
                 entidade.Attributes.Add("mobilephone", GeradorForm.geredorTelefone(endereco[5]));
                 colecaoEntidades.Entities.Add(entidade);
+                contador++;
             }
             return colecaoEntidades;
         }
