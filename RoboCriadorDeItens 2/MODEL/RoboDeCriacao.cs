@@ -1,17 +1,16 @@
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.DAL;
 using RoboCriadorDeItens_2.Geradores;
 using System;
 using System.Diagnostics;
 
-namespace RoboCriadorDeItens_2
+namespace RoboCriadorDeItens_2.MODEL
 {
     class RoboDeCriacao
     {
         protected static Random rnd = new Random();
-        internal static void criacao()
+        internal static void Criacao()
         {
             /*
             * contact

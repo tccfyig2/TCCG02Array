@@ -4,11 +4,11 @@ using RoboCriadorDeItens_2.DAL;
 using System;
 using System.Diagnostics;
 
-namespace RoboCriadorDeItens_2
+namespace RoboCriadorDeItens_2.MODEL
 {
     class RoboDeImportacao
     {
-        internal static void importacao()
+        internal static void Importacao()
         {
             Stopwatch cronometro = new Stopwatch();
             // Cria conexões!
@@ -35,7 +35,7 @@ namespace RoboCriadorDeItens_2
 
             // Importa Conta!
             cronometro.Start();
-            EntityCollection contas = Query.QueryExpression(serviceProxyOrigem, "account");
+            EntityCollection contas = Query.RetornaEntidadesLink(serviceProxyOrigem, "account");
             loop = (int)Math.Ceiling((float)contas.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
@@ -92,25 +92,25 @@ namespace RoboCriadorDeItens_2
             // Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
             // Importa Unidade
-            //EntityCollection unidade = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uom", "item");
+            //EntityCollection unidade = Query.RetornaEntidades(serviceProxyOrigem, "uom", "item");
             //EntityCollection uom = ImportaUom(serviceProxyOrigem, unidade);
             //Query.ImportaParaCrm(serviceProxyDestino, uom, "uom");
             //Console.WriteLine($"Pacote importado para uom!");
 
-            // Importa Lista de Preços
-            //EntityCollection listaDePreços = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "pricelevel", "Default");
+            //Importa Lista de Preços
+            //EntityCollection listaDePreços = Query.RetornaEntidades(serviceProxyOrigem, "pricelevel", "Default");
             //EntityCollection pricelevel = ImportaPricelevel(serviceProxyOrigem, listaDePreços);
             //Query.ImportaParaCrm(serviceProxyDestino, pricelevel, "pricelevel");
             //Console.WriteLine($"Pacote importado para pricelevel!");
 
-            // Importa Grupo de Unidades
-            //EntityCollection grupoDeUnidades = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
+            //Importa Grupo de Unidades
+            //EntityCollection grupoDeUnidades = Query.RetornaEntidades(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
             //EntityCollection uomschedule = ImportaUomschedule(serviceProxyOrigem, grupoDeUnidades);
             //Query.ImportaParaCrm(serviceProxyDestino, pricelevel, "uomschedule");
             //Console.WriteLine($"Pacote importado para uomschedule!");
 
             //Importa Produtos
-            //EntityCollection produtos = Query.RetornaEntidadesCondicao(serviceProxyOrigem, "product", "Notebook Lenovo");
+            //EntityCollection produtos = Query.RetornaEntidades(serviceProxyOrigem, "product", "Notebook Lenovo");
             //EntityCollection product = ImportaProduct(serviceProxyOrigem, produtos);
             //Query.ImportaParaCrm(serviceProxyDestino, product, "product");
             //Console.WriteLine($"Pacote importado para product!");

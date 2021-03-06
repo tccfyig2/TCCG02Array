@@ -12,7 +12,7 @@ namespace RoboCriadorDeItens_2.DAL
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
             queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
-            if(condicao != null)
+            if (condicao != null)
             {
                 queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);
             }
