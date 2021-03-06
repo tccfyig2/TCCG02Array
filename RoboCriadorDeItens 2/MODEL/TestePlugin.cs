@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
+using System.Windows;
 
 namespace RoboCriadorDeItens_2.MODEL
 {
@@ -8,66 +9,89 @@ namespace RoboCriadorDeItens_2.MODEL
     {
         internal static void Plugin()
         {
-            // Cria conexão!
-            Conexao conexao = new Conexao();
-            CrmServiceClient _serviceProxy = conexao.ObterConexaoApresentacao();
-
-            // Start
-            Console.Write("1 - Plugin CPF Invalido\n2 - Plugin CPF Duplicado\n3 - Plugin CNPJ Invalido\n4 - Plugin CNPJ Duplicado\n5 - Plugin código Duplicado\nDigite o número da opção: ");
-            string resposta = Console.ReadLine().ToLower();
-            Console.Clear();
-            switch (resposta)
+            // Interface
+            bool start = true;
+            while (start)
             {
-                case "1":
-                    PluginCPFInvalido(_serviceProxy);
-                    break;
-                case "2":
-                    PluginCPFDuplicado(_serviceProxy);
-                    break;
-                case "3":
-                    PluginCNPJInvalido(_serviceProxy);
-                    break;
-                case "4":
-                    PluginCNPJDuplicado(_serviceProxy);
-                    break;
-                case "5":
-                    PluginCodigoDuplicado(_serviceProxy);
-                    break;
-                default:
-                    Console.WriteLine("Alternativa inválida!");
-                    break;
+                Console.Write("O que deseja Testar?\n" +
+                "\t1 - Plugin CPF Inválido\n" +
+                "\t2 - Plugin CPF Duplicado\n" +
+                "\t3 - Plugin CNPJ Inválido\n" +
+                "\t4 - Plugin CNPJ Duplicado\n" +
+                "\t5 - Plugin código Duplicado\n" +
+                "\t6 - Voltar\n" +
+                "Digite o número da opção: ");
+                string resposta = Console.ReadLine().ToLower();
+                Console.Clear();
+                switch (resposta)
+                {
+                    case "1":
+                        Enviar(PluginCPFInvalido());
+                        break;
+                    case "2":
+                        Enviar(PluginCPFDuplicado());
+                        break;
+                    case "3":
+                        Enviar(PluginCNPJInvalido());
+                        break;
+                    case "4":
+                        Enviar(PluginCNPJDuplicado());
+                        break;
+                    case "5":
+                        Enviar(PluginCodigoDuplicado());
+                        break;
+                    case "6":
+                        start = false;
+                        break;
+                    default:
+                        Console.WriteLine("Alternativa inválida!");
+                        break;
+                }
             }
         }
-        static void PluginCPFInvalido(CrmServiceClient _serviceProxy)
+        static Entity PluginCPFInvalido()
         {
             Entity entidade = new Entity("contact");
             entidade.Attributes.Add("cred2_cpf", "38561393466");
-            _serviceProxy.Create(entidade);
+            return entidade;
         }
-        static void PluginCPFDuplicado(CrmServiceClient _serviceProxy)
+        static Entity PluginCPFDuplicado()
         {
             Entity entidade = new Entity("contact");
             entidade.Attributes.Add("cred2_cpf", "38561393467");
-            _serviceProxy.Create(entidade);
+            return entidade;
         }
-        static void PluginCNPJInvalido(CrmServiceClient _serviceProxy)
+        static Entity PluginCNPJInvalido()
         {
             Entity entidade = new Entity("account");
             entidade.Attributes.Add("cred2_cnpj", "70865518919501");
-            _serviceProxy.Create(entidade);
+            return entidade;
         }
-        static void PluginCNPJDuplicado(CrmServiceClient _serviceProxy)
+        static Entity PluginCNPJDuplicado()
         {
             Entity entidade = new Entity("account");
             entidade.Attributes.Add("cred2_cnpj", "70865518919509");
-            _serviceProxy.Create(entidade);
+            return entidade;
         }
-        static void PluginCodigoDuplicado(CrmServiceClient _serviceProxy)
+        static Entity PluginCodigoDuplicado()
         {
             Entity entidade = new Entity("salesorder");
             entidade.Attributes.Add("cred2_codigo", "cod-10000");
-            _serviceProxy.Create(entidade);
+            return entidade;
         }
-
+        static void Enviar(Entity entidade)
+        {
+            // Cria conexão!
+            Conexao conexao = new Conexao();
+            CrmServiceClient _serviceProxy = conexao.ObterConexaoApresentacao();
+            try
+            {
+                _serviceProxy.Create(entidade);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

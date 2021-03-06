@@ -10,7 +10,12 @@ namespace RoboCriadorDeItens_2
             bool start = true;
             while (start)
             {
-                Console.Write("1- Criar\n2- Importar\n3- Plugin\n4- Sair\nDigite o número da opção: ");
+                Console.Write("O que deseja fazer?\n" +
+                    "\t1- Criar\n" +
+                    "\t2- Importar\n" +
+                    "\t3- Plugin\n" +
+                    "\t4- Sair\n" +
+                    "Digite o número da opção: ");
                 string resposta = Console.ReadLine().ToLower();
                 Console.Clear();
                 switch (resposta)
@@ -25,7 +30,6 @@ namespace RoboCriadorDeItens_2
                         break;
                     case "3":
                         TestePlugin.Plugin();
-                        Console.WriteLine("Sucesso!!");
                         break;
                     case "4":
                         start = false;
