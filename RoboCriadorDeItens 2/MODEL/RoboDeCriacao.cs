@@ -29,9 +29,14 @@ namespace RoboCriadorDeItens_2
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
 
-            int tamanhoPacote = 10;
-            // loop deve ser um número inteiro! Divisivel por tamanhoPacote!
-            int loop = (int)Math.Ceiling((float)1 / tamanhoPacote);
+            // Especificações
+            Console.WriteLine("Digite o tamanho do pacote!");
+            int tamanhoPacote = int.Parse(Console.ReadLine());
+            // if (tamanho do pacote > numeroTotal) {numreoTotal = tamanhoPacote}
+            Console.WriteLine("Digite a quantidade total de itens a ser criado!");
+            int numeroTotal = int.Parse(Console.ReadLine());
+            int loop = (int)Math.Ceiling((float)numeroTotal / tamanhoPacote);
+
             //Cria Contatos!
             cronometro.Start();
             for (int i = 0; i < loop; i++)

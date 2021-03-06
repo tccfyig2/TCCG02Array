@@ -16,8 +16,11 @@ namespace RoboCriadorDeItens_2
             CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
             CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
 
+            // Especificações
+            Console.WriteLine("Digite o tamanho do pacote!");
+            int tamanhoPacote = int.Parse(Console.ReadLine());
+
             // Importa Contato!
-            int tamanhoPacote = 50;
             cronometro.Start();
             EntityCollection contatos = Query.RetornaEntidades(serviceProxyOrigem, "contact");
             int loop = (int)Math.Ceiling((float)contatos.Entities.Count / tamanhoPacote);
