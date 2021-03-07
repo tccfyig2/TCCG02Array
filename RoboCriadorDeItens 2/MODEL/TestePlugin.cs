@@ -1,14 +1,20 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Tooling.Connector;
+using RoboCriadorDeItens_2.DAL;
 using System;
-using System.Windows;
 
 namespace RoboCriadorDeItens_2.MODEL
 {
-    class TestePlugin
+    class TestePlugin : Query
     {
         internal static void Plugin()
         {
+            // Cria conexão
+            Console.WriteLine("Conectando...");
+            Conexao conexao = new Conexao();
+            CrmServiceClient _serviceProxy = conexao.ObterConexaoApresentacao();
+            Console.Clear();
+
             // Interface
             bool start = true;
             while (start)
@@ -26,19 +32,19 @@ namespace RoboCriadorDeItens_2.MODEL
                 switch (resposta)
                 {
                     case "1":
-                        Enviar(PluginCPFInvalido());
+                        TesteDePlugin(_serviceProxy, PluginCPFInvalido());
                         break;
                     case "2":
-                        Enviar(PluginCPFDuplicado());
+                        TesteDePlugin(_serviceProxy, PluginCPFDuplicado());
                         break;
                     case "3":
-                        Enviar(PluginCNPJInvalido());
+                        TesteDePlugin(_serviceProxy, PluginCNPJInvalido());
                         break;
                     case "4":
-                        Enviar(PluginCNPJDuplicado());
+                        TesteDePlugin(_serviceProxy, PluginCNPJDuplicado());
                         break;
                     case "5":
-                        Enviar(PluginCodigoDuplicado());
+                        TesteDePlugin(_serviceProxy, PluginCodigoDuplicado());
                         break;
                     case "6":
                         start = false;
@@ -78,20 +84,6 @@ namespace RoboCriadorDeItens_2.MODEL
             Entity entidade = new Entity("salesorder");
             entidade.Attributes.Add("cred2_codigo", "cod-10000");
             return entidade;
-        }
-        static void Enviar(Entity entidade)
-        {
-            // Cria conexão!
-            Conexao conexao = new Conexao();
-            CrmServiceClient _serviceProxy = conexao.ObterConexaoApresentacao();
-            try
-            {
-                _serviceProxy.Create(entidade);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
         }
     }
 }

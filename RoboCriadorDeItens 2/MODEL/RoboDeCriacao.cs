@@ -7,15 +7,18 @@ using System.Diagnostics;
 
 namespace RoboCriadorDeItens_2.MODEL
 {
-    class RoboDeCriacao
-    {
+    class RoboDeCriacao : Query
+{
         protected static Random rnd = new Random();
         internal static void Criacao()
         {
             Stopwatch cronometro = new Stopwatch();
+
             // Cria Conexão
+            Console.WriteLine("Conectando...");
             Conexao conexao = new Conexao();
             CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
+            Console.Clear();
 
             // Especificações
             int tamanhoPacote = 50;
@@ -29,7 +32,7 @@ namespace RoboCriadorDeItens_2.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = CriaContact(numeroTotal, tamanhoPacote, i);
-                Query.criaNoCrm(_serviceProxy, contact);
+                criaNoCrm(_serviceProxy, contact);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
             cronometro.Stop();
@@ -37,11 +40,11 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Cria Contas!
             cronometro.Start();
-            EntityCollection contatos = Query.RetornaEntidades(_serviceProxy, "contact");
+            EntityCollection contatos = RetornaEntidades(_serviceProxy, "contact");
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
-                Query.criaNoCrm(_serviceProxy, account);
+                criaNoCrm(_serviceProxy, account);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
             cronometro.Stop();
@@ -52,7 +55,7 @@ namespace RoboCriadorDeItens_2.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection lead = CriaLead(numeroTotal, tamanhoPacote, i);
-                Query.criaNoCrm(_serviceProxy, lead);
+                criaNoCrm(_serviceProxy, lead);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em lead!");
             }
             cronometro.Stop();
@@ -60,13 +63,18 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Cria Ordens!
             cronometro.Start();
-            EntityCollection contas = Query.RetornaEntidades(_serviceProxy, "account");
+            EntityCollection contas = RetornaEntidades(_serviceProxy, "account");
             Console.WriteLine("Digite o valor inicial do código da Ordem!");
             int semente = int.Parse(Console.ReadLine());
+            while (semente <= 15071)
+            {
+                Console.WriteLine("Valor inicial do código da Ordem é inválido!");
+                semente = int.Parse(Console.ReadLine());
+            }
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i, semente);
-                Query.criaNoCrm(_serviceProxy, salesorder);
+                criaNoCrm(_serviceProxy, salesorder);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
             cronometro.Stop();
@@ -74,11 +82,11 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Cria Produtos da Ordem!
             cronometro.Start();
-            EntityCollection ordens = Query.RetornaEntidades(_serviceProxy, "salesorder");
+            EntityCollection ordens = RetornaEntidades(_serviceProxy, "salesorder");
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
-                Query.criaNoCrm(_serviceProxy, salesorderdetail);
+                criaNoCrm(_serviceProxy, salesorderdetail);
                 Console.WriteLine($"Pacote nº: {i + 1} de salesorderdetail!");
             }
             cronometro.Stop();

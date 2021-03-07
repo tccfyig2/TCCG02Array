@@ -3,12 +3,13 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
 using System;
+using System.Windows;
 
 namespace RoboCriadorDeItens_2.DAL
 {
     class Query
     {
-        internal static EntityCollection RetornaEntidades(CrmServiceClient _serviceProxy, string entidade, string condicao = null)
+        protected static EntityCollection RetornaEntidades(CrmServiceClient _serviceProxy, string entidade, string condicao = null)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
             if (condicao != null)
@@ -35,7 +36,7 @@ namespace RoboCriadorDeItens_2.DAL
             }
             return itens;
         }
-        internal static EntityCollection RetornaEntidadesLink(CrmServiceClient serviceProxyOrigem, string entidade)
+        protected static EntityCollection RetornaEntidadesLink(CrmServiceClient serviceProxyOrigem, string entidade)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
             queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
@@ -60,7 +61,7 @@ namespace RoboCriadorDeItens_2.DAL
             }
             return itens;
         }
-        internal static EntityCollection ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades, string tabela)
+        protected static EntityCollection ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades, string tabela)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -94,7 +95,7 @@ namespace RoboCriadorDeItens_2.DAL
             Console.WriteLine($"{cont} entidades importadas!");
             return atualizar;
         }
-        internal static void AtualizaCrmOrigem(CrmServiceClient serviceProxyOrigem, EntityCollection colecaoEntidades)
+        protected static void AtualizaCrmOrigem(CrmServiceClient serviceProxyOrigem, EntityCollection colecaoEntidades)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -120,7 +121,7 @@ namespace RoboCriadorDeItens_2.DAL
             }
             Console.WriteLine($"{cont} entidades ATUALIZADAS!");
         }
-        internal static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
+        protected static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -149,6 +150,17 @@ namespace RoboCriadorDeItens_2.DAL
                 cont++;
             }
             Console.WriteLine($"{cont} entidades criadas!");
+        }
+        protected static void TesteDePlugin(CrmServiceClient _serviceProxy, Entity entidade)
+        {
+            try
+            {
+                _serviceProxy.Create(entidade);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }
