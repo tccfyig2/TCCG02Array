@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboCriadorDeItens 2", "Rob
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin", "Plugin\Plugin.csproj", "{C8420EC2-0C7C-455A-AA1D-68350D142BEE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "JavaScript", "JavaScript", "{F42C02C0-B03A-4044-B3E4-BD2A4DE0626B}"
+	ProjectSection(SolutionItems) = preProject
+		JavaScript\busca_Endereco_CEP.js = JavaScript\busca_Endereco_CEP.js
+		JavaScript\CNPJ_Validacao_Duplicados.js = JavaScript\CNPJ_Validacao_Duplicados.js
+		JavaScript\CPF_Validacao_Duplicados.js = JavaScript\CPF_Validacao_Duplicados.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

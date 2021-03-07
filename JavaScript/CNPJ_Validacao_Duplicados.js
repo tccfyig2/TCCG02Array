@@ -11,7 +11,6 @@ function CNPJ_Validacao_Duplicados(executionContext) {
         let security = true;
         for (let i = 0; i < results.entities.length; i++) {
           const cnpjBanco = results.entities[i]["cred2_cnpj"];
-          
           if (cnpjBanco == cnpjCampo.getValue()) {
             security = false;
             cnpjCampo.setValue("");
@@ -53,7 +52,6 @@ function validacao_CNPJ(cnpjCampo) {
   ) {
     return false;
   }
-
   const multpDigito1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
   const multpDigito2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
   let cnpj = [];
@@ -61,23 +59,18 @@ function validacao_CNPJ(cnpjCampo) {
   {
       cnpj[i] = parseInt(cnpjCampo[i]);
   }
-
   // Calculo primeiro dígito
   let soma = 0;
   for (let i = 0; i < 12; i++) {
     soma += multpDigito1[i] * cnpj[i];
   }
-
   cnpj[12] = Resto(soma);
-
   // Calculo segundo dígito
   soma = 0;
   for (let i = 0; i < 13; i++) {
     soma += multpDigito2[i] * cnpj[i];
   }
-
   cnpj[13] = Resto(soma);
-  
   if (cnpjCampo == cnpj.join('')) {
     return true;
   }

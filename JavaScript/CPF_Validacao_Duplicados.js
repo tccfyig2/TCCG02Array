@@ -11,7 +11,6 @@ function CPF_Validacao_Duplicados(executionContext) {
         let security = true;
         for (let i = 0; i < results.entities.length; i++) {
           const cpfBanco = results.entities[i]["cred2_cpf"];
-  
           if (cpfBanco == cpfCampo.getValue()) {
             security = false;
             cpfCampo.setValue("");
@@ -53,7 +52,6 @@ function validacao_CPF(cpfCampo) {
   ) {
     return false;
   }
-
   const multpDigito1 = [10, 9, 8, 7, 6, 5, 4, 3, 2];
   const multpDigito2 = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2];
   let cpf = [];
@@ -61,23 +59,18 @@ function validacao_CPF(cpfCampo) {
   {
       cpf[i] = parseInt(cpfCampo[i]);
   }
-
   // Calculo primeiro dígito
   let soma = 0;
   for (let i = 0; i < 9; i++) {
     soma += multpDigito1[i] * cpf[i];
   }
-
   cpf[9] = Resto(soma);
-
   // Calculo segundo dígito
   soma = 0;
   for (let i = 0; i < 10; i++) {
     soma += multpDigito2[i] * cpf[i];
   }
-
   cpf[10] = Resto(soma);
-
   if (cpfCampo == cpf.join('')) {
     return true;
   }
