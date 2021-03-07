@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xrm.Tooling.Connector;
+using System;
 using System.Net;
 
 namespace RoboCriadorDeItens_2
 {
     class Conexao
     {
-        private static CrmServiceClient crmServiceClientOrigem;
-        private static CrmServiceClient crmServiceClientDestino;
-
-        internal CrmServiceClient ObterConexaoApresentacao()
+        static CrmServiceClient crmServiceClientOrigem;
+        static CrmServiceClient crmServiceClientDestino;
+        internal static CrmServiceClient Apresentacao()
         {
+            Console.WriteLine("Conectando...");
             var connectionStringCRM = @"AuthType=OAuth;
             Username = admin@fyitcc.onmicrosoft.com;
             Password = Mortadela2; SkipDiscovery = True;
@@ -24,8 +25,9 @@ namespace RoboCriadorDeItens_2
             }
             return crmServiceClientOrigem;
         }
-        internal CrmServiceClient ObterConexaoCobaia()
+        internal static CrmServiceClient Cobaia()
         {
+            Console.WriteLine("Conectando...");
             var connectionStringCRM = @"AuthType=OAuth;
                 Username = adminrobo@adminrobo.onmicrosoft.com;
                 Password = TCCabc123321*; SkipDiscovery = True;

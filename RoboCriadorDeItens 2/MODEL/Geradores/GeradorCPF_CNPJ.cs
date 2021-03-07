@@ -4,7 +4,7 @@ namespace RoboCriadorDeItens_2.Geradores
 {
     class GeradorCPF_CNPJ
     {
-        protected static Random rnd = new Random();
+        static Random rnd = new Random();
         internal static string GeradorCPF()
         {
             int[] multpDigito1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };

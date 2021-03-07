@@ -8,17 +8,11 @@ namespace RoboCriadorDeItens_2.MODEL
 {
     class RoboDeImportacao : Query
     {
+        static CrmServiceClient serviceProxyOrigem = Conexao.Cobaia();
+        static CrmServiceClient serviceProxyDestino = Conexao.Apresentacao();
         internal static void Importacao()
         {
             Stopwatch cronometro = new Stopwatch();
-
-            // Cria Conexão
-            Console.WriteLine("Conectando...");
-            Conexao conexao = new Conexao();
-            CrmServiceClient serviceProxyOrigem = conexao.ObterConexaoCobaia();
-            CrmServiceClient serviceProxyDestino = conexao.ObterConexaoApresentacao();
-            Console.Clear();
-
             // Especificações
             int tamanhoPacote = 50;
 

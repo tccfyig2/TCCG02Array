@@ -14,7 +14,7 @@ namespace RoboCriadorDeItens_2.DAL
             QueryExpression queryExpression = new QueryExpression(entidade);
             if (condicao != null)
             {
-                queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);
+                queryExpression.Criteria.AddCondition("name", ConditionOperator.EndsWith, condicao);
             }
             else
             {

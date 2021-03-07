@@ -5,7 +5,7 @@ namespace RoboCriadorDeItens_2.Geradores
 {
     class GeradorForm
     {
-        protected static Random rnd = new Random();
+        static Random rnd = new Random();
         internal static string GeradorEmail(string nome = "exemplo")
         {
             string[] sufixos = { "live", "yahoo", "uol", "bol", "aol", "gmail", "ymail", "hotmail", "ig" };

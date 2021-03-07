@@ -9,16 +9,11 @@ namespace RoboCriadorDeItens_2.MODEL
 {
     class RoboDeCriacao : Query
 {
-        protected static Random rnd = new Random();
+        static CrmServiceClient _serviceProxy = Conexao.Cobaia();
+        static Random rnd = new Random();
         internal static void Criacao()
         {
             Stopwatch cronometro = new Stopwatch();
-
-            // Cria Conexão
-            Console.WriteLine("Conectando...");
-            Conexao conexao = new Conexao();
-            CrmServiceClient _serviceProxy = conexao.ObterConexaoCobaia();
-            Console.Clear();
 
             // Especificações
             int tamanhoPacote = 50;
