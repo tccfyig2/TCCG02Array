@@ -119,7 +119,7 @@ namespace RoboCriadorDeItens_2.DAL
                 }
                 cont++;
             }
-            Console.WriteLine($"{cont} entidades ATUALIZADAS!");
+            Console.WriteLine($"{cont} entidades atualizadas na origem!");
         }
         protected static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
         {

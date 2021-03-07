@@ -23,20 +23,20 @@ namespace RoboCriadorDeItens_2.MODEL
             // Especificações
             int tamanhoPacote = 50;
             // if (tamanho do pacote > numeroTotal) {numreoTotal = tamanhoPacote}
-            Console.WriteLine("Digite a quantidade total de itens a ser criado!");
-            int numeroTotal = int.Parse(Console.ReadLine());
-            int loop = (int)Math.Ceiling((float)numeroTotal / tamanhoPacote);
+            Console.Write("Digite a quantidade de entidades por tabela: ");
+            int totalEntidades = int.Parse(Console.ReadLine());
+            int loop = (int)Math.Ceiling((float)totalEntidades / tamanhoPacote);
 
             //Cria Contatos!
             cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection contact = CriaContact(numeroTotal, tamanhoPacote, i);
+                EntityCollection contact = CriaContact(totalEntidades, tamanhoPacote, i);
                 criaNoCrm(_serviceProxy, contact);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
             cronometro.Stop();
-            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
+            Console.WriteLine("Tempo de criação: {0:hh\\:mm\\:ss}\n", cronometro.Elapsed);
 
             // Cria Contas!
             cronometro.Start();
@@ -48,27 +48,27 @@ namespace RoboCriadorDeItens_2.MODEL
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
             cronometro.Stop();
-            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
+            Console.WriteLine("Tempo de criação: {0:hh\\:mm\\:ss}\n", cronometro.Elapsed);
 
             // Cria Clientes Potenciais!
             cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection lead = CriaLead(numeroTotal, tamanhoPacote, i);
+                EntityCollection lead = CriaLead(totalEntidades, tamanhoPacote, i);
                 criaNoCrm(_serviceProxy, lead);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em lead!");
             }
             cronometro.Stop();
-            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
+            Console.WriteLine("Tempo de criação: {0:hh\\:mm\\:ss}\n", cronometro.Elapsed);
 
             // Cria Ordens!
             cronometro.Start();
             EntityCollection contas = RetornaEntidades(_serviceProxy, "account");
-            Console.WriteLine("Digite o valor inicial do código da Ordem!");
+            Console.Write("Digite o valor inicial do código da Ordem: ");
             int semente = int.Parse(Console.ReadLine());
-            while (semente <= 15071)
+            while (semente <= 15075 || semente > 19999)
             {
-                Console.WriteLine("Valor inicial do código da Ordem é inválido!");
+                Console.Write("Valor inicial do código da Ordem é inválido!\nDigite o valor inicial do código da Ordem: ");
                 semente = int.Parse(Console.ReadLine());
             }
             for (int i = 0; i < loop; i++)
@@ -78,7 +78,7 @@ namespace RoboCriadorDeItens_2.MODEL
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
             cronometro.Stop();
-            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
+            Console.WriteLine("Tempo de criação: {0:hh\\:mm\\:ss}\n", cronometro.Elapsed);
 
             // Cria Produtos da Ordem!
             cronometro.Start();
@@ -90,15 +90,15 @@ namespace RoboCriadorDeItens_2.MODEL
                 Console.WriteLine($"Pacote nº: {i + 1} de salesorderdetail!");
             }
             cronometro.Stop();
-            Console.WriteLine("Tempo decorrido: {0:hh\\:mm\\:ss}", cronometro.Elapsed);
+            Console.WriteLine("Tempo de criação: {0:hh\\:mm\\:ss}\n", cronometro.Elapsed);
         }
-        static EntityCollection CriaContact(int numeroTotal, int tamanhoPacote, int contador)
+        static EntityCollection CriaContact(int totalEntidades, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == numeroTotal) { break; };
+                if (contador == totalEntidades) { break; };
                 Entity entidade = new Entity("contact");
                 entidade.Attributes.Add("crb79_importado", false);
                 string[] endereco = (GeradorForm.GeradorEndereco());
@@ -149,13 +149,13 @@ namespace RoboCriadorDeItens_2.MODEL
             }
             return colecaoEntidades;
         }
-        static EntityCollection CriaLead(int numeroTotal, int tamanhoPacote, int contador)
+        static EntityCollection CriaLead(int totalEntidades, int tamanhoPacote, int contador)
         {
             contador *= tamanhoPacote;
             EntityCollection colecaoEntidades = new EntityCollection();
             for (int i = 0; i < tamanhoPacote; i++)
             {
-                if (contador == numeroTotal) { break; };
+                if (contador == totalEntidades) { break; };
                 Entity entidade = new Entity("lead");
                 entidade.Attributes.Add("crb79_importado", false);
                 string[] endereco = (GeradorForm.GeradorEndereco());
