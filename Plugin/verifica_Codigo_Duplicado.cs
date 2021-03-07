@@ -21,19 +21,19 @@ namespace Plugin
                 // Evita loop
                 if (context.Depth > 1)
                 {
-                    return;
+                    throw new InvalidPluginExecutionException("Loop Detectado!");
                 }
                 string campo = "cred2_codigo";
                 if (entity.Attributes.Contains(campo))
                 {
                     string cod = entity.GetAttributeValue<string>(campo).ToString();
-                    QueryExpression contactQuery = new QueryExpression("salesorder");
-                    contactQuery.ColumnSet = new ColumnSet(campo);
-                    contactQuery.Criteria.AddCondition(campo, ConditionOperator.Equal, cod);
-                    EntityCollection contactColl = service.RetrieveMultiple(contactQuery);
-                    if (contactColl.Entities.Count > 0)
+                    QueryExpression queryExpression = new QueryExpression("salesorder");
+                    queryExpression.ColumnSet = new ColumnSet(campo);
+                    queryExpression.Criteria.AddCondition(campo, ConditionOperator.Equal, cod);
+                    EntityCollection result = service.RetrieveMultiple(queryExpression);
+                    if (result.Entities.Count > 0)
                     {
-                        throw new InvalidPluginExecutionException("Código já existe no banco de dados!");
+                        throw new InvalidPluginExecutionException("Código já cadastrado!");
                     }
                 }
             }
