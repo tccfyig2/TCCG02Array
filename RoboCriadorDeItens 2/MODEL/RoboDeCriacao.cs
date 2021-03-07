@@ -17,7 +17,6 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Especificações
             int tamanhoPacote = 50;
-            // if (tamanho do pacote > numeroTotal) {numreoTotal = tamanhoPacote}
             Console.Write("Digite a quantidade de entidades por tabela: ");
             int totalEntidades = int.Parse(Console.ReadLine());
             int loop = (int)Math.Ceiling((float)totalEntidades / tamanhoPacote);
@@ -59,13 +58,9 @@ namespace RoboCriadorDeItens_2.MODEL
             // Cria Ordens!
             cronometro.Start();
             EntityCollection contas = RetornaEntidades(_serviceProxy, "account");
-            Console.Write("Digite o valor inicial do código da Ordem: ");
-            int semente = int.Parse(Console.ReadLine());
-            while (semente <= 15075 || semente > 19999)
-            {
-                Console.Write("Valor inicial do código da Ordem é inválido!\nDigite o valor inicial do código da Ordem: ");
-                semente = int.Parse(Console.ReadLine());
-            }
+            // Semente: Valor incial do código da ordem.
+            int semente = LastSalesorderNumber(_serviceProxy);
+            Console.WriteLine(semente);
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i, semente);
@@ -185,7 +180,7 @@ namespace RoboCriadorDeItens_2.MODEL
                 if (contador == account.Entities.Count) { break; };
                 Entity entidade = new Entity("salesorder");
                 entidade.Attributes.Add("crb79_importado", false);
-                string codigo = $"cod-{semente + contador}";  // Semente: VALOR INICIAL DO CONTADOR
+                string codigo = $"cod-{semente + contador}";
                 entidade.Attributes.Add("name", $"Ordem {codigo}");
                 entidade.Attributes.Add("crb79_codigo", codigo);
                 entidade.Attributes.Add("customerid", new EntityReference("account", account[contador].Id));

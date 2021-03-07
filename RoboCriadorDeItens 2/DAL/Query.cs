@@ -162,5 +162,15 @@ namespace RoboCriadorDeItens_2.DAL
                 MessageBox.Show(ex.Message);
             }
         }
+        protected static int LastSalesorderNumber(CrmServiceClient serviceProxyOrigem)
+        {
+            QueryExpression queryExpression = new QueryExpression("salesorder");
+            queryExpression.ColumnSet = new ColumnSet(true);
+            queryExpression.AddOrder("createdon", OrderType.Descending);
+            queryExpression.TopCount = 1;
+            EntityCollection entidade = serviceProxyOrigem.RetrieveMultiple(queryExpression);
+            string cod = entidade[0]["crb79_codigo"].ToString().Replace("cod-", "");
+            return int.Parse(cod) + 1;
+        }
     }
 }
