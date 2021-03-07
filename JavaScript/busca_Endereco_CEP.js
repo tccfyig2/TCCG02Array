@@ -8,7 +8,6 @@ function busca_Endereco_CEP() {
         if (cep != "") {
             var validacaoCEP = /^[0-9]{8}$/;
             if (validacaoCEP.test(cep)) {
-                limpa_Form();
                 var script = document.createElement('script');
                 script.src = 'https://viacep.com.br/ws/' + cep + '/json/?callback=imprime_Endereco';
                 document.body.appendChild(script);
@@ -27,6 +26,7 @@ function imprime_Endereco(valorCampo) {
         Xrm.Page.getAttribute("address1_line3").setValue(valorCampo.bairro);
         Xrm.Page.getAttribute("address1_city").setValue(valorCampo.localidade);
         Xrm.Page.getAttribute("address1_stateorprovince").setValue(valorCampo.uf);
+        Xrm.Page.getAttribute("address1_country").setValue("Brasil");
     }
     else {
         erro("CEP não encontrado!");
@@ -34,10 +34,12 @@ function imprime_Endereco(valorCampo) {
 };
 
 function limpa_Form() {
+    Xrm.Page.getAttribute("address1_postalcode").setValue("");
     Xrm.Page.getAttribute("address1_line1").setValue("");
     Xrm.Page.getAttribute("address1_line3").setValue("");
     Xrm.Page.getAttribute("address1_city").setValue("");
     Xrm.Page.getAttribute("address1_stateorprovince").setValue("");
+    Xrm.Page.getAttribute("address1_country").setValue("");
 };
 
 function erro(mensagem) {

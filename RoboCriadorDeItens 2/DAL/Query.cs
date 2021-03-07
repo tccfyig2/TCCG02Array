@@ -170,7 +170,8 @@ namespace RoboCriadorDeItens_2.DAL
             queryExpression.TopCount = 1;
             EntityCollection entidade = serviceProxyOrigem.RetrieveMultiple(queryExpression);
             string cod = entidade[0]["crb79_codigo"].ToString().Replace("cod-", "");
-            return int.Parse(cod) + 1;
+            int codigo = int.Parse(cod) + 1;
+            return codigo;
         }
     }
 }

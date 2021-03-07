@@ -60,7 +60,6 @@ namespace RoboCriadorDeItens_2.MODEL
             EntityCollection contas = RetornaEntidades(_serviceProxy, "account");
             // Semente: Valor incial do código da ordem.
             int semente = LastSalesorderNumber(_serviceProxy);
-            Console.WriteLine(semente);
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i, semente);
