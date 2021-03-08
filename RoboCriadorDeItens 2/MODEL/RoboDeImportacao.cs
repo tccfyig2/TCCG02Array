@@ -88,25 +88,25 @@ namespace RoboCriadorDeItens_2.MODEL
             //// Importa Unidade
             //EntityCollection unidade = RetornaEntidades("uom", "item");
             //EntityCollection uom = ImportaUom(unidade);
-            //ImportaParaCrm(serviceProxyDestino, uom, "uom");
+            //ImportaParaCrm(uom, "uom");
             //Console.WriteLine($"Pacote importado para uom!\n");
 
             ////Importa Lista de Preços
             //EntityCollection listaDePreços = RetornaEntidades("pricelevel", "Default");
             //EntityCollection pricelevel = ImportaPricelevel(listaDePreços);
-            //ImportaParaCrm(serviceProxyDestino, pricelevel, "pricelevel");
+            //ImportaParaCrm(pricelevel, "pricelevel");
             //Console.WriteLine($"Pacote importado para pricelevel!\n");
 
             ////Importa Grupo de Unidades
             //EntityCollection grupoDeUnidades = RetornaEntidades("uomschedule", "Default Unit - Sales Professional Business");
             //EntityCollection uomschedule = ImportaUomschedule(grupoDeUnidades);
-            //ImportaParaCrm(serviceProxyDestino, uomschedule, "uomschedule");
+            //ImportaParaCrm(uomschedule, "uomschedule");
             //Console.WriteLine($"Pacote importado para uomschedule!\n");
 
             ////Importa Produtos
             //EntityCollection produtos = RetornaEntidades("product", "Notebook Lenovo");
             //EntityCollection product = ImportaProduct(produtos);
-            //ImportaParaCrm(serviceProxyDestino, product, "product");
+            //ImportaParaCrm(product, "product");
             //Console.WriteLine($"Pacote importado para product!\n");
         }
         static EntityCollection ImportaContact(EntityCollection query, int tamanhoPacote, int contador)
