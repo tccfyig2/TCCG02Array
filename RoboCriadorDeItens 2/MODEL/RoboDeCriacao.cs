@@ -1,5 +1,4 @@
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.DAL;
 using RoboCriadorDeItens_2.Geradores;
 using System;
@@ -9,7 +8,6 @@ namespace RoboCriadorDeItens_2.MODEL
 {
     class RoboDeCriacao : Query
 {
-        static CrmServiceClient _serviceProxy = Conexao.Cobaia();
         static Random rnd = new Random();
         internal static void Criacao()
         {
@@ -26,7 +24,7 @@ namespace RoboCriadorDeItens_2.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = CriaContact(totalEntidades, tamanhoPacote, i);
-                criaNoCrm(_serviceProxy, contact);
+                criaNoCrm(contact);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
             cronometro.Stop();
@@ -34,11 +32,11 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Cria Contas!
             cronometro.Start();
-            EntityCollection contatos = RetornaEntidades(_serviceProxy, "contact");
+            EntityCollection contatos = RetornaEntidades("contact");
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = CriaAccount(contatos, tamanhoPacote, i);
-                criaNoCrm(_serviceProxy, account);
+                criaNoCrm(account);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
             cronometro.Stop();
@@ -49,7 +47,7 @@ namespace RoboCriadorDeItens_2.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection lead = CriaLead(totalEntidades, tamanhoPacote, i);
-                criaNoCrm(_serviceProxy, lead);
+                criaNoCrm(lead);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em lead!");
             }
             cronometro.Stop();
@@ -57,13 +55,13 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Cria Ordens!
             cronometro.Start();
-            EntityCollection contas = RetornaEntidades(_serviceProxy, "account");
+            EntityCollection contas = RetornaEntidades("account");
             // Semente: Valor incial do código da ordem.
-            int semente = LastSalesorderNumber(_serviceProxy);
+            int semente = LastSalesorderNumber();
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = CriaSalesorder(contas, tamanhoPacote, i, semente);
-                criaNoCrm(_serviceProxy, salesorder);
+                criaNoCrm(salesorder);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
             cronometro.Stop();
@@ -71,11 +69,11 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Cria Produtos da Ordem!
             cronometro.Start();
-            EntityCollection ordens = RetornaEntidades(_serviceProxy, "salesorder");
+            EntityCollection ordens = RetornaEntidades("salesorder");
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorderdetail = CriaSalesorderdetail(ordens, tamanhoPacote, i);
-                criaNoCrm(_serviceProxy, salesorderdetail);
+                criaNoCrm(salesorderdetail);
                 Console.WriteLine($"Pacote nº: {i + 1} de salesorderdetail!");
             }
             cronometro.Stop();

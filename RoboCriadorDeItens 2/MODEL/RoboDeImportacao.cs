@@ -1,5 +1,4 @@
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Tooling.Connector;
 using RoboCriadorDeItens_2.DAL;
 using System;
 using System.Diagnostics;
@@ -8,8 +7,6 @@ namespace RoboCriadorDeItens_2.MODEL
 {
     class RoboDeImportacao : Query
     {
-        static CrmServiceClient serviceProxyOrigem = Conexao.Cobaia();
-        static CrmServiceClient serviceProxyDestino = Conexao.Apresentacao();
         internal static void Importacao()
         {
             Stopwatch cronometro = new Stopwatch();
@@ -18,13 +15,13 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Importa Contato!
             cronometro.Start();
-            EntityCollection contatos = RetornaEntidades(serviceProxyOrigem, "contact");
+            EntityCollection contatos = RetornaEntidades("contact");
             int loop = (int)Math.Ceiling((float)contatos.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = ImportaContact(contatos, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, contact, "contact");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = ImportaParaCrm(contact, "contact");
+                AtualizaCrmOrigem(atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para contact!");
             }
             cronometro.Stop();
@@ -32,13 +29,13 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Importa Conta!
             cronometro.Start();
-            EntityCollection contas = RetornaEntidadesLink(serviceProxyOrigem, "account");
+            EntityCollection contas = RetornaEntidadesLink("account");
             loop = (int)Math.Ceiling((float)contas.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = ImportaAccount(contas, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, account, "account");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = ImportaParaCrm(account, "account");
+                AtualizaCrmOrigem(atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para account!");
             }
             cronometro.Stop();
@@ -46,13 +43,13 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Importa Clientes Potenciais!
             cronometro.Start();
-            EntityCollection clientesPotenciais = RetornaEntidades(serviceProxyOrigem, "lead");
+            EntityCollection clientesPotenciais = RetornaEntidades("lead");
             loop = (int)Math.Ceiling((float)clientesPotenciais.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection lead = ImportaLead(clientesPotenciais, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, lead, "lead");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = ImportaParaCrm(lead, "lead");
+                AtualizaCrmOrigem(atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para lead!");
             }
             cronometro.Stop();
@@ -60,13 +57,13 @@ namespace RoboCriadorDeItens_2.MODEL
 
             //Importa Ordens!
             cronometro.Start();
-            EntityCollection ordens = RetornaEntidades(serviceProxyOrigem, "salesorder");
+            EntityCollection ordens = RetornaEntidades("salesorder");
             loop = (int)Math.Ceiling((float)ordens.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = ImportaSalesorder(ordens, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorder, "salesorder");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = ImportaParaCrm(salesorder, "salesorder");
+                AtualizaCrmOrigem(atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para salesorder!");
             }
             cronometro.Stop();
@@ -74,13 +71,13 @@ namespace RoboCriadorDeItens_2.MODEL
 
             // Importa Produtos da Ordem!
             cronometro.Start();
-            EntityCollection produtosDaOrdem = RetornaEntidades(serviceProxyOrigem, "salesorderdetail");
+            EntityCollection produtosDaOrdem = RetornaEntidades("salesorderdetail");
             loop = (int)Math.Ceiling((float)produtosDaOrdem.Entities.Count / tamanhoPacote);
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorderdetail = ImportaSalesorderdetail(produtosDaOrdem, tamanhoPacote, i);
-                EntityCollection atualizar = ImportaParaCrm(serviceProxyDestino, salesorderdetail, "salesorderdetail");
-                AtualizaCrmOrigem(serviceProxyOrigem, atualizar);
+                EntityCollection atualizar = ImportaParaCrm(salesorderdetail, "salesorderdetail");
+                AtualizaCrmOrigem(atualizar);
                 Console.WriteLine($"Pacote nº: {i + 1} importado para salesorderdetail!");
             }
             cronometro.Stop();
@@ -89,25 +86,25 @@ namespace RoboCriadorDeItens_2.MODEL
             // Os abaixo não devem ser necessarios uma vez que ja foram importados!
 
             //// Importa Unidade
-            //EntityCollection unidade = RetornaEntidades(serviceProxyOrigem, "uom", "item");
+            //EntityCollection unidade = RetornaEntidades("uom", "item");
             //EntityCollection uom = ImportaUom(unidade);
             //ImportaParaCrm(serviceProxyDestino, uom, "uom");
             //Console.WriteLine($"Pacote importado para uom!\n");
 
             ////Importa Lista de Preços
-            //EntityCollection listaDePreços = RetornaEntidades(serviceProxyOrigem, "pricelevel", "Default");
+            //EntityCollection listaDePreços = RetornaEntidades("pricelevel", "Default");
             //EntityCollection pricelevel = ImportaPricelevel(listaDePreços);
             //ImportaParaCrm(serviceProxyDestino, pricelevel, "pricelevel");
             //Console.WriteLine($"Pacote importado para pricelevel!\n");
 
             ////Importa Grupo de Unidades
-            //EntityCollection grupoDeUnidades = RetornaEntidades(serviceProxyOrigem, "uomschedule", "Default Unit - Sales Professional Business");
+            //EntityCollection grupoDeUnidades = RetornaEntidades("uomschedule", "Default Unit - Sales Professional Business");
             //EntityCollection uomschedule = ImportaUomschedule(grupoDeUnidades);
             //ImportaParaCrm(serviceProxyDestino, uomschedule, "uomschedule");
             //Console.WriteLine($"Pacote importado para uomschedule!\n");
 
             ////Importa Produtos
-            //EntityCollection produtos = RetornaEntidades(serviceProxyOrigem, "product", "Notebook Lenovo");
+            //EntityCollection produtos = RetornaEntidades("product", "Notebook Lenovo");
             //EntityCollection product = ImportaProduct(produtos);
             //ImportaParaCrm(serviceProxyDestino, product, "product");
             //Console.WriteLine($"Pacote importado para product!\n");

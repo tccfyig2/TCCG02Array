@@ -9,7 +9,9 @@ namespace RoboCriadorDeItens_2.DAL
 {
     class Query
     {
-        protected static EntityCollection RetornaEntidades(CrmServiceClient _serviceProxy, string entidade, string condicao = null)
+        static CrmServiceClient serviceProxyOrigem = Conexao.Cobaia();
+        static CrmServiceClient serviceProxyDestino = Conexao.Apresentacao();
+        protected static EntityCollection RetornaEntidades(string entidade, string condicao = null)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
             if (condicao != null)
@@ -28,7 +30,7 @@ namespace RoboCriadorDeItens_2.DAL
             bool moreData = true;
             while (moreData)
             {
-                EntityCollection result = _serviceProxy.RetrieveMultiple(queryExpression);
+                EntityCollection result = serviceProxyOrigem.RetrieveMultiple(queryExpression);
                 itens.Entities.AddRange(result.Entities);
                 moreData = result.MoreRecords;
                 queryExpression.PageInfo.PageNumber++;
@@ -36,7 +38,7 @@ namespace RoboCriadorDeItens_2.DAL
             }
             return itens;
         }
-        protected static EntityCollection RetornaEntidadesLink(CrmServiceClient serviceProxyOrigem, string entidade)
+        protected static EntityCollection RetornaEntidadesLink(string entidade)
         {
             QueryExpression queryExpression = new QueryExpression(entidade);
             queryExpression.Criteria.AddCondition("crb79_importado", ConditionOperator.Equal, false);
@@ -61,7 +63,7 @@ namespace RoboCriadorDeItens_2.DAL
             }
             return itens;
         }
-        protected static EntityCollection ImportaParaCrm(CrmServiceClient serviceProxyDestino, EntityCollection colecaoEntidades, string tabela)
+        protected static EntityCollection ImportaParaCrm(EntityCollection colecaoEntidades, string tabela)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -95,7 +97,7 @@ namespace RoboCriadorDeItens_2.DAL
             Console.WriteLine($"{cont} entidades importadas!");
             return atualizar;
         }
-        protected static void AtualizaCrmOrigem(CrmServiceClient serviceProxyOrigem, EntityCollection colecaoEntidades)
+        protected static void AtualizaCrmOrigem(EntityCollection colecaoEntidades)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -121,7 +123,7 @@ namespace RoboCriadorDeItens_2.DAL
             }
             Console.WriteLine($"{cont} entidades atualizadas na origem!");
         }
-        protected static void criaNoCrm(CrmServiceClient _serviceProxy, EntityCollection colecaoEntidades)
+        protected static void criaNoCrm(EntityCollection colecaoEntidades)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -135,7 +137,7 @@ namespace RoboCriadorDeItens_2.DAL
                 CreateRequest createRequest = new CreateRequest { Target = entidade };
                 request.Requests.Add(createRequest);
             }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)_serviceProxy.Execute(request);
+            ExecuteMultipleResponse response = (ExecuteMultipleResponse)serviceProxyOrigem.Execute(request);
             int cont = 0;
             foreach (var item in response.Responses)
             {
@@ -151,22 +153,22 @@ namespace RoboCriadorDeItens_2.DAL
             }
             Console.WriteLine($"{cont} entidades criadas!");
         }
-        protected static void TesteDePlugin(CrmServiceClient _serviceProxy, Entity entidade)
+        protected static void TesteDePlugin(Entity entidade)
         {
             try
             {
-                _serviceProxy.Create(entidade);
+                serviceProxyDestino.Create(entidade);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        protected static int LastSalesorderNumber(CrmServiceClient serviceProxyOrigem)
+        protected static int LastSalesorderNumber()
         {
             QueryExpression queryExpression = new QueryExpression("salesorder");
             queryExpression.ColumnSet = new ColumnSet(true);
-            queryExpression.AddOrder("createdon", OrderType.Descending);
+            queryExpression.AddOrder("crb79_codigo", OrderType.Descending);
             queryExpression.TopCount = 1;
             EntityCollection entidade = serviceProxyOrigem.RetrieveMultiple(queryExpression);
             string cod = entidade[0]["crb79_codigo"].ToString().Replace("cod-", "");
