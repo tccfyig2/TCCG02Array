@@ -131,12 +131,13 @@ namespace Robo.DAO
                 Settings = new ExecuteMultipleSettings
                 { ContinueOnError = false, ReturnResponses = true }
             };
+
             foreach (var entidade in colecaoEntidades.Entities)
             {
                 CreateRequest createRequest = new CreateRequest { Target = entidade };
                 request.Requests.Add(createRequest);
             }
-            ExecuteMultipleResponse resposta = (ExecuteMultipleResponse)serviceProxyDestino.Execute(request);
+            ExecuteMultipleResponse resposta = (ExecuteMultipleResponse)serviceProxyOrigem.Execute(request);
             EntityCollection memoria = new EntityCollection();
             int cont = 0;
             foreach (var item in resposta.Responses)
@@ -153,7 +154,7 @@ namespace Robo.DAO
                 }
                 cont++;
             }
-            Console.WriteLine($"{cont} entidades importadas!");
+            Console.WriteLine($"{cont} entidades criadas!");
             return memoria;
         }
         protected static void TesteDePlugin(Entity entidade)

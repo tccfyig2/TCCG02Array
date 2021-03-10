@@ -26,7 +26,8 @@ namespace Robo.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = CriaContact(totalEntidades, tamanhoPacote, i);
-                momoriaContact =+ criaNoCrm(contact, "contact");
+                EntityCollection momoria = (criaNoCrm(contact, "contact"));
+                momoriaContact.Entities.AddRange(momoria.Entities);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
             cronometro.Stop();
@@ -38,7 +39,8 @@ namespace Robo.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = CriaAccount(momoriaContact, tamanhoPacote, i);
-                momoriaAccount =+ criaNoCrm(account, "account");
+                EntityCollection momoria = criaNoCrm(account, "account");
+                momoriaAccount.Entities.AddRange(momoria.Entities);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
             cronometro.Stop();
@@ -63,7 +65,8 @@ namespace Robo.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = CriaSalesorder(momoriaAccount, tamanhoPacote, i, semente);
-                momoriaSalesorder =+ criaNoCrm(salesorder, "salesorder");
+                EntityCollection momoria = criaNoCrm(salesorder, "salesorder");
+                momoriaSalesorder.Entities.AddRange(momoria.Entities);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
             cronometro.Stop();
@@ -202,7 +205,7 @@ namespace Robo.MODEL
                 entidade.Attributes.Add("productid", new EntityReference("product", productid));
                 entidade.Attributes.Add("quantity", decimal.Parse(rnd.Next(1, 5).ToString()));
                 entidade.Attributes.Add("salesorderid", new EntityReference("salesorder", salesorder[contador].Id));
-                entidade.Attributes.Add("uomid", new EntityReference("businessunit", uomid));
+                entidade.Attributes.Add("uomid", new EntityReference("uom", uomid));
                 colecaoEntidades.Entities.Add(entidade);
                 contador++;
             }
