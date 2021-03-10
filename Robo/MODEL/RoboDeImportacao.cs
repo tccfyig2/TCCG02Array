@@ -218,6 +218,7 @@ namespace Robo.MODEL
                 if (contador == query.Entities.Count) { break; }
                 Entity entidade = new Entity("salesorderdetail");
                 entidade.Attributes.Add("productid", query[contador]["productid"]);
+                entidade.Attributes.Add("quantity", , query[contador]["quantity"]);
                 entidade.Attributes.Add("salesorderid", query[contador]["salesorderid"]);
                 entidade.Attributes.Add("uomid", new EntityReference("uom", new Guid("6f80721a-bf77-eb11-a812-000d3a1c6462")));
                 entidade.Id = query[contador].Id;
