@@ -26,8 +26,7 @@ namespace Robo.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = CriaContact(totalEntidades, tamanhoPacote, i);
-                criaNoCrm(contact);
-                momoriaContact += contact;
+                momoriaContact =+ criaNoCrm(contact, "contact");
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
             cronometro.Stop();
@@ -39,8 +38,7 @@ namespace Robo.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection account = CriaAccount(momoriaContact, tamanhoPacote, i);
-                criaNoCrm(account);
-                momoriaAccount += account;
+                momoriaAccount =+ criaNoCrm(account, "account");
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
             cronometro.Stop();
@@ -65,8 +63,7 @@ namespace Robo.MODEL
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection salesorder = CriaSalesorder(momoriaAccount, tamanhoPacote, i, semente);
-                criaNoCrm(salesorder);
-                momoriaSalesorder += salesorder;
+                momoriaSalesorder =+ criaNoCrm(salesorder, "salesorder");
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
             cronometro.Stop();
