@@ -30,7 +30,7 @@ namespace Plugin
                 string campo = "cred2_cnpj";
                 if (!entity.Attributes.Contains(campo))
                 {
-                    throw new InvalidPluginExecutionException("CNPJ é obigatório!");
+                    throw new InvalidPluginExecutionException("CNPJ é obrigatório!");
                 }
                 else
                 {

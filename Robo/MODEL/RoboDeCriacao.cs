@@ -22,12 +22,12 @@ namespace Robo.MODEL
             
             //Cria Contatos!
             cronometro.Start();
-            EntityCollection momoriaContact = new EntityCollection();
+            EntityCollection memoriaContact = new EntityCollection();
             for (int i = 0; i < loop; i++)
             {
                 EntityCollection contact = CriaContact(totalEntidades, tamanhoPacote, i);
-                EntityCollection momoria = (criaNoCrm(contact, "contact"));
-                momoriaContact.Entities.AddRange(momoria.Entities);
+                EntityCollection memoria = (criaNoCrm(contact, "contact"));
+                memoriaContact.Entities.AddRange(memoria.Entities);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em contact!");
             }
             cronometro.Stop();
@@ -35,12 +35,12 @@ namespace Robo.MODEL
 
             // Cria Contas!
             cronometro.Start();
-            EntityCollection momoriaAccount = new EntityCollection();
+            EntityCollection memoriaAccount = new EntityCollection();
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection account = CriaAccount(momoriaContact, tamanhoPacote, i);
-                EntityCollection momoria = criaNoCrm(account, "account");
-                momoriaAccount.Entities.AddRange(momoria.Entities);
+                EntityCollection account = CriaAccount(memoriaContact, tamanhoPacote, i);
+                EntityCollection memoria = criaNoCrm(account, "account");
+                memoriaAccount.Entities.AddRange(memoria.Entities);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em account!");
             }
             cronometro.Stop();
@@ -59,14 +59,14 @@ namespace Robo.MODEL
 
             // Cria Ordens!
             cronometro.Start();
-            EntityCollection momoriaSalesorder = new EntityCollection();
+            EntityCollection memoriaSalesorder = new EntityCollection();
             // Semente: Valor incial do código da ordem.
             int semente = LastSalesorderNumber();
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection salesorder = CriaSalesorder(momoriaAccount, tamanhoPacote, i, semente);
-                EntityCollection momoria = criaNoCrm(salesorder, "salesorder");
-                momoriaSalesorder.Entities.AddRange(momoria.Entities);
+                EntityCollection salesorder = CriaSalesorder(memoriaAccount, tamanhoPacote, i, semente);
+                EntityCollection memoria = criaNoCrm(salesorder, "salesorder");
+                memoriaSalesorder.Entities.AddRange(memoria.Entities);
                 Console.WriteLine($"Pacote nº: {i + 1} criado em salesorder!");
             }
             cronometro.Stop();
@@ -76,7 +76,7 @@ namespace Robo.MODEL
             cronometro.Start();
             for (int i = 0; i < loop; i++)
             {
-                EntityCollection salesorderdetail = CriaSalesorderdetail(momoriaSalesorder, tamanhoPacote, i);
+                EntityCollection salesorderdetail = CriaSalesorderdetail(memoriaSalesorder, tamanhoPacote, i);
                 criaNoCrm(salesorderdetail);
                 Console.WriteLine($"Pacote nº: {i + 1} de salesorderdetail!");
             }

@@ -30,7 +30,7 @@ namespace Plugin
                 string campo = "cred2_cpf";
                 if (!entity.Attributes.Contains(campo))
                 {
-                    throw new InvalidPluginExecutionException("CPF é obigatório!");
+                    throw new InvalidPluginExecutionException("CPF é obrigatório!");
                 }
                 else
                 {
