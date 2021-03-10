@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{BB6066DB-25AB-4BB5-AD9E-CD640F3022EA}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>RoboCriadorDeItens_2</RootNamespace>
-    <AssemblyName>RoboCriadorDeItens 2</AssemblyName>
+    <RootNamespace>Robo</RootNamespace>
+    <AssemblyName>Robo</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conexao.cs" />
-    <Compile Include="DAL\Query.cs" />
+    <Compile Include="DAO\Query.cs" />
     <Compile Include="MODEL\Geradores\GeradorCPF_CNPJ.cs" />
     <Compile Include="MODEL\Geradores\GeradorForm.cs" />
     <Compile Include="MODEL\TestePlugin.cs" />

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RoboCriadorDeItens 2", "RoboCriadorDeItens 2\RoboCriadorDeItens 2.csproj", "{BB6066DB-25AB-4BB5-AD9E-CD640F3022EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Robo", "Robo\Robo.csproj", "{BB6066DB-25AB-4BB5-AD9E-CD640F3022EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin", "Plugin\Plugin.csproj", "{C8420EC2-0C7C-455A-AA1D-68350D142BEE}"
 EndProject

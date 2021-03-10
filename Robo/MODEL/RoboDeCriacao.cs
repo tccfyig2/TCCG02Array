@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
-using RoboCriadorDeItens_2.DAL;
-using RoboCriadorDeItens_2.Geradores;
+using Robo.DAO;
+using Robo.Geradores;
 using System;
 using System.Diagnostics;
 
-namespace RoboCriadorDeItens_2.MODEL
+namespace Robo.MODEL
 {
     class RoboDeCriacao : Query
 {

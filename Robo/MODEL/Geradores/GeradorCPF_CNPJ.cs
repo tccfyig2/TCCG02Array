@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RoboCriadorDeItens_2.Geradores
+namespace Robo.Geradores
 {
     class GeradorCPF_CNPJ
     {

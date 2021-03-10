@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
-using RoboCriadorDeItens_2.DAL;
+using Robo.DAO;
 
-namespace RoboCriadorDeItens_2.MODEL
+namespace Robo.MODEL
 {
     class TestePlugin : Query
     {

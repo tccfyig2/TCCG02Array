@@ -1,6 +1,6 @@
-﻿using RoboCriadorDeItens_2.VIEW;
+﻿using Robo.VIEW;
 
-namespace RoboCriadorDeItens_2
+namespace Robo
 {
     class Program
     {

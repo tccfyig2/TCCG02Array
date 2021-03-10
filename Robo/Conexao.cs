@@ -2,7 +2,7 @@
 using System;
 using System.Net;
 
-namespace RoboCriadorDeItens_2
+namespace Robo
 {
     class Conexao
     {

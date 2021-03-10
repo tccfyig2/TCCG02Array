@@ -1,7 +1,7 @@
-﻿using RoboCriadorDeItens_2.MODEL;
+﻿using Robo.MODEL;
 using System;
 
-namespace RoboCriadorDeItens_2.VIEW
+namespace Robo.VIEW
 {
     class View
     {

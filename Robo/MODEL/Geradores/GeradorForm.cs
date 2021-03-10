@@ -1,7 +1,7 @@
 ﻿using DotCEP;
 using System;
 
-namespace RoboCriadorDeItens_2.Geradores
+namespace Robo.Geradores
 {
     class GeradorForm
     {
@@ -514,7 +514,7 @@ namespace RoboCriadorDeItens_2.Geradores
                 "Quer saber de comércio",
                 "Como ganhar comércio",
                 "resolver problemas com facilidade",
-                "Gestão de clientes",
+                "Gestão de clientes"
             };
             int index = rnd.Next(topico.Length);
             return topico[index];

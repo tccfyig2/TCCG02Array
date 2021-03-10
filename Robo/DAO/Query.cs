@@ -5,7 +5,7 @@ using Microsoft.Xrm.Tooling.Connector;
 using System;
 using System.Windows;
 
-namespace RoboCriadorDeItens_2.DAL
+namespace Robo.DAO
 {
     class Query
     {
@@ -16,7 +16,7 @@ namespace RoboCriadorDeItens_2.DAL
             QueryExpression queryExpression = new QueryExpression(entidade);
             if (condicao != null)
             {
-                queryExpression.Criteria.AddCondition("name", ConditionOperator.EndsWith, condicao);
+                queryExpression.Criteria.AddCondition("name", ConditionOperator.Equal, condicao);
             }
             else
             {

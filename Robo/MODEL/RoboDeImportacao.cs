@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
-using RoboCriadorDeItens_2.DAL;
+using Robo.DAO;
 using System;
 using System.Diagnostics;
 
-namespace RoboCriadorDeItens_2.MODEL
+namespace Robo.MODEL
 {
     class RoboDeImportacao : Query
     {
