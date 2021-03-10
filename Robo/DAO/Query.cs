@@ -1,4 +1,4 @@
-﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Tooling.Connector;
@@ -123,7 +123,7 @@ namespace Robo.DAO
             }
             Console.WriteLine($"{cont} entidades atualizadas na origem!");
         }
-        protected static void criaNoCrm(EntityCollection colecaoEntidades)
+        protected static EntityCollection criaNoCrm(EntityCollection colecaoEntidades, string tabela = null)
         {
             ExecuteMultipleRequest request = new ExecuteMultipleRequest()
             {
@@ -131,27 +131,30 @@ namespace Robo.DAO
                 Settings = new ExecuteMultipleSettings
                 { ContinueOnError = false, ReturnResponses = true }
             };
-
             foreach (var entidade in colecaoEntidades.Entities)
             {
                 CreateRequest createRequest = new CreateRequest { Target = entidade };
                 request.Requests.Add(createRequest);
             }
-            ExecuteMultipleResponse response = (ExecuteMultipleResponse)serviceProxyOrigem.Execute(request);
+            ExecuteMultipleResponse resposta = (ExecuteMultipleResponse)serviceProxyDestino.Execute(request);
+            EntityCollection memoria = new EntityCollection();
             int cont = 0;
-            foreach (var item in response.Responses)
+            foreach (var item in resposta.Responses)
             {
-                if (item.Response != null)
-                {
-                    //Console.WriteLine($"Entidade nº: {cont} criado!");
-                }
-                else if (item.Fault != null)
+                if (item.Fault != null)
                 {
                     Console.WriteLine($"ERRO na entidade nº: {cont}!\n{item.Fault}");
                 }
+                else if (tabela != null)
+                {
+                    Entity entidade = new Entity(tabela);
+                    entidade.Id = (Guid)item.Response.Results["id"];
+                    memoria.Entities.Add(entidade);
+                }
                 cont++;
             }
-            Console.WriteLine($"{cont} entidades criadas!");
+            Console.WriteLine($"{cont} entidades importadas!");
+            return memoria;
         }
         protected static void TesteDePlugin(Entity entidade)
         {
