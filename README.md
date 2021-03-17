@@ -4,17 +4,17 @@
 
 ## Objetivos do Projeto:
 
-- Criação de um Robô: 
+- Criação de um Robô: </br>
   Importar dados em massa de um sistema para outro.
 
-- Elaboração de Plugins: 
+- Elaboração de Plugins: </br>
   Impedir a importação de dados inválidos ou duplicados no sistema.
 
-- Tratativa de dados vindos do cliente: :
+- Tratativa de dados vindos do cliente:</br>
   Verificam se os campos foram preenchidos com dados válidos.
 
-- Origem do robô de criação:
-  Popular o sistema de origem.
+- Origem do robô de criação:</br>
+  Popular o sistema de origem.</br>
   Desenvolvimento de um robô para gerar dados.
 
   
@@ -27,7 +27,7 @@
 *Conexão e criação das entidades no sistema*
 *Armazenamento das identificações.*
 
-#### <u>Dificuldades:</u>
+#### <ins>Dificuldades:</ins>
 **Lentidão ao enviar dados para o sistema.** </br>
 *Envio em pacotes.*
 
@@ -48,7 +48,8 @@
 *Conexão e envio dos dados para o sistema Destino e obtém a confirmação de entrega.*
 *Marca dados como importados no sistema Origem.*
 
-#### <u>Dificuldades:</u>
+
+#### <ins>Dificuldades:</ins>
 **Sistema de busca limitada – 5000 entidades.** </br>
 *Sistema de paginação.*
 
@@ -86,7 +87,7 @@
 
 
 
-#### <u>Dificuldades:</u>
+#### <ins>Dificuldades:</ins>
 
 **Criação de máscara.** </br>
 *Utilização de recurso existente no CRM.*
@@ -98,7 +99,7 @@
 
 ### JavaScript:
 
-#### <u>Dificuldades:</u>
+#### <ins>Dificuldades:</ins>
 
 **Validação de CPF e CNPJ.** </br>
 *Desenvolvimento de uma validação.*
@@ -108,7 +109,7 @@
 
 ### Plugins:
 
-#### <u>Dificuldades:</u>
+#### <ins>Dificuldades:</ins>
 
 **Validação de CPF e CNPJ.** </br>
 *Conversão dos validadores feitos em JavaScript para C#.*
