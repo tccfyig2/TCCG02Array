@@ -23,8 +23,8 @@
 ## Pontos Principais, desafios e soluções
 
 ### **Robô de criação:**
-*Criação e associação dos dados com seus respectivos campos.*
-*Conexão e criação das entidades no sistema*
+*Criação e associação dos dados com seus respectivos campos.*</br>
+*Conexão e criação das entidades no sistema*</br>
 *Armazenamento das identificações.*
 
 #### <ins>Dificuldades:</ins>
@@ -43,9 +43,9 @@
 
 
 ### Robô de importação:
-*Conexão e requerimento de dados do Sistema Origem.*
-*Associação dos dados dos sistemas.*
-*Conexão e envio dos dados para o sistema Destino e obtém a confirmação de entrega.*
+*Conexão e requerimento de dados do Sistema Origem.*</br>
+*Associação dos dados dos sistemas.*</br>
+*Conexão e envio dos dados para o sistema Destino e obtém a confirmação de entrega.*</br>
 *Marca dados como importados no sistema Origem.*
 
 
